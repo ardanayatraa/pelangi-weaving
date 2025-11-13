@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Product extends Model
+class Produk extends Model
 {
     protected $table = 'produk';
     protected $primaryKey = 'id_produk';
@@ -30,29 +30,25 @@ class Product extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'id_kategori', 'id_kategori');
+        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
     }
 
     public function variants(): HasMany
     {
-        return $this->hasMany(ProductVariant::class, 'id_produk', 'id_produk');
+        return $this->hasMany(VarianProduk::class, 'id_produk', 'id_produk');
     }
 
     public function activeVariants(): HasMany
     {
-        return $this->hasMany(ProductVariant::class, 'id_produk', 'id_produk')
+        return $this->hasMany(VarianProduk::class, 'id_produk', 'id_produk')
             ->where('status', 'tersedia');
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImage::class, 'id_produk', 'id_produk');
+        return $this->hasMany(GambarProduk::class, 'id_produk', 'id_produk');
     }
 
-    /**
-     * Get price range for products with variants
-     * Returns array with 'min' and 'max' keys
-     */
     public function getPriceRange()
     {
         $variants = $this->activeVariants;
@@ -69,18 +65,11 @@ class Product extends Model
         ];
     }
 
-    /**
-     * Check if product has variants
-     */
     public function hasVariants(): bool
     {
         return $this->activeVariants()->exists();
     }
 
-    /**
-     * Get formatted price display
-     * Shows range if has variants, single price otherwise
-     */
     public function getFormattedPrice(): string
     {
         if ($this->hasVariants()) {
@@ -90,7 +79,6 @@ class Product extends Model
                 return 'Rp ' . number_format($range['min'], 0, ',', '.') . ' - Rp ' . number_format($range['max'], 0, ',', '.');
             }
             
-            // Jika semua varian harga sama
             return 'Rp ' . number_format($range['min'], 0, ',', '.');
         }
         

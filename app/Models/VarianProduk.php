@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ProductVariant extends Model
+class VarianProduk extends Model
 {
     protected $table = 'varian_produk';
     protected $primaryKey = 'id_varian';
@@ -33,12 +33,12 @@ class ProductVariant extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'id_produk', 'id_produk');
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImage::class, 'id_varian', 'id_varian');
+        return $this->hasMany(GambarProduk::class, 'id_varian', 'id_varian');
     }
 
     public function isInStock(): bool

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\Payment;
+use App\Models\Pesanan;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +13,7 @@ class PaymentController extends Controller
 {
     public function show($nomorInvoice)
     {
-        $order = Order::with(['payment', 'items'])
+        $order = Pesanan::with(['payment', 'items'])
             ->where('nomor_invoice', $nomorInvoice)
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->firstOrFail();
@@ -46,7 +46,7 @@ class PaymentController extends Controller
         }
         
         Log::info('Mencari payment dengan order_id: ' . $orderId);
-        $payment = Payment::where('midtrans_order_id', $orderId)->first();
+        $payment = Pembayaran::where('midtrans_order_id', $orderId)->first();
         
         if (!$payment) {
             Log::error('Payment tidak ditemukan untuk order_id: ' . $orderId);
@@ -174,7 +174,7 @@ class PaymentController extends Controller
         
         Log::info('Signature valid, processing callback...');
         
-        $payment = Payment::where('midtrans_order_id', $request->order_id)->first();
+        $payment = Pembayaran::where('midtrans_order_id', $request->order_id)->first();
         
         if (!$payment) {
             Log::error('Payment tidak ditemukan untuk order_id: ' . $request->order_id);

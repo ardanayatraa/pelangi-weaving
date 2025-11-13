@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - Pelangi Weaving</title>
+    <title>Login - Pelangi Traditional Weaving Sidemen</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -18,7 +18,7 @@
                     <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
                         <span class="text-white font-bold text-2xl">P</span>
                     </div>
-                    <span class="text-2xl font-bold text-gray-900">Pelangi Weaving</span>
+                    <span class="text-2xl font-bold text-gray-900">Pelangi Traditional Weaving</span>
                 </a>
                 <h2 class="mt-6 text-3xl font-bold text-gray-900">Selamat Datang!</h2>
                 <p class="mt-2 text-sm text-gray-600">Masuk untuk melanjutkan</p>

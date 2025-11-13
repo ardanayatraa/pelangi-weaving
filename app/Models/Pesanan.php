@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Order extends Model
+class Pesanan extends Model
 {
     protected $table = 'pesanan';
     protected $primaryKey = 'id_pesanan';
@@ -37,12 +37,12 @@ class Order extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(OrderItem::class, 'id_pesanan', 'id_pesanan');
+        return $this->hasMany(DetailPesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
     public function payment(): HasOne
     {
-        return $this->hasOne(Payment::class, 'id_pesanan', 'id_pesanan');
+        return $this->hasOne(Pembayaran::class, 'id_pesanan', 'id_pesanan');
     }
 
     public function pengiriman(): HasOne

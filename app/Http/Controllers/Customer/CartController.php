@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
-use App\Models\ProductVariant;
+use App\Models\Keranjang;
+use App\Models\VarianProduk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +12,7 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cartItems = Cart::with(['product', 'productVariant.product'])
+        $cartItems = Keranjang::with(['product', 'productVariant.product'])
             ->where('id_pelanggan', Auth::id())
             ->get();
         
@@ -34,7 +34,7 @@ class CartController extends Controller
         
         // Check stock
         if ($validated['id_varian']) {
-            $variant = ProductVariant::findOrFail($validated['id_varian']);
+            $variant = VarianProduk::findOrFail($validated['id_varian']);
             if ($variant->stok < $validated['jumlah']) {
                 return back()->with('error', 'Stok tidak mencukupi!');
             }
@@ -42,9 +42,9 @@ class CartController extends Controller
         
         // If "Buy Now" - clear cart first and add only this item, then redirect to checkout
         if ($request->has('buy_now')) {
-            Cart::where('id_pelanggan', Auth::id())->delete();
+            Keranjang::where('id_pelanggan', Auth::id())->delete();
             
-            Cart::create([
+            Keranjang::create([
                 'id_pelanggan' => Auth::id(),
                 'id_produk' => $validated['id_produk'],
                 'id_varian' => $validated['id_varian'],
@@ -55,7 +55,7 @@ class CartController extends Controller
         }
         
         // Normal "Add to Cart" flow
-        $cartItem = Cart::where('id_pelanggan', Auth::id())
+        $cartItem = Keranjang::where('id_pelanggan', Auth::id())
             ->where('id_produk', $validated['id_produk'])
             ->where('id_varian', $validated['id_varian'])
             ->first();
@@ -64,7 +64,7 @@ class CartController extends Controller
             $newQuantity = $cartItem->jumlah + $validated['jumlah'];
             
             if ($validated['id_varian']) {
-                $variant = ProductVariant::findOrFail($validated['id_varian']);
+                $variant = VarianProduk::findOrFail($validated['id_varian']);
                 if ($variant->stok < $newQuantity) {
                     return back()->with('error', 'Stok tidak mencukupi!');
                 }
@@ -72,7 +72,7 @@ class CartController extends Controller
             
             $cartItem->update(['jumlah' => $newQuantity]);
         } else {
-            Cart::create([
+            Keranjang::create([
                 'id_pelanggan' => Auth::id(),
                 'id_produk' => $validated['id_produk'],
                 'id_varian' => $validated['id_varian'],
@@ -85,7 +85,7 @@ class CartController extends Controller
 
     public function update(Request $request, $id)
     {
-        $cart = Cart::findOrFail($id);
+        $cart = Keranjang::findOrFail($id);
         
         if ($cart->id_pelanggan != Auth::id()) {
             abort(403);
@@ -97,7 +97,7 @@ class CartController extends Controller
         
         // Check stock
         if ($cart->id_varian) {
-            $variant = ProductVariant::findOrFail($cart->id_varian);
+            $variant = VarianProduk::findOrFail($cart->id_varian);
             if ($variant->stok < $validated['jumlah']) {
                 return back()->with('error', 'Stok tidak mencukupi!');
             }
@@ -110,7 +110,7 @@ class CartController extends Controller
 
     public function remove($id)
     {
-        $cart = Cart::findOrFail($id);
+        $cart = Keranjang::findOrFail($id);
         
         if ($cart->id_pelanggan != Auth::id()) {
             abort(403);
@@ -123,7 +123,7 @@ class CartController extends Controller
 
     public function clear()
     {
-        Cart::where('id_pelanggan', Auth::id())->delete();
+        Keranjang::where('id_pelanggan', Auth::id())->delete();
         
         return back()->with('success', 'Keranjang berhasil dikosongkan!');
     }

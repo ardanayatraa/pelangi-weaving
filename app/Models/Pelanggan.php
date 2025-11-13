@@ -36,11 +36,11 @@ class Pelanggan extends Authenticatable
 
     public function carts(): HasMany
     {
-        return $this->hasMany(Cart::class, 'id_pelanggan', 'id_pelanggan');
+        return $this->hasMany(Keranjang::class, 'id_pelanggan', 'id_pelanggan');
     }
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'id_pelanggan', 'id_pelanggan');
+        return $this->hasMany(Pesanan::class, 'id_pelanggan', 'id_pelanggan');
     }
 }

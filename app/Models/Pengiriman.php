@@ -34,7 +34,7 @@ class Pengiriman extends Model
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'id_pesanan', 'id_pesanan');
+        return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
     public function isSampai(): bool

@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Category;
+use App\Models\Produk;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'activeVariants', 'images'])
+        $query = Produk::with(['category', 'activeVariants', 'images'])
             ->where('status', 'aktif');
         
         if ($request->has('category') && $request->category != '') {
@@ -50,19 +50,19 @@ class ProductController extends Controller
         
         $products = $query->paginate(20);
         
-        $categories = Category::withCount('products')->orderBy('nama_kategori')->get();
+        $categories = Kategori::withCount('products')->orderBy('nama_kategori')->get();
         
         return view('customer.products.index', compact('products', 'categories'));
     }
 
     public function show($slug)
     {
-        $product = Product::with(['category', 'activeVariants', 'images'])
+        $product = Produk::with(['category', 'activeVariants', 'images'])
             ->where('slug', $slug)
             ->where('status', 'aktif')
             ->firstOrFail();
         
-        $relatedProducts = Product::with(['category', 'activeVariants', 'images'])
+        $relatedProducts = Produk::with(['category', 'activeVariants', 'images'])
             ->where('id_kategori', $product->id_kategori)
             ->where('id_produk', '!=', $product->id_produk)
             ->where('status', 'aktif')

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +12,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['items.product', 'items.productVariant', 'payment', 'pengiriman'])
+        $query = Pesanan::with(['items.product', 'items.productVariant', 'payment', 'pengiriman'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id());
         
         if ($request->has('status') && $request->status != '') {
@@ -31,7 +31,7 @@ class OrderController extends Controller
             'payment_param' => $request->get('payment')
         ]);
         
-        $order = Order::with(['items.product', 'items.productVariant', 'payment', 'pengiriman'])
+        $order = Pesanan::with(['items.product', 'items.productVariant', 'payment', 'pengiriman'])
             ->where('nomor_invoice', $nomorInvoice)
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->firstOrFail();
@@ -138,7 +138,7 @@ class OrderController extends Controller
 
     public function cancel($nomorInvoice)
     {
-        $order = Order::where('nomor_invoice', $nomorInvoice)
+        $order = Pesanan::where('nomor_invoice', $nomorInvoice)
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->firstOrFail();
         

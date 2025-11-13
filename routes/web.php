@@ -103,15 +103,15 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
     Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{id}', [AdminProductController::class, 'show'])->name('products.show');
-    Route::get('/products/{id}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{id}', [AdminProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{id}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/products/{slug}', [AdminProductController::class, 'show'])->name('products.show');
+    Route::get('/products/{slug}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{slug}', [AdminProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{slug}', [AdminProductController::class, 'destroy'])->name('products.destroy');
     
     // Product Variants
-    Route::post('/products/{productId}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
-    Route::put('/products/{productId}/variants/{variantId}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
-    Route::delete('/products/{productId}/variants/{variantId}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
+    Route::post('/products/{slug}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+    Route::put('/products/{slug}/variants/{variantId}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
+    Route::delete('/products/{slug}/variants/{variantId}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
     
     // Orders
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');

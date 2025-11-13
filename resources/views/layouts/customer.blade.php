@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Pelangi Weaving')</title>
+    <title>@yield('title', 'Pelangi Traditional Weaving Sidemen')</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -191,10 +191,10 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="small">
-                    <i class="bi bi-telephone text-red-custom"></i> Hubungi Kami: 0812-3456-7890
+                    <i class="bi bi-telephone text-red-custom"></i> Hubungi Kami: +62 361-123456
                 </div>
                 <div class="small">
-                    <i class="bi bi-truck text-red-custom"></i> Gratis Ongkir Min. Belanja Rp 100.000
+                     Selamat berbelanja !
                 </div>
             </div>
         </div>
@@ -204,7 +204,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="bi bi-shop"></i> Pelangi Weaving
+                <i class="bi bi-shop"></i> Pelangi Traditional Weaving
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: white;">
@@ -325,12 +325,26 @@
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-2 mb-4">
                         <i class="bi bi-shop text-red-500 text-3xl"></i>
-                        <h3 class="text-2xl font-bold">Pelangi Weaving</h3>
+                        <h3 class="text-2xl font-bold">Pelangi Traditional Weaving Sidemen</h3>
                     </div>
-                    <p class="text-gray-400 mb-6 leading-relaxed">
-                        Kain tenun tradisional Bali berkualitas tinggi dengan motif autentik. 
-                        Melestarikan warisan budaya melalui karya seni tenun yang indah.
+                    <p class="text-gray-400 mb-4 leading-relaxed">
+                        UKM tenun tradisional di Desa Sidemen sejak 1979. Menyediakan kain songket berkualitas premium 
+                        dengan motif flora dan fauna khas Bali. Benang katun dan sutra dengan pengerjaan teliti dan penuh kesabaran.
                     </p>
+                    <div class="flex items-center gap-4 text-sm text-gray-400 mb-6">
+                        <div>
+                            <i class="bi bi-clock-fill text-red-500 me-1"></i>
+                            Sejak 1979
+                        </div>
+                        <div>
+                            <i class="bi bi-star-fill text-yellow-500 me-1"></i>
+                            Rating 4.8
+                        </div>
+                        <div>
+                            <i class="bi bi-award-fill text-red-500 me-1"></i>
+                            40+ ATBM
+                        </div>
+                    </div>
                     
                     <!-- Social Media -->
                     <div class="flex items-center gap-3">
@@ -437,8 +451,8 @@
                             <i class="bi bi-geo-alt-fill text-red-500 text-xl mt-1"></i>
                             <div>
                                 <p class="text-gray-400 text-sm">
-                                    Jl. Raya Ubud No. 123<br>
-                                    Gianyar, Bali 80571<br>
+                                    Jl. Sidemen, Kec. Sidemen<br>
+                                    Kabupaten Karangasem, Bali 80864<br>
                                     Indonesia
                                 </p>
                             </div>
@@ -446,8 +460,8 @@
                         <li class="flex items-start gap-3">
                             <i class="bi bi-telephone-fill text-red-500 text-xl"></i>
                             <div>
-                                <p class="text-gray-400 text-sm">+62 812-3456-7890</p>
                                 <p class="text-gray-400 text-sm">+62 361-123456</p>
+                                <p class="text-gray-400 text-sm">WhatsApp: +62 812-3456-7890</p>
                             </div>
                         </li>
                         <li class="flex items-start gap-3">
@@ -460,8 +474,8 @@
                         <li class="flex items-start gap-3">
                             <i class="bi bi-clock-fill text-red-500 text-xl"></i>
                             <div>
-                                <p class="text-gray-400 text-sm">Senin - Sabtu</p>
-                                <p class="text-gray-400 text-sm">09:00 - 18:00 WITA</p>
+                                <p class="text-gray-400 text-sm">Senin - Minggu</p>
+                                <p class="text-gray-400 text-sm">08:00 - 18:00 WITA</p>
                             </div>
                         </li>
                     </ul>
@@ -506,8 +520,8 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <p class="text-sm text-gray-400 text-center md:text-left">
-                        &copy; {{ date('Y') }} <span class="text-red-500 font-semibold">Pelangi Weaving</span>. 
-                        All rights reserved. Made with <i class="bi bi-heart-fill text-red-500"></i> in Bali
+                        &copy; {{ date('Y') }} <span class="text-red-500 font-semibold">Pelangi Traditional Weaving Sidemen</span>. 
+                        All rights reserved.
                     </p>
                     <div class="flex items-center gap-6">
                         <a href="{{ route('admin.login') }}" class="text-sm text-gray-400 hover:text-red-500 transition-colors">Admin</a>

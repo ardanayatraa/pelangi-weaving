@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Category;
+use App\Models\Produk;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Product::with(['category', 'activeVariants', 'images'])
+        $featuredProducts = Produk::with(['category', 'activeVariants', 'images'])
             ->where('status', 'aktif')
             ->latest()
             ->take(8)
             ->get();
         
-        $categories = Category::withCount(['products' => function($query) {
+        $categories = Kategori::withCount(['products' => function($query) {
             $query->where('status', 'aktif');
         }])
         ->orderBy('nama_kategori')

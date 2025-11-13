@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', 'Beranda - Pelangi Weaving')
+@section('title', 'Beranda - Pelangi Traditional Weaving Sidemen')
 
 @section('content')
 <style>
@@ -62,73 +62,37 @@
 
 </style>
 
-<!-- Hero Banner Blibli Style -->
+<!-- Hero Banner Modern Minimalist -->
 <section class="hero-banner">
-    <div class="container-fluid px-0">
-        <div class="row g-0">
-            <div class="col-12">
-                <div class="hero-slide" style="background: #8B0000; min-height: 400px; display: flex; align-items: center;">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-6 text-white">
-                                <span class="badge bg-light text-dark mb-3 px-3 py-2 fw-bold">✨ Koleksi Terbaru</span>
-                                <h1 class="display-3 fw-bold mb-3">Kain Tenun Bali Berkualitas</h1>
-                                <p class="fs-5 mb-4 opacity-90">Temukan koleksi kain tenun tradisional dengan motif autentik. Pengiriman ke seluruh Indonesia!</p>
-                                <div class="d-flex gap-3">
-                                    <a href="{{ route('products.index') }}" class="btn btn-light btn-lg px-5 fw-bold text-dark" style="border-radius: 8px;">
-                                        Belanja Sekarang
-                                    </a>
-                                    <a href="{{ route('products.index') }}" class="btn btn-outline-light btn-lg px-5 fw-bold" style="border-radius: 8px;">
-                                        Lihat Katalog
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 text-center d-none d-lg-block">
-                                <img src="https://images.unsplash.com/photo-1558769132-cb1aea1f5db8?w=600&h=400&fit=crop" 
-                                     alt="Kain Tenun" 
-                                     class="img-fluid rounded-4 shadow-lg"
-                                     style="max-height: 350px; object-fit: cover;">
-                            </div>
-                        </div>
-                    </div>
+    <div class="container">
+        <div class="row align-items-center" style="min-height: 450px;">
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    <span class="badge" style="background: #FFF5F0; color: #DC143C; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px;">
+                        ✨ Koleksi Terbaru
+                    </span>
+                </div>
+                <h1 class="display-4 fw-bold mb-3" style="color: #1a1a1a; line-height: 1.2;">
+                    Kain Tenun Bali<br>
+                    <span style="color: #DC143C;">Berkualitas Premium</span>
+                </h1>
+                <p class="fs-5 mb-4" style="color: #666; line-height: 1.6;">
+                    Kain songket dengan motif flora & fauna khas Bali sejak 1979.<br>
+                    Benang katun dan sutra berkualitas premium. Pengiriman ke seluruh Indonesia.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ route('products.index') }}" class="btn btn-lg px-4" style="background: #DC143C; color: white; border-radius: 12px; font-weight: 600; border: none;">
+                        <i class="bi bi-bag me-2"></i>Belanja Sekarang
+                    </a>
+                    <a href="{{ route('products.index') }}" class="btn btn-lg px-4" style="background: white; color: #1a1a1a; border-radius: 12px; font-weight: 600; border: 2px solid #e5e5e5;">
+                        <i class="bi bi-grid me-2"></i>Lihat Katalog
+                    </a>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
-
-<!-- Info Banner -->
-<div class="container my-4">
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="card border-0 text-white" style="border-radius: 12px; background: #8B0000;">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-truck fs-1 mb-2"></i>
-                    <h6 class="mb-0">Pengiriman Cepat</h6>
-                    <small>Ke Seluruh Indonesia</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 bg-dark text-white" style="border-radius: 12px;">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-shield-check fs-1 mb-2"></i>
-                    <h6 class="mb-0">100% Original</h6>
-                    <small>Produk Asli Bali</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 bg-light text-dark" style="border-radius: 12px; border: 2px solid #E0E0E0;">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-arrow-repeat fs-1 mb-2"></i>
-                    <h6 class="mb-0">Mudah Dikembalikan</h6>
-                    <small>Garansi 7 Hari</small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Categories -->
 <section class="py-5 bg-white">
@@ -253,15 +217,115 @@
     </div>
 </section>
 
+<!-- Keunggulan Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold mb-3">Mengapa Memilih Kami?</h3>
+            <p class="text-muted">Keunggulan Pelangi Traditional Weaving Sidemen</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Sejak 1979</h5>
+                    <p class="text-muted small">UKM pertama di Desa Sidemen dengan pengalaman 46+ tahun</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
+                        <i class="bi bi-hand-thumbs-up-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Kualitas Premium</h5>
+                    <p class="text-muted small">Tenun rapat, halus, dibuat dengan kesabaran dan ketelitian</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
+                        <i class="bi bi-palette-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Motif Autentik</h5>
+                    <p class="text-muted small">Motif flora & fauna khas Bali dengan beragam pilihan warna</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Rating 4.8</h5>
+                    <p class="text-muted small">Kepuasan pelanggan terbukti di Google Maps</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tentang Singkat -->
+<section class="py-5" style="background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <span class="badge bg-danger mb-3">Tentang Kami</span>
+                <h2 class="fw-bold mb-4">Melestarikan Warisan Budaya Bali</h2>
+                <p class="mb-3">
+                    Tenun Trisna Tradisional Weaving adalah UKM pertama di Desa Sidemen yang berdiri sejak 1979. 
+                    Kami memiliki 40 ATBM dan alat pemintal benang (jantra).
+                </p>
+                <p class="mb-4">
+                    Setiap kain songket kami dibuat dengan teknik tradisional, menggunakan motif flora dan fauna khas Bali. 
+                    Tersedia dalam benang katun dan sutra dengan berbagai varian motif.
+                </p>
+                <a href="{{ route('products.index') }}" class="btn btn-danger btn-lg">
+                    <i class="bi bi-bag me-2"></i>Lihat Produk
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4">
+                            <h3 class="fw-bold text-danger mb-2">40+</h3>
+                            <p class="text-muted small mb-0">ATBM & Alat Tenun</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4">
+                            <h3 class="fw-bold text-danger mb-2">46+</h3>
+                            <p class="text-muted small mb-0">Tahun Pengalaman</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4">
+                            <h3 class="fw-bold text-danger mb-2">35-50</h3>
+                            <p class="text-muted small mb-0">Kain per Minggu</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4">
+                            <h3 class="fw-bold text-danger mb-2">4.8★</h3>
+                            <p class="text-muted small mb-0">Rating Google</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="py-5 bg-light">
     <div class="container">
-        <div class="card border-0" style="background: linear-gradient(135deg, #0095DA 0%, #00B4DB 100%); border-radius: 16px;">
+        <div class="card border-0" style="background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); border-radius: 16px;">
             <div class="card-body text-center text-white py-5">
                 <h2 class="fw-bold mb-3">Bergabunglah Bersama Kami!</h2>
-                <p class="lead mb-4">Daftar sekarang dan nikmati kemudahan berbelanja kain tenun berkualitas</p>
+                <p class="lead mb-4">Daftar sekarang dan nikmati kemudahan berbelanja kain tenun berkualitas premium</p>
                 <a href="{{ route('register') }}" class="btn btn-light btn-lg px-5" style="border-radius: 24px; font-weight: 600;">
-                    Daftar Sekarang
+                    <i class="bi bi-person-plus me-2"></i>Daftar Sekarang
                 </a>
             </div>
         </div>

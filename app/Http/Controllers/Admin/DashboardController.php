@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\Product;
+use App\Models\Pesanan;
+use App\Models\Produk;
 use App\Models\Pelanggan;
-use App\Models\Category;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -14,27 +14,27 @@ class DashboardController extends Controller
     public function index()
     {
         // Total statistik
-        $totalOrders = Order::count();
-        $totalProducts = Product::count();
+        $totalOrders = Pesanan::count();
+        $totalProducts = Produk::count();
         $totalCustomers = Pelanggan::count();
-        $totalRevenue = Order::where('status_pesanan', 'selesai')->sum('total_bayar');
+        $totalRevenue = Pesanan::where('status_pesanan', 'selesai')->sum('total_bayar');
         
         // Pesanan hari ini
-        $todayOrders = Order::whereDate('created_at', today())->count();
-        $todayRevenue = Order::whereDate('created_at', today())
+        $todayOrders = Pesanan::whereDate('created_at', today())->count();
+        $todayRevenue = Pesanan::whereDate('created_at', today())
             ->where('status_pesanan', 'selesai')
             ->sum('total_bayar');
         
         // Pesanan pending
-        $pendingOrders = Order::where('status_pesanan', 'baru')->count();
+        $pendingOrders = Pesanan::where('status_pesanan', 'baru')->count();
         
         // Produk stok rendah (< 10)
-        $lowStockProducts = Product::where('stok', '<', 10)
+        $lowStockProducts = Produk::where('stok', '<', 10)
             ->where('status', 'aktif')
             ->count();
         
         // Recent orders
-        $recentOrders = Order::with(['pelanggan', 'payment'])
+        $recentOrders = Pesanan::with(['pelanggan', 'payment'])
             ->latest()
             ->take(10)
             ->get();
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             ->get();
         
         // Revenue chart data (7 hari terakhir)
-        $revenueChart = Order::where('status_pesanan', 'selesai')
+        $revenueChart = Pesanan::where('status_pesanan', 'selesai')
             ->where('created_at', '>=', now()->subDays(7))
             ->select(
                 DB::raw('DATE(created_at) as date'),

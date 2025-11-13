@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::withCount('products');
+        $query = Kategori::withCount('products');
         
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -53,7 +53,7 @@ class CategoryController extends Controller
             $validated['slug'] = Str::slug($validated['nama_kategori']);
         }
         
-        Category::create($validated);
+        Kategori::create($validated);
         
         return redirect()->route('admin.categories.index')
             ->with('success', 'Kategori berhasil ditambahkan!');
@@ -61,7 +61,7 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        $category = Category::with(['products' => function($query) {
+        $category = Kategori::with(['products' => function($query) {
             $query->withCount('variants')->latest();
         }])->findOrFail($id);
         
@@ -70,13 +70,13 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Kategori::findOrFail($id);
         return view('admin.categories.edit', compact('category'));
     }
 
     public function update(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
+        $category = Kategori::findOrFail($id);
         
         $validated = $request->validate([
             'nama_kategori' => 'required|string|max:100',
@@ -96,7 +96,7 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Kategori::findOrFail($id);
         
         if ($category->products()->count() > 0) {
             return redirect()->route('admin.categories.index')

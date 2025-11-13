@@ -1,107 +1,92 @@
 @extends('layouts.admin')
 
-@section('title', $product->name)
+@section('title', $product->nama_produk)
+@section('page-title', 'Detail Produk')
 
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.products.index') }}" class="text-gray-700 hover:text-gray-900 font-medium inline-flex items-center">
-        <i class="bi bi-arrow-left mr-1"></i> Kembali ke Daftar Produk
+    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Kembali
     </a>
+    <a href="{{ route('admin.products.edit', $product->slug) }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-pencil me-1"></i> Edit
+    </a>
+    <form action="{{ route('admin.products.destroy', $product->slug) }}" method="POST" class="d-inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit" 
+                onclick="return confirm('Yakin hapus produk ini?')"
+                class="btn btn-danger btn-sm">
+            <i class="bi bi-trash me-1"></i> Hapus
+        </button>
+    </form>
 </div>
 
-<div class="flex items-center justify-between mb-4">
-    <div>
-        <h1 class="text-2xl font-bold text-gray-900">{{ $product->name }}</h1>
-        <p class="text-sm text-gray-600 mt-1">Detail produk dan varian</p>
-    </div>
-    <div class="flex items-center space-x-2">
-        <a href="{{ route('admin.products.edit', $product) }}" 
-           class="btn-primary px-4 py-2 text-sm font-semibold inline-flex items-center">
-            <i class="bi bi-pencil mr-1"></i> Edit
-        </a>
-        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline">
-            @csrf
-            @method('DELETE')
-            <button type="submit" 
-                    onclick="return confirm('Yakin hapus produk ini?')"
-                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm font-semibold">
-                <i class="bi bi-trash mr-1"></i> Hapus
-            </button>
-        </form>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+<div class="row g-4">
     <!-- Main Content -->
-    <div class="lg:col-span-2 space-y-4">
+    <div class="col-lg-8">
         <!-- Product Info -->
-        <div class="bg-white border border-gray-200">
-            <div class="px-4 py-3 border-b border-gray-200" style="background: #f9f9f9;">
-                <h2 class="text-sm font-bold text-gray-900 uppercase">Informasi Produk</h2>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Informasi Produk</h5>
             </div>
-            <div class="p-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-gray-600 mb-1">Nama Produk</p>
-                        <p class="font-semibold text-gray-900">{{ $product->name }}</p>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Nama Produk</label>
+                        <p class="fw-bold">{{ $product->nama_produk }}</p>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-600 mb-1">Kategori</p>
-                        <p class="font-semibold text-gray-900">{{ $product->category->name }}</p>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Kategori</label>
+                        <p class="fw-bold">{{ $product->category->nama_kategori }}</p>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-600 mb-1">Harga Dasar</p>
-                        <p class="font-bold text-gray-900 text-lg">Rp {{ number_format($product->base_price, 0, ',', '.') }}</p>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Harga</label>
+                        <p class="fw-bold text-primary fs-5">Rp {{ number_format($product->harga, 0, ',', '.') }}</p>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-600 mb-1">Berat</p>
-                        <p class="font-semibold text-gray-900">{{ $product->weight }} gram</p>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Berat</label>
+                        <p class="fw-bold">{{ $product->berat }} gram</p>
                     </div>
-                </div>
-
-                <div class="mt-4">
-                    <p class="text-xs text-gray-600 mb-1">Deskripsi</p>
-                    <p class="text-sm text-gray-900">{{ $product->description }}</p>
-                </div>
-
-                <div class="mt-4 flex items-center space-x-2">
-                    @if($product->is_active)
-                        <span class="badge-status bg-green-100 text-green-800">
-                            <i class="bi bi-check-circle mr-1"></i> Aktif
-                        </span>
-                    @else
-                        <span class="badge-status bg-gray-100 text-gray-800">
-                            <i class="bi bi-x-circle mr-1"></i> Nonaktif
-                        </span>
-                    @endif
-                    
-                    @if($product->is_featured)
-                        <span class="badge-status bg-yellow-100 text-yellow-800">
-                            <i class="bi bi-star mr-1"></i> Unggulan
-                        </span>
-                    @endif
+                    <div class="col-12">
+                        <label class="form-label text-muted small">Deskripsi</label>
+                        <p>{{ $product->deskripsi }}</p>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label text-muted small">Status</label>
+                        <div>
+                            @if($product->status == 'aktif')
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i> Aktif
+                                </span>
+                            @else
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-x-circle me-1"></i> Nonaktif
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Product Images -->
         @if($product->images->count() > 0)
-        <div class="bg-white border border-gray-200">
-            <div class="px-4 py-3 border-b border-gray-200" style="background: #f9f9f9;">
-                <h2 class="text-sm font-bold text-gray-900 uppercase">Gambar Produk</h2>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Gambar Produk</h5>
             </div>
-            <div class="p-4">
-                <div class="grid grid-cols-5 gap-2">
+            <div class="card-body">
+                <div class="row g-2">
                     @foreach($product->images as $image)
-                    <div class="relative cursor-pointer" onclick="openImageModal('{{ asset('storage/' . $image->image_path) }}', '{{ $product->name }}')">
-                        <img src="{{ asset('storage/' . $image->image_path) }}" 
-                             alt="{{ $product->name }}"
-                             class="w-full h-24 object-cover border border-gray-200 bg-gray-100">
-                        @if($image->is_primary)
-                        <span class="absolute top-1 left-1 px-1.5 py-0.5 bg-red-600 text-white text-xs font-bold">
-                            UTAMA
-                        </span>
-                        @endif
+                    <div class="col-3">
+                        <div class="position-relative">
+                            <img src="{{ asset('storage/' . $image->path) }}" 
+                                 alt="{{ $product->nama_produk }}"
+                                 class="img-fluid rounded border"
+                                 style="cursor: pointer; height: 120px; width: 100%; object-fit: cover;"
+                                 onclick="showImageModal('{{ asset('storage/' . $image->path) }}')">
+                        </div>
                     </div>
                     @endforeach
                 </div>
@@ -110,561 +95,436 @@
         @endif
 
         <!-- Product Variants -->
-        <div class="bg-white border border-gray-200" x-data="{ 
-            showModal: false, 
-            showEditModal: false, 
-            showDeleteModal: false,
-            editVariantId: null,
-            deleteVariantId: null,
-            deleteVariantName: ''
-        }">
-            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between" style="background: #f9f9f9;">
-                <h2 class="text-sm font-bold text-gray-900 uppercase">Varian Produk ({{ $product->variants->count() }})</h2>
-                <button @click="showModal = true" 
-                        class="btn-primary px-3 py-1.5 text-xs font-semibold">
-                    <i class="bi bi-plus-circle mr-1"></i> Tambah Varian
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Varian Produk ({{ $product->variants->count() }})</h5>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addVariantModal">
+                    <i class="bi bi-plus-circle me-1"></i> Tambah Varian
                 </button>
             </div>
-            
-            <!-- Modal Add Variant -->
-            <div x-show="showModal" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 z-50 overflow-y-auto"
-                 style="display: none;">
-                <div class="flex items-center justify-center min-h-screen px-4">
-                    <!-- Backdrop -->
-                    <div @click="showModal = false" class="fixed inset-0 bg-black bg-opacity-50"></div>
-                    
-                    <!-- Modal Content -->
-                    <div class="relative bg-white w-full max-w-2xl border border-gray-300 shadow-lg">
-                        <!-- Modal Header -->
-                        <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between" style="background: #f9f9f9;">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase">Tambah Varian Baru</h3>
-                            <button @click="showModal = false" class="text-gray-500 hover:text-gray-700">
-                                <i class="bi bi-x-lg text-xl"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Modal Body -->
-                        <form action="{{ route('admin.products.variants.store', $product) }}" method="POST" enctype="multipart/form-data" class="p-4">
-                            @csrf
-                            <div class="space-y-3">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Warna *</label>
-                                        <input type="text" name="color" required
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="Merah Marun">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Ukuran *</label>
-                                        <input type="text" name="size" required
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="2 x 1 meter">
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis Benang *</label>
-                                        <input type="text" name="thread_type" required
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="Benang Emas 24K">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Varian *</label>
-                                        <input type="text" name="name" required
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="Merah Marun - 2x1m">
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Harga (Rp) *</label>
-                                        <input type="number" name="price" required min="0"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="2500000">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Stok *</label>
-                                        <input type="number" name="stock_quantity" required min="0"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="10">
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Berat (gram)</label>
-                                        <input type="number" name="weight" min="0" value="{{ $product->weight }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">SKU</label>
-                                        <input type="text" name="sku"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                                               placeholder="PW-001-MER">
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Varian (Opsional)</label>
-                                    <input type="file" name="images[]" multiple accept="image/*" id="variantImages"
-                                           class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    <p class="mt-1 text-xs text-gray-500">Upload gambar khusus untuk varian ini. Format: JPG, PNG, JPEG.</p>
-                                    
-                                    <!-- Preview Container -->
-                                    <div id="variantImagePreview" class="grid grid-cols-4 gap-2 mt-3" style="display: none;"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Modal Footer -->
-                            <div class="flex items-center justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
-                                <button type="button" 
-                                        @click="showModal = false"
-                                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 text-sm font-semibold">
-                                    Batal
-                                </button>
-                                <button type="submit" 
-                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm font-semibold">
-                                    <i class="bi bi-check-circle mr-1"></i> Simpan Varian
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Modal Edit Variant -->
-            @foreach($product->variants as $variant)
-            <div x-show="showEditModal && editVariantId === {{ $variant->id }}" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 z-50 overflow-y-auto"
-                 style="display: none;">
-                <div class="flex items-center justify-center min-h-screen px-4">
-                    <div @click="showEditModal = false" class="fixed inset-0 bg-black bg-opacity-50"></div>
-                    
-                    <div class="relative bg-white w-full max-w-2xl border border-gray-300 shadow-lg">
-                        <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between" style="background: #f9f9f9;">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase">Edit Varian: {{ $variant->name }}</h3>
-                            <button @click="showEditModal = false" class="text-gray-500 hover:text-gray-700">
-                                <i class="bi bi-x-lg text-xl"></i>
-                            </button>
-                        </div>
-                        
-                        <form action="{{ route('admin.products.variants.update', [$product, $variant]) }}" method="POST" enctype="multipart/form-data" class="p-4">
-                            @csrf
-                            @method('PUT')
-                            <div class="space-y-3">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Warna *</label>
-                                        <input type="text" name="color" required value="{{ $variant->color }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Ukuran *</label>
-                                        <input type="text" name="size" required value="{{ $variant->size }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis Benang *</label>
-                                        <input type="text" name="thread_type" required value="{{ $variant->thread_type }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Varian *</label>
-                                        <input type="text" name="name" required value="{{ $variant->name }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Harga (Rp) *</label>
-                                        <input type="number" name="price" required min="0" value="{{ $variant->price }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Stok *</label>
-                                        <input type="number" name="stock_quantity" required min="0" value="{{ $variant->stock_quantity }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Berat (gram)</label>
-                                        <input type="number" name="weight" min="0" value="{{ $variant->weight }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1">SKU</label>
-                                        <input type="text" name="sku" value="{{ $variant->sku }}"
-                                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center justify-between py-2 border-t border-gray-200">
-                                    <label class="text-xs font-semibold text-gray-700">Status Aktif</label>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" name="is_active" value="1" class="sr-only peer" {{ $variant->is_active ? 'checked' : '' }}>
-                                        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                                    </label>
-                                </div>
-                                
-                                @if($variant->images->count() > 0)
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar Saat Ini</label>
-                                    <div class="grid grid-cols-4 gap-2">
-                                        @foreach($variant->images as $image)
-                                        <img src="{{ asset('storage/' . $image->image_path) }}" 
-                                             alt="{{ $variant->name }}"
-                                             class="w-full h-20 object-cover border border-gray-200">
-                                        @endforeach
-                                    </div>
-                                </div>
-                                @endif
-                                
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Upload Gambar Baru (Opsional)</label>
-                                    <input type="file" name="images[]" multiple accept="image/*" id="variantImagesEdit{{ $variant->id }}"
-                                           class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400">
-                                    <p class="mt-1 text-xs text-gray-500">Upload gambar baru akan menambahkan ke gambar yang sudah ada.</p>
-                                    
-                                    <!-- Preview Container -->
-                                    <div id="variantImagePreviewEdit{{ $variant->id }}" class="grid grid-cols-4 gap-2 mt-3" style="display: none;"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
-                                <button type="button" 
-                                        @click="showEditModal = false"
-                                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 text-sm font-semibold">
-                                    Batal
-                                </button>
-                                <button type="submit" 
-                                        class="btn-primary px-4 py-2 text-sm font-semibold">
-                                    <i class="bi bi-check-circle mr-1"></i> Update Varian
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-            
-            <!-- Modal Delete Confirmation -->
-            <div x-show="showDeleteModal" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 z-50 overflow-y-auto"
-                 style="display: none;">
-                <div class="flex items-center justify-center min-h-screen px-4">
-                    <div @click="showDeleteModal = false" class="fixed inset-0 bg-black bg-opacity-50"></div>
-                    
-                    <div class="relative bg-white w-full max-w-md border border-gray-300 shadow-lg">
-                        <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between" style="background: #f9f9f9;">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase">Konfirmasi Hapus</h3>
-                            <button @click="showDeleteModal = false" class="text-gray-500 hover:text-gray-700">
-                                <i class="bi bi-x-lg text-xl"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="p-4">
-                            <div class="flex items-start space-x-3 mb-4">
-                                <div class="w-12 h-12 bg-red-100 flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-exclamation-triangle text-red-600 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-semibold text-gray-900 mb-1">Yakin hapus varian ini?</p>
-                                    <p class="text-sm text-gray-600" x-text="deleteVariantName"></p>
-                                    <p class="text-xs text-red-600 mt-2">Tindakan ini tidak dapat dibatalkan!</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-end space-x-2">
-                                <button @click="showDeleteModal = false" 
-                                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 text-sm font-semibold">
-                                    Batal
-                                </button>
-                                <form :action="'/admin/products/{{ $product->id }}/variants/' + deleteVariantId" 
-                                      method="POST" 
-                                      class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm font-semibold">
-                                        <i class="bi bi-trash mr-1"></i> Ya, Hapus
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Gambar</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">SKU</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Varian</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Harga</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Stok</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($product->variants as $variant)
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-5">
-                                @if($variant->images->first())
-                                    <div class="w-14 h-14 overflow-hidden rounded border border-gray-200 bg-gray-100 cursor-pointer" 
-                                         onclick="openImageModal('{{ asset('storage/' . $variant->images->first()->image_path) }}', '{{ $variant->name }}')">
-                                        <img src="{{ asset('storage/' . $variant->images->first()->image_path) }}" 
-                                             alt="{{ $variant->name }}"
-                                             class="w-full h-full object-cover">
-                                    </div>
-                                @elseif($product->images->first())
-                                    <div class="w-14 h-14 overflow-hidden rounded border border-gray-200 bg-gray-100 opacity-50 cursor-pointer"
-                                         onclick="openImageModal('{{ asset('storage/' . $product->images->first()->image_path) }}', '{{ $product->name }}')">
-                                        <img src="{{ asset('storage/' . $product->images->first()->image_path) }}" 
-                                             alt="{{ $product->name }}"
-                                             class="w-full h-full object-cover">
-                                    </div>
-                                @else
-                                    <div class="w-14 h-14 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
-                                        <i class="bi bi-image text-gray-400"></i>
-                                    </div>
-                                @endif
-                            </td>
-                            <td class="px-6 py-5 text-sm text-gray-600">{{ $variant->sku }}</td>
-                            <td class="px-6 py-5">
-                                <div class="text-sm font-semibold text-gray-900">{{ $variant->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $variant->color }} • {{ $variant->size }}</div>
-                            </td>
-                            <td class="px-6 py-5 text-sm font-semibold text-gray-900">
-                                Rp {{ number_format($variant->price, 0, ',', '.') }}
-                            </td>
-                            <td class="px-6 py-5">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $variant->stock_quantity > 10 ? 'bg-green-50 text-green-700' : ($variant->stock_quantity > 0 ? 'bg-yellow-50 text-yellow-700' : 'bg-red-50 text-red-700') }}">
-                                    {{ $variant->stock_quantity }} unit
-                                </span>
-                            </td>
-                            <td class="px-6 py-5">
-                                @if($variant->is_active)
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">Aktif</span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Nonaktif</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-5">
-                                <div class="flex items-center justify-center gap-3">
-                                    <button @click="editVariantId = {{ $variant->id }}; showEditModal = true" 
-                                            class="text-blue-600 hover:text-blue-800 transition-colors"
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Gambar</th>
+                                <th>Kode</th>
+                                <th>Varian</th>
+                                <th>Harga</th>
+                                <th>Stok</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($product->variants as $variant)
+                            <tr>
+                                <td>
+                                    @if($variant->gambar_varian)
+                                        <img src="{{ asset('storage/' . $variant->gambar_varian) }}" 
+                                             alt="{{ $variant->nama_varian }}"
+                                             class="rounded"
+                                             style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
+                                             onclick="showImageModal('{{ asset('storage/' . $variant->gambar_varian) }}')"
+                                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'bg-light rounded d-flex align-items-center justify-content-center\' style=\'width: 50px; height: 50px;\'><i class=\'bi bi-image text-muted\'></i></div>';">
+                                    @elseif($product->images->first())
+                                        <img src="{{ asset('storage/' . $product->images->first()->path) }}" 
+                                             alt="{{ $product->nama_produk }}"
+                                             class="rounded opacity-50"
+                                             style="width: 50px; height: 50px; object-fit: cover;"
+                                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'bg-light rounded d-flex align-items-center justify-content-center\' style=\'width: 50px; height: 50px;\'><i class=\'bi bi-image text-muted\'></i></div>';">
+                                    @else
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                             style="width: 50px; height: 50px;">
+                                            <i class="bi bi-image text-muted"></i>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td><small class="text-muted">{{ $variant->kode_varian }}</small></td>
+                                <td>
+                                    <div class="fw-bold">{{ $variant->nama_varian }}</div>
+                                    <small class="text-muted">
+                                        @if($variant->warna) {{ $variant->warna }} @endif
+                                        @if($variant->ukuran) • {{ $variant->ukuran }} @endif
+                                        @if($variant->jenis_benang) • {{ $variant->jenis_benang }} @endif
+                                    </small>
+                                </td>
+                                <td class="fw-bold">Rp {{ number_format($variant->harga, 0, ',', '.') }}</td>
+                                <td>
+                                    <span class="badge {{ $variant->stok > 10 ? 'bg-success' : ($variant->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
+                                        {{ $variant->stok }} unit
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($variant->status == 'tersedia')
+                                        <span class="badge bg-success">Tersedia</span>
+                                    @else
+                                        <span class="badge bg-secondary">Habis</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-primary" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editVariantModal{{ $variant->id_varian }}"
                                             title="Edit">
-                                        <i class="bi bi-pencil-square text-lg"></i>
+                                        <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button @click="deleteVariantId = {{ $variant->id }}; deleteVariantName = '{{ $variant->name }}'; showDeleteModal = true" 
-                                            class="text-red-600 hover:text-red-800 transition-colors"
-                                            title="Hapus">
-                                        <i class="bi bi-trash text-lg"></i>
+                                    <form action="{{ route('admin.products.variants.destroy', [$product->slug, $variant->id_varian]) }}" 
+                                          method="POST" 
+                                          class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Yakin hapus varian {{ $variant->nama_varian }}?')"
+                                                title="Hapus">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">
+                                    Belum ada varian. 
+                                    <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#addVariantModal">
+                                        Tambah varian pertama
                                     </button>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
-                                <div class="text-gray-400 text-sm">
-                                    Belum ada varian. <button @click="showModal = true" class="text-blue-600 hover:text-blue-800 font-medium">Tambah varian pertama</button>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Sidebar -->
-    <div class="space-y-4">
+    <div class="col-lg-4">
         <!-- Quick Stats -->
-        <div class="bg-white border border-gray-200 p-4">
-            <h2 class="text-sm font-bold text-gray-900 uppercase mb-3">Statistik</h2>
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-600">Total Varian</span>
-                    <span class="font-bold text-gray-900">{{ $product->variants->count() }}</span>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">Statistik</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted small">Total Varian</span>
+                    <span class="fw-bold">{{ $product->variants->count() }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-600">Total Stok</span>
-                    <span class="font-bold text-gray-900">{{ $product->variants->sum('stock_quantity') }} unit</span>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted small">Total Stok</span>
+                    <span class="fw-bold">{{ $product->variants->sum('stok') }} unit</span>
                 </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-600">Harga Terendah</span>
-                    <span class="font-bold text-gray-900">Rp {{ number_format($product->variants->min('price') ?? $product->base_price, 0, ',', '.') }}</span>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted small">Harga Terendah</span>
+                    <span class="fw-bold">Rp {{ number_format($product->variants->min('harga') ?? $product->harga, 0, ',', '.') }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-600">Harga Tertinggi</span>
-                    <span class="font-bold text-gray-900">Rp {{ number_format($product->variants->max('price') ?? $product->base_price, 0, ',', '.') }}</span>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted small">Harga Tertinggi</span>
+                    <span class="fw-bold">Rp {{ number_format($product->variants->max('harga') ?? $product->harga, 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Meta Info -->
-        <div class="bg-white border border-gray-200 p-4">
-            <h2 class="text-sm font-bold text-gray-900 uppercase mb-3">Informasi Lainnya</h2>
-            <div class="space-y-3 text-sm">
-                <div>
-                    <p class="text-xs text-gray-600 mb-1">Dibuat</p>
-                    <p class="font-medium text-gray-900 text-xs">{{ $product->created_at->format('d M Y, H:i') }}</p>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Informasi Lainnya</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Dibuat</label>
+                    <p class="mb-0 small">{{ $product->created_at->format('d M Y, H:i') }}</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Terakhir Diupdate</label>
+                    <p class="mb-0 small">{{ $product->updated_at->format('d M Y, H:i') }}</p>
                 </div>
                 <div>
-                    <p class="text-xs text-gray-600 mb-1">Terakhir Diupdate</p>
-                    <p class="font-medium text-gray-900 text-xs">{{ $product->updated_at->format('d M Y, H:i') }}</p>
+                    <label class="form-label text-muted small">Slug</label>
+                    <p class="mb-0 small"><code>{{ $product->slug }}</code></p>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Variant Modal -->
+<div class="modal fade" id="addVariantModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header border-0 bg-light" style="padding: 24px;">
                 <div>
-                    <p class="text-xs text-gray-600 mb-1">Slug</p>
-                    <p class="font-mono text-xs text-gray-900 bg-gray-100 px-2 py-1">{{ $product->slug }}</p>
+                    <h5 class="modal-title fw-bold mb-1">Tambah Varian Baru</h5>
+                    <p class="text-muted small mb-0">Isi informasi varian produk</p>
                 </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ route('admin.products.variants.store', $product->slug) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body" style="padding: 24px;">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nama Varian <span class="text-danger">*</span></label>
+                            <input type="text" name="nama_varian" class="form-control" required 
+                                   placeholder="Merah Marun - 2x1m">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kode Varian <span class="text-danger">*</span></label>
+                            <input type="text" name="kode_varian" class="form-control" required 
+                                   placeholder="PW-001-MER">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Warna</label>
+                            <input type="text" name="warna" class="form-control" 
+                                   placeholder="Merah Marun">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Ukuran</label>
+                            <input type="text" name="ukuran" class="form-control" 
+                                   placeholder="2 x 1 meter">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Jenis Benang</label>
+                            <input type="text" name="jenis_benang" class="form-control" 
+                                   placeholder="Benang Emas 24K">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
+                            <input type="number" name="harga" class="form-control" required min="0" 
+                                   placeholder="2500000">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Stok <span class="text-danger">*</span></label>
+                            <input type="number" name="stok" class="form-control" required min="0" 
+                                   placeholder="10">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Berat (gram)</label>
+                            <input type="number" name="berat" class="form-control" min="0" 
+                                   value="{{ $product->berat }}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Gambar Varian (Opsional)</label>
+                            <input type="file" name="gambar_varian" class="form-control" accept="image/*">
+                            <small class="text-muted">Format: JPG, PNG, JPEG. Maks 2MB</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light" style="padding: 20px 24px;">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="padding: 10px 24px;">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+                        <i class="bi bi-check-circle me-2"></i>Simpan Varian
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Variant Modals -->
+@foreach($product->variants as $variant)
+<div class="modal fade" id="editVariantModal{{ $variant->id_varian }}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-header border-0 bg-light" style="padding: 24px;">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1">Edit Varian</h5>
+                    <p class="text-muted small mb-0">{{ $variant->nama_varian }}</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ route('admin.products.variants.update', [$product->slug, $variant->id_varian]) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body" style="padding: 24px;">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nama Varian <span class="text-danger">*</span></label>
+                            <input type="text" name="nama_varian" class="form-control" required 
+                                   value="{{ $variant->nama_varian }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kode Varian <span class="text-danger">*</span></label>
+                            <input type="text" name="kode_varian" class="form-control" required 
+                                   value="{{ $variant->kode_varian }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Warna</label>
+                            <input type="text" name="warna" class="form-control" 
+                                   value="{{ $variant->warna }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Ukuran</label>
+                            <input type="text" name="ukuran" class="form-control" 
+                                   value="{{ $variant->ukuran }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Jenis Benang</label>
+                            <input type="text" name="jenis_benang" class="form-control" 
+                                   value="{{ $variant->jenis_benang }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
+                            <input type="number" name="harga" class="form-control" required min="0" 
+                                   value="{{ $variant->harga }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Stok <span class="text-danger">*</span></label>
+                            <input type="number" name="stok" class="form-control" required min="0" 
+                                   value="{{ $variant->stok }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Berat (gram)</label>
+                            <input type="number" name="berat" class="form-control" min="0" 
+                                   value="{{ $variant->berat }}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="tersedia" {{ $variant->status == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                <option value="habis" {{ $variant->status == 'habis' ? 'selected' : '' }}>Habis</option>
+                            </select>
+                        </div>
+                        @if($variant->gambar_varian)
+                        <div class="col-12">
+                            <label class="form-label">Gambar Saat Ini</label>
+                            <div>
+                                <img src="{{ asset('storage/' . $variant->gambar_varian) }}" 
+                                     alt="{{ $variant->nama_varian }}"
+                                     class="img-thumbnail"
+                                     style="max-width: 200px; cursor: pointer;"
+                                     onclick="showImageModal('{{ asset('storage/' . $variant->gambar_varian) }}')">
+                            </div>
+                        </div>
+                        @endif
+                        <div class="col-12">
+                            <label class="form-label">Upload Gambar Baru (Opsional)</label>
+                            <input type="file" name="gambar_varian" class="form-control" accept="image/*">
+                            <small class="text-muted">Kosongkan jika tidak ingin mengubah gambar</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light" style="padding: 20px 24px;">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal" style="padding: 10px 24px;">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+                        <i class="bi bi-check-circle me-2"></i>Update Varian
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3 bg-white" data-bs-dismiss="modal" style="z-index: 1;"></button>
+                <img id="modalImage" src="" alt="" class="img-fluid w-100">
             </div>
         </div>
     </div>
 </div>
 @endsection
 
-<!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 z-50 hidden" style="backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.7);" onclick="closeImageModal()">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <!-- Close Button -->
-        <button onclick="closeImageModal()" class="fixed top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-800 rounded-full shadow-lg transition-all duration-200">
-            <i class="bi bi-x text-2xl font-bold"></i>
-        </button>
-        
-        <!-- Image Container -->
-        <div class="relative max-w-2xl w-full" onclick="event.stopPropagation()">
-            <img id="modalImage" src="" alt="" class="w-full h-auto max-h-[60vh] object-contain bg-white border-4 border-white shadow-2xl rounded">
-        </div>
-    </div>
-</div>
+@push('styles')
+<style>
+/* Modal Animations */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Modal Backdrop */
+.modal-backdrop.show {
+    opacity: 0.6;
+    backdrop-filter: blur(4px);
+}
+
+/* Form Inputs */
+.modal .form-control,
+.modal .form-select {
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    transition: all 0.2s;
+}
+
+.modal .form-control:focus,
+.modal .form-select:focus {
+    border-color: #DC143C;
+    box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+}
+
+.modal .form-label {
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+/* File Input */
+.modal input[type="file"] {
+    padding: 8px 12px;
+}
+
+/* Buttons */
+.modal .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.modal .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.modal .btn-light:hover {
+    background: #f0f0f0;
+}
+
+/* Image Preview in Modal */
+.modal img.img-thumbnail {
+    border-radius: 8px;
+    border: 2px solid #e5e5e5;
+}
+</style>
+@endpush
 
 @push('scripts')
 <script>
-// Image Modal Functions
-function openImageModal(imageSrc, altText) {
+function showImageModal(imageSrc) {
     document.getElementById('modalImage').src = imageSrc;
-    document.getElementById('modalImage').alt = altText;
-    document.getElementById('imageModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    new bootstrap.Modal(document.getElementById('imageModal')).show();
 }
 
-function closeImageModal() {
-    document.getElementById('imageModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// Close modal with ESC key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeImageModal();
-    }
+// Smooth modal animations
+document.addEventListener('DOMContentLoaded', function() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('show.bs.modal', function() {
+            this.querySelector('.modal-dialog').style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.querySelector('.modal-dialog').style.transform = 'scale(1)';
+            }, 10);
+        });
+    });
 });
-
-// Image Preview for Add Variant
-const variantImagesInput = document.getElementById('variantImages');
-if (variantImagesInput) {
-    variantImagesInput.addEventListener('change', function(e) {
-        const preview = document.getElementById('variantImagePreview');
-        preview.innerHTML = '';
-        preview.style.display = 'grid';
-        
-        const files = Array.from(e.target.files);
-        
-        files.forEach((file, index) => {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative';
-                    div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-20 object-cover border border-gray-200">
-                        <span class="absolute top-1 left-1 px-2 py-0.5 bg-black bg-opacity-70 text-white text-xs font-bold">
-                            ${index + 1}
-                        </span>
-                    `;
-                    preview.appendChild(div);
-                };
-                
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        if (files.length === 0) {
-            preview.style.display = 'none';
-        }
-    });
-}
-
-// Image Preview for Edit Variant (multiple variants)
-@foreach($product->variants as $variant)
-const variantImagesEdit{{ $variant->id }} = document.getElementById('variantImagesEdit{{ $variant->id }}');
-if (variantImagesEdit{{ $variant->id }}) {
-    variantImagesEdit{{ $variant->id }}.addEventListener('change', function(e) {
-        const preview = document.getElementById('variantImagePreviewEdit{{ $variant->id }}');
-        preview.innerHTML = '';
-        preview.style.display = 'grid';
-        
-        const files = Array.from(e.target.files);
-        
-        files.forEach((file, index) => {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative';
-                    div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-20 object-cover border border-gray-200">
-                        <span class="absolute top-1 left-1 px-2 py-0.5 bg-black bg-opacity-70 text-white text-xs font-bold">
-                            NEW ${index + 1}
-                        </span>
-                    `;
-                    preview.appendChild(div);
-                };
-                
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        if (files.length === 0) {
-            preview.style.display = 'none';
-        }
-    });
-}
-@endforeach
 </script>
 @endpush

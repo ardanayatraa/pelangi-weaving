@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use App\Models\Pesanan;
 use App\Models\Pengiriman;
 use Illuminate\Http\Request;
 
@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['pelanggan', 'items', 'payment']);
+        $query = Pesanan::with(['pelanggan', 'items', 'payment']);
         
         if ($request->has('status') && $request->status != '') {
             $query->where('status_pesanan', $request->status);
@@ -42,11 +42,11 @@ class OrderController extends Controller
         $orders = $perPage == 'all' ? $query->get() : $query->paginate((int)$perPage);
         
         $status_counts = [
-            'baru' => Order::where('status_pesanan', 'baru')->count(),
-            'diproses' => Order::where('status_pesanan', 'diproses')->count(),
-            'dikirim' => Order::where('status_pesanan', 'dikirim')->count(),
-            'selesai' => Order::where('status_pesanan', 'selesai')->count(),
-            'batal' => Order::where('status_pesanan', 'batal')->count(),
+            'baru' => Pesanan::where('status_pesanan', 'baru')->count(),
+            'diproses' => Pesanan::where('status_pesanan', 'diproses')->count(),
+            'dikirim' => Pesanan::where('status_pesanan', 'dikirim')->count(),
+            'selesai' => Pesanan::where('status_pesanan', 'selesai')->count(),
+            'batal' => Pesanan::where('status_pesanan', 'batal')->count(),
         ];
         
         return view('admin.orders.index', compact('orders', 'status_counts'));
@@ -54,7 +54,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::with(['pelanggan', 'items.product', 'items.productVariant', 'payment', 'pengiriman'])
+        $order = Pesanan::with(['pelanggan', 'items.product', 'items.productVariant', 'payment', 'pengiriman'])
             ->findOrFail($id);
         
         return view('admin.orders.show', compact('order'));
@@ -62,7 +62,7 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
+        $order = Pesanan::findOrFail($id);
         
         $validated = $request->validate([
             'status_pesanan' => 'required|in:baru,diproses,dikirim,selesai,batal',
@@ -76,7 +76,7 @@ class OrderController extends Controller
     
     public function updateShipping(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
+        $order = Pesanan::findOrFail($id);
         
         $validated = $request->validate([
             'kurir' => 'required|string|max:50',
@@ -107,7 +107,7 @@ class OrderController extends Controller
     
     public function printInvoice($id)
     {
-        $order = Order::with(['pelanggan', 'items.product', 'items.productVariant', 'payment'])
+        $order = Pesanan::with(['pelanggan', 'items.product', 'items.productVariant', 'payment'])
             ->findOrFail($id);
         
         return view('admin.orders.invoice', compact('order'));

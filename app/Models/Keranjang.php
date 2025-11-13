@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Cart extends Model
+class Keranjang extends Model
 {
     protected $table = 'keranjang';
     protected $primaryKey = 'id_keranjang';
@@ -28,12 +28,12 @@ class Cart extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'id_produk', 'id_produk');
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 
     public function productVariant(): BelongsTo
     {
-        return $this->belongsTo(ProductVariant::class, 'id_varian', 'id_varian');
+        return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
     }
 
     public function getSubtotalAttribute(): float

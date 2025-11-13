@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductImage extends Model
+class GambarProduk extends Model
 {
     protected $table = 'gambar_produk';
     protected $primaryKey = 'id_gambar';
@@ -24,11 +24,11 @@ class ProductImage extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'id_produk', 'id_produk');
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 
     public function productVariant(): BelongsTo
     {
-        return $this->belongsTo(ProductVariant::class, 'id_varian', 'id_varian');
+        return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
     }
 }

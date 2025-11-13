@@ -130,21 +130,25 @@
             <div class="card border-0 shadow-sm" style="border-radius: 12px;">
                 <div class="card-body p-3">
                     @if($product->images->first())
-                    <img src="{{ Storage::url($product->images->first()->path) }}" class="product-image-main mb-3" id="mainImage" alt="{{ $product->nama_produk }}">
+                    <img src="{{ asset('storage/' . $product->images->first()->path) }}" 
+                         class="product-image-main mb-3" 
+                         id="mainImage" 
+                         alt="{{ $product->nama_produk }}">
                     @else
-                    <div class="product-image-main bg-light d-flex align-items-center justify-content-center mb-3">
+                    <div class="product-image-main bg-light d-flex align-items-center justify-content-center mb-3" id="mainImage">
                         <i class="bi bi-image text-muted" style="font-size: 5rem;"></i>
                     </div>
                     @endif
                     
                     <!-- Thumbnails -->
-                    @if($product->images->count() > 1)
-                    <div class="d-flex gap-2 overflow-auto">
+                    <div class="d-flex gap-2 overflow-auto" id="thumbnailContainer">
                         @foreach($product->images as $image)
-                        <img src="{{ Storage::url($image->path) }}" class="product-image-thumb {{ $loop->first ? 'active' : '' }}" onclick="changeImage(this)" alt="{{ $product->nama_produk }}">
+                        <img src="{{ asset('storage/' . $image->path) }}" 
+                             class="product-image-thumb {{ $loop->first ? 'active' : '' }}" 
+                             onclick="changeImage(this)" 
+                             alt="{{ $product->nama_produk }}">
                         @endforeach
                     </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -368,16 +372,67 @@ function updateVariantInfo() {
         document.getElementById('selectedVariantId').value = matchingVariant.id_varian;
         document.getElementById('displayPrice').textContent = 'Rp ' + parseInt(matchingVariant.harga).toLocaleString('id-ID');
         document.getElementById('stockBadge').textContent = 'Stok: ' + matchingVariant.stok;
-        document.getElementById('availableStock').textContent = matchingVariant.stok;
-        document.getElementById('quantity').max = matchingVariant.stok;
+        
+        const availableStockEl = document.getElementById('availableStock');
+        if (availableStockEl) availableStockEl.textContent = matchingVariant.stok;
+        
+        const quantityInput = document.getElementById('quantity');
+        if (quantityInput) {
+            quantityInput.max = matchingVariant.stok;
+            if (parseInt(quantityInput.value) > matchingVariant.stok) {
+                quantityInput.value = matchingVariant.stok;
+            }
+        }
+        
         document.getElementById('variantError').style.display = 'none';
         
         // Update gambar jika varian punya gambar
         if (matchingVariant.gambar_varian) {
-            const mainImage = document.getElementById('mainProductImage');
+            const mainImage = document.getElementById('mainImage');
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            
             if (mainImage) {
+                // Ganti gambar utama dengan gambar varian
                 mainImage.src = '/storage/' + matchingVariant.gambar_varian;
+                
+                // Update thumbnails - tampilkan gambar varian
+                if (thumbnailContainer) {
+                    thumbnailContainer.innerHTML = `
+                        <img src="/storage/${matchingVariant.gambar_varian}" 
+                             class="product-image-thumb active" 
+                             onclick="changeImage(this)" 
+                             alt="${matchingVariant.nama_varian}">
+                    `;
+                }
             }
+        } else {
+            // Jika varian tidak punya gambar, kembalikan ke gambar produk default
+            resetToDefaultImages();
+        }
+    }
+}
+
+function resetToDefaultImages() {
+    const productImages = @json($product->images->map(function($img) {
+        return asset('storage/' . $img->path);
+    }));
+    
+    const mainImage = document.getElementById('mainImage');
+    const thumbnailContainer = document.getElementById('thumbnailContainer');
+    
+    if (productImages.length > 0 && mainImage) {
+        mainImage.src = productImages[0];
+        
+        if (thumbnailContainer) {
+            thumbnailContainer.innerHTML = '';
+            productImages.forEach((imgSrc, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = imgSrc;
+                thumb.className = 'product-image-thumb' + (index === 0 ? ' active' : '');
+                thumb.onclick = function() { changeImage(this); };
+                thumb.alt = '{{ $product->nama_produk }}';
+                thumbnailContainer.appendChild(thumb);
+            });
         }
     }
 }

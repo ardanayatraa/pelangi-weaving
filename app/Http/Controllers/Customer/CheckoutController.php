@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Payment;
+use App\Models\Keranjang;
+use App\Models\Pesanan;
+use App\Models\DetailPesanan;
+use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class CheckoutController extends Controller
         
         $selectedIds = explode(',', $selectedIds);
         
-        $cartItems = Cart::with(['product', 'productVariant'])
+        $cartItems = Keranjang::with(['product', 'productVariant'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->whereIn('id_keranjang', $selectedIds)
             ->get();
@@ -74,7 +74,7 @@ class CheckoutController extends Controller
         // Get only selected items
         $selectedIds = explode(',', $validated['selected_items']);
         
-        $cartItems = Cart::with(['productVariant', 'product'])
+        $cartItems = Keranjang::with(['productVariant', 'product'])
             ->where('id_pelanggan', $pelangganId)
             ->whereIn('id_keranjang', $selectedIds)
             ->get();
@@ -97,7 +97,7 @@ class CheckoutController extends Controller
             
             $nomorInvoice = 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
             
-            $order = Order::create([
+            $order = Pesanan::create([
                 'id_pelanggan' => $pelangganId,
                 'nomor_invoice' => $nomorInvoice,
                 'tanggal_pesanan' => now(),
@@ -111,7 +111,7 @@ class CheckoutController extends Controller
             foreach ($cartItems as $cartItem) {
                 $harga = $cartItem->productVariant ? $cartItem->productVariant->harga : $cartItem->product->harga;
                 
-                OrderItem::create([
+                DetailPesanan::create([
                     'id_pesanan' => $order->id_pesanan,
                     'id_produk' => $cartItem->id_produk,
                     'id_varian' => $cartItem->id_varian,
@@ -144,7 +144,7 @@ class CheckoutController extends Controller
             $midtransService = app(MidtransService::class);
             $snapToken = $midtransService->createTransaction($order, $cartItems);
             
-            Payment::create([
+            Pembayaran::create([
                 'id_pesanan' => $order->id_pesanan,
                 'midtrans_order_id' => $nomorInvoice,
                 'snap_token' => $snapToken,
@@ -154,7 +154,7 @@ class CheckoutController extends Controller
             DB::commit();
             
             // Delete only selected items from cart
-            Cart::where('id_pelanggan', $pelangganId)
+            Keranjang::where('id_pelanggan', $pelangganId)
                 ->whereIn('id_keranjang', $selectedIds)
                 ->delete();
             

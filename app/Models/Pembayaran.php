@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Payment extends Model
+class Pembayaran extends Model
 {
     protected $table = 'pembayaran';
     protected $primaryKey = 'id_pembayaran';
@@ -28,7 +28,7 @@ class Payment extends Model
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'id_pesanan', 'id_pesanan');
+        return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
     public function isPaid(): bool

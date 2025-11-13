@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Kategori extends Model
 {
     protected $table = 'kategori';
     protected $primaryKey = 'id_kategori';
@@ -18,12 +18,12 @@ class Category extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'id_kategori', 'id_kategori');
+        return $this->hasMany(Produk::class, 'id_kategori', 'id_kategori');
     }
 
     public function activeProducts(): HasMany
     {
-        return $this->hasMany(Product::class, 'id_kategori', 'id_kategori')
+        return $this->hasMany(Produk::class, 'id_kategori', 'id_kategori')
             ->where('status', 'aktif');
     }
 }
