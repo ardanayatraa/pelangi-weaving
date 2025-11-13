@@ -1,0 +1,189 @@
+<?php
+
+namespace App\Http\Controllers\Customer;
+
+use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use App\Models\Pengiriman;
+use App\Services\MidtransService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class CheckoutController extends Controller
+{
+    public function index(Request $request)
+    {
+        // Get selected cart items from request (comma-separated IDs)
+        $selectedIds = $request->input('items');
+        
+        if (!$selectedIds) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Pilih produk yang ingin dibeli!');
+        }
+        
+        $selectedIds = explode(',', $selectedIds);
+        
+        $cartItems = Cart::with(['product', 'productVariant'])
+            ->where('id_pelanggan', Auth::guard('pelanggan')->id())
+            ->whereIn('id_keranjang', $selectedIds)
+            ->get();
+        
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Keranjang belanja kosong!');
+        }
+        
+        // Check stock
+        foreach ($cartItems as $item) {
+            if ($item->productVariant && $item->productVariant->stok < $item->jumlah) {
+                return redirect()->route('cart.index')
+                    ->with('error', "Stok {$item->productVariant->nama_varian} tidak mencukupi!");
+            }
+        }
+        
+        $subtotal = $cartItems->sum(function($item) {
+            $harga = $item->productVariant ? $item->productVariant->harga : $item->product->harga;
+            return $item->jumlah * $harga;
+        });
+        
+        $pelanggan = Auth::guard('pelanggan')->user();
+        
+        return view('customer.checkout.index', compact('cartItems', 'subtotal', 'pelanggan'));
+    }
+
+    public function process(Request $request)
+    {
+        $validated = $request->validate([
+            'shipping_address' => 'required|string',
+            'shipping_city' => 'required|string',
+            'shipping_province' => 'required|string',
+            'shipping_postal_code' => 'required|string',
+            'courier_service' => 'required|string|max:50',
+            'courier_type' => 'required|string|max:50',
+            'shipping_cost' => 'required|numeric|min:0',
+            'notes' => 'nullable|string',
+            'selected_items' => 'required|string', // comma-separated cart IDs
+        ]);
+        
+        $pelangganId = Auth::guard('pelanggan')->id();
+        
+        // Get only selected items
+        $selectedIds = explode(',', $validated['selected_items']);
+        
+        $cartItems = Cart::with(['productVariant', 'product'])
+            ->where('id_pelanggan', $pelangganId)
+            ->whereIn('id_keranjang', $selectedIds)
+            ->get();
+        
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Keranjang belanja kosong!');
+        }
+        
+        DB::beginTransaction();
+        
+        try {
+            $subtotal = $cartItems->sum(function($item) {
+                $harga = $item->productVariant ? $item->productVariant->harga : $item->product->harga;
+                return $item->jumlah * $harga;
+            });
+            
+            $ongkir = $validated['shipping_cost'];
+            $totalBayar = $subtotal + $ongkir;
+            
+            $nomorInvoice = 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+            
+            $order = Order::create([
+                'id_pelanggan' => $pelangganId,
+                'nomor_invoice' => $nomorInvoice,
+                'tanggal_pesanan' => now(),
+                'subtotal' => $subtotal,
+                'ongkir' => $ongkir,
+                'total_bayar' => $totalBayar,
+                'status_pesanan' => 'baru',
+                'catatan' => $validated['notes'],
+            ]);
+            
+            foreach ($cartItems as $cartItem) {
+                $harga = $cartItem->productVariant ? $cartItem->productVariant->harga : $cartItem->product->harga;
+                
+                OrderItem::create([
+                    'id_pesanan' => $order->id_pesanan,
+                    'id_produk' => $cartItem->id_produk,
+                    'id_varian' => $cartItem->id_varian,
+                    'jumlah' => $cartItem->jumlah,
+                    'harga_satuan' => $harga,
+                    'subtotal' => $cartItem->jumlah * $harga,
+                ]);
+                
+                if ($cartItem->productVariant) {
+                    $cartItem->productVariant->decrement('stok', $cartItem->jumlah);
+                } else {
+                    $cartItem->product->decrement('stok', $cartItem->jumlah);
+                }
+            }
+            
+            $fullAddress = $validated['shipping_address'] . ', ' . 
+                          $validated['shipping_city'] . ', ' . 
+                          $validated['shipping_province'] . ' ' . 
+                          $validated['shipping_postal_code'];
+            
+            Pengiriman::create([
+                'id_pesanan' => $order->id_pesanan,
+                'kurir' => strtoupper($validated['courier_service']),
+                'layanan' => strtoupper($validated['courier_type']),
+                'ongkir' => $ongkir,
+                'alamat_pengiriman' => $fullAddress,
+                'status_pengiriman' => 'menunggu',
+            ]);
+            
+            $midtransService = app(MidtransService::class);
+            $snapToken = $midtransService->createTransaction($order, $cartItems);
+            
+            Payment::create([
+                'id_pesanan' => $order->id_pesanan,
+                'midtrans_order_id' => $nomorInvoice,
+                'snap_token' => $snapToken,
+                'status_pembayaran' => 'unpaid',
+            ]);
+            
+            DB::commit();
+            
+            // Delete only selected items from cart
+            Cart::where('id_pelanggan', $pelangganId)
+                ->whereIn('id_keranjang', $selectedIds)
+                ->delete();
+            
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'snap_token' => $snapToken,
+                    'order_number' => $order->nomor_invoice,
+                    'message' => 'Pesanan berhasil dibuat!'
+                ]);
+            }
+            
+            return redirect()->route('payment.show', $order->nomor_invoice)
+                ->with('success', 'Pesanan berhasil dibuat! Silakan lakukan pembayaran.');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            \Log::error('Checkout error: ' . $e->getMessage());
+            
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return back()->withInput()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+}
