@@ -12,7 +12,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pesanan::with(['items.product', 'items.productVariant', 'payment', 'pengiriman'])
+        $query = Pesanan::with(['items.produk.images', 'items.varian', 'payment', 'pengiriman'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id());
         
         if ($request->has('status') && $request->status != '') {
@@ -31,7 +31,7 @@ class OrderController extends Controller
             'payment_param' => $request->get('payment')
         ]);
         
-        $order = Pesanan::with(['items.product', 'items.productVariant', 'payment', 'pengiriman'])
+        $order = Pesanan::with(['items.produk.images', 'items.varian', 'payment', 'pengiriman'])
             ->where('nomor_invoice', $nomorInvoice)
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->firstOrFail();
@@ -149,13 +149,39 @@ class OrderController extends Controller
         $order->update(['status_pesanan' => 'batal']);
         
         foreach ($order->items as $item) {
-            if ($item->productVariant) {
-                $item->productVariant->increment('stok', $item->jumlah);
-            } else {
-                $item->product->increment('stok', $item->jumlah);
+            if ($item->varian) {
+                $item->varian->increment('stok', $item->jumlah);
+            } elseif ($item->produk) {
+                $item->produk->increment('stok', $item->jumlah);
             }
         }
         
         return back()->with('success', 'Pesanan berhasil dibatalkan!');
+    }
+    
+    public function complete($nomorInvoice)
+    {
+        $order = Pesanan::where('nomor_invoice', $nomorInvoice)
+            ->where('id_pelanggan', Auth::guard('pelanggan')->id())
+            ->firstOrFail();
+        
+        // Hanya bisa konfirmasi jika status dikirim
+        if ($order->status_pesanan != 'dikirim') {
+            return back()->with('error', 'Pesanan belum dapat dikonfirmasi!');
+        }
+        
+        // Update status pesanan menjadi selesai
+        $order->update(['status_pesanan' => 'selesai']);
+        
+        // Update status pengiriman menjadi sampai
+        if ($order->pengiriman) {
+            $order->pengiriman->update([
+                'status_pengiriman' => 'sampai',
+                'tanggal_terima' => now(),
+            ]);
+        }
+        
+        return redirect()->route('orders.show', $nomorInvoice)
+            ->with('success', 'Terima kasih! Pesanan telah dikonfirmasi selesai.');
     }
 }

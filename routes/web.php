@@ -60,6 +60,7 @@ Route::middleware(['pelanggan'])->group(function () {
     Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{nomorInvoice}', [CustomerOrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{nomorInvoice}/cancel', [CustomerOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('/orders/{nomorInvoice}/complete', [CustomerOrderController::class, 'complete'])->name('orders.complete');
     
     // Payment
     Route::get('/payment/finish', [PaymentController::class, 'finish'])->name('payment.finish');

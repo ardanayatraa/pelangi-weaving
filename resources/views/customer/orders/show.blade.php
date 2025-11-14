@@ -16,10 +16,10 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <!-- Main Content -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-2 space-y-4 md:space-y-6">
             <!-- Order Status -->
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <div class="flex items-center justify-between mb-6">
@@ -123,22 +123,34 @@
                 <div class="space-y-4">
                     @foreach($order->items as $item)
                     @php
-                        $product = $item->product;
-                        $variant = $item->productVariant;
-                        $imageUrl = $product->gambar_utama ?? 'products/default.jpg';
+                        $produk = $item->produk;
+                        $varian = $item->varian;
+                        
+                        // Get image URL
+                        $imageUrl = null;
+                        if ($varian && $varian->gambar_varian) {
+                            $imageUrl = $varian->gambar_varian;
+                        } elseif ($produk && $produk->images->first()) {
+                            $imageUrl = $produk->images->first()->path;
+                        }
                     @endphp
                     <div class="flex gap-4 pb-4 {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
-                        <img src="{{ asset('storage/' . $imageUrl) }}" 
-                             alt="{{ $product->nama_produk }}"
-                             class="w-24 h-24 object-cover rounded border border-gray-200">
+                        @if($imageUrl)
+                            <img src="{{ asset('storage/' . $imageUrl) }}" 
+                                 alt="{{ $produk->nama_produk }}"
+                                 class="w-24 h-24 object-cover rounded border border-gray-200"
+                                 onerror="this.src='{{ asset('images/placeholder.png') }}'">
+                        @else
+                            <div class="w-24 h-24 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
+                                <i class="bi bi-image text-gray-400 text-3xl"></i>
+                            </div>
+                        @endif
                         
                         <div class="flex-1">
-                            <h4 class="font-semibold text-gray-900 mb-1">{{ $product->nama_produk }}</h4>
-                            @if($variant)
+                            <h4 class="font-semibold text-gray-900 mb-1">{{ $produk->nama_produk }}</h4>
+                            @if($varian)
                             <p class="text-sm text-gray-600 mb-2">
-                                @if($variant->warna) {{ $variant->warna }} @endif
-                                @if($variant->ukuran) • {{ $variant->ukuran }} @endif
-                                @if($variant->jenis_benang) • {{ $variant->jenis_benang }} @endif
+                                {{ $varian->nama_varian }}
                             </p>
                             @endif
                             <div class="flex items-center justify-between">
@@ -160,26 +172,36 @@
                 </h3>
                 
                 <div class="space-y-3">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <span class="text-gray-600">Kurir</span>
-                        <span class="font-semibold text-gray-900">{{ $order->pengiriman->kurir }} - {{ $order->pengiriman->layanan }}</span>
+                        <span class="font-bold text-gray-900 text-right">
+                            {{ strtoupper($order->pengiriman->kurir ?? 'POS') }} - {{ strtoupper($order->pengiriman->layanan ?? 'PAKET KILAT KHUSUS') }}
+                        </span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Status</span>
+                        @php
+                        $statusPengiriman = [
+                            'menunggu' => ['text' => 'Menunggu', 'class' => 'text-yellow-600'],
+                            'dalam_perjalanan' => ['text' => 'Dalam Perjalanan', 'class' => 'text-blue-600'],
+                            'sampai' => ['text' => 'Sampai', 'class' => 'text-green-600'],
+                        ];
+                        $currentStatus = $statusPengiriman[$order->pengiriman->status_pengiriman] ?? ['text' => 'Menunggu', 'class' => 'text-gray-600'];
+                        @endphp
+                        <span class="font-bold {{ $currentStatus['class'] }} text-right">{{ $currentStatus['text'] }}</span>
                     </div>
                     
                     @if($order->pengiriman->no_resi)
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">No. Resi</span>
-                        <span class="font-mono font-semibold text-gray-900">{{ $order->pengiriman->no_resi }}</span>
+                    <div class="pt-3 border-t border-gray-200">
+                        <p class="text-sm text-gray-600 mb-1">No. Resi:</p>
+                        <p class="font-mono font-bold text-gray-900 text-lg">{{ $order->pengiriman->no_resi }}</p>
                     </div>
                     @endif
                     
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Status</span>
-                        <span class="font-semibold text-gray-900">{{ ucfirst(str_replace('_', ' ', $order->pengiriman->status_pengiriman)) }}</span>
-                    </div>
-                    
                     <div class="pt-3 border-t border-gray-200">
-                        <p class="text-sm text-gray-600 mb-1">Alamat Pengiriman:</p>
-                        <p class="text-gray-900">{{ $order->pengiriman->alamat_pengiriman }}</p>
+                        <p class="text-sm text-gray-600 mb-2">Alamat Pengiriman:</p>
+                        <p class="text-gray-900 leading-relaxed">{{ $order->pengiriman->alamat_pengiriman }}</p>
                     </div>
                 </div>
             </div>
@@ -229,13 +251,76 @@
                 @endif
 
                 <!-- Actions -->
-                <div class="space-y-2">
+                <div class="space-y-2" x-data="{ showConfirmModal: false }">
                     @if($order->payment && in_array($order->payment->status_pembayaran, ['unpaid', 'pending']) && !in_array($order->status_pesanan, ['batal', 'selesai']))
                     <a href="{{ route('payment.show', $order->nomor_invoice) }}" 
                        class="block w-full text-center px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold rounded-lg transition-all shadow-lg transform hover:scale-105">
                         <i class="bi bi-credit-card mr-2"></i>
                         Bayar Sekarang
                     </a>
+                    @endif
+                    
+                    @if($order->status_pesanan == 'dikirim')
+                    <button @click="showConfirmModal = true" 
+                            class="block w-full px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold rounded-lg transition-all shadow-lg transform hover:scale-105">
+                        <i class="bi bi-check-circle mr-2"></i>
+                        Pesanan Sudah Diterima
+                    </button>
+                    
+                    <!-- Confirmation Modal (No Backdrop) -->
+                    <div x-show="showConfirmModal" x-cloak 
+                         class="fixed inset-0 z-[9999] overflow-y-auto flex items-center justify-center p-4" 
+                         style="display: none;">
+                        <div @click.away="showConfirmModal = false" x-show="showConfirmModal" 
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 transform scale-90"
+                             x-transition:enter-end="opacity-100 transform scale-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100 transform scale-100"
+                             x-transition:leave-end="opacity-0 transform scale-90"
+                             class="relative bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border-4 border-green-500">
+                            <div class="bg-gradient-to-r from-green-50 to-green-100 px-6 py-4 border-b border-green-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="bi bi-check-circle text-white text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-900">Konfirmasi Penerimaan</h3>
+                                        <p class="text-sm text-gray-600">Pesanan sudah diterima?</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6">
+                                <p class="text-gray-700 mb-4">
+                                    Dengan mengkonfirmasi, Anda menyatakan bahwa pesanan telah diterima dengan baik dan sesuai. 
+                                    Status pesanan akan diubah menjadi <strong>Selesai</strong>.
+                                </p>
+                                
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                                    <p class="text-sm text-yellow-800">
+                                        <i class="bi bi-exclamation-triangle mr-1"></i>
+                                        Pastikan Anda sudah menerima dan memeriksa pesanan sebelum konfirmasi.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex justify-end gap-3">
+                                <button @click="showConfirmModal = false" 
+                                        class="px-5 py-2.5 bg-white hover:bg-gray-100 text-gray-700 font-semibold rounded-lg border border-gray-300 transition">
+                                    Batal
+                                </button>
+                                <form action="{{ route('orders.complete', $order->nomor_invoice) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" 
+                                            class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition hover:shadow-lg">
+                                        <i class="bi bi-check-circle mr-2"></i>
+                                        Ya, Sudah Diterima
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     @endif
                     
                     @if(in_array($order->status_pesanan, ['baru']) && $order->payment && $order->payment->status_pembayaran != 'paid')

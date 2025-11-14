@@ -86,7 +86,7 @@ class PaymentController extends Controller
             ->with('success', $message);
     }
     
-    private function checkPaymentStatus(Payment $payment)
+    private function checkPaymentStatus(Pembayaran $payment)
     {
         try {
             Log::info('Checking payment status dari Midtrans untuk order: ' . $payment->midtrans_order_id);

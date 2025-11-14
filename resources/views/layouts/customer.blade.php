@@ -6,297 +6,197 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pelangi Traditional Weaving Sidemen')</title>
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#FEF2F2',
+                            100: '#FEE2E2',
+                            200: '#FECACA',
+                            300: '#FCA5A5',
+                            400: '#F87171',
+                            500: '#EF4444',
+                            600: '#DC2626',
+                            700: '#B91C1C',
+                            800: '#991B1B',
+                            900: '#7F1D1D',
+                        },
+                        dark: {
+                            800: '#1F2937',
+                            900: '#111827',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    @vite(['resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <style>
-        :root {
-            --primary-red: #DC2626;
-            --dark-red: #B91C1C;
-            --light-red: #EF4444;
-            --black: #1F2937;
-            --dark-black: #111827;
-            --white: #FFFFFF;
-            --off-white: #F9FAFB;
-            --gray-light: #E5E7EB;
-            --gray-medium: #6B7280;
+        [x-cloak] { display: none !important; }
+        
+        /* Custom scrollbar */
+        .scrollbar-thin::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--off-white);
-            color: var(--black);
-        }
-        
-        .navbar-custom {
-            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        
-        .navbar-custom .navbar-brand {
-            color: white !important;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        
-        .navbar-custom .nav-link {
-            color: white !important;
-            font-weight: 500;
-            padding: 0.5rem 1rem !important;
-            transition: all 0.3s;
-        }
-        
-        .navbar-custom .nav-link:hover {
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
-        }
-        
-        .btn-primary-custom {
-            background: var(--primary-red);
-            border: none;
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1.5rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary-custom:hover {
-            background: var(--dark-red);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-        }
-        
-        .card-custom {
-            border: none;
-            border-radius: 12px;
-            background: var(--white);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-        }
-        
-        .card-custom:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
-        }
-        
-        .badge-custom {
-            background: var(--primary-red);
-            color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        
-        .search-box {
-            background: white;
-            border-radius: 24px;
-            padding: 0.5rem 1.5rem;
-            border: 2px solid var(--gray-light);
-        }
-        
-        .search-box:focus {
-            border-color: var(--primary-red);
-            outline: none;
-        }
-        
-        .bg-dark-custom {
-            background-color: var(--dark-black) !important;
-        }
-        
-        .text-red-custom {
-            color: var(--primary-red) !important;
-        }
-        
-        .btn-outline-red {
-            border: 2px solid var(--primary-red);
-            color: var(--primary-red);
-            background: transparent;
-        }
-        
-        .btn-outline-red:hover {
-            background: var(--primary-red);
-            color: white;
-        }
-        
-        .hover-red:hover {
-            color: var(--primary-red) !important;
-        }
-        
-        .alert-success {
-            background: #DEF7EC;
-            border-color: #84E1BC;
-            color: #03543F;
-        }
-        
-        .alert-danger {
-            background: #FDE8E8;
-            border-color: #F98080;
-            color: #9B1C1C;
-        }
-        
-        .btn-success {
-            background: var(--primary-red) !important;
-            border-color: var(--primary-red) !important;
-        }
-        
-        .btn-success:hover {
-            background: var(--dark-red) !important;
-            border-color: var(--dark-red) !important;
-        }
-        
-        .text-primary {
-            color: var(--primary-red) !important;
-        }
-        
-        .bg-primary {
-            background-color: var(--primary-red) !important;
-        }
-        
-        .border-primary {
-            border-color: var(--primary-red) !important;
-        }
-        
-        /* Override Bootstrap btn-primary */
-        .btn-primary {
-            background-color: var(--primary-red) !important;
-            border-color: var(--primary-red) !important;
-            color: white !important;
-        }
-        
-        .btn-primary:hover,
-        .btn-primary:focus,
-        .btn-primary:active {
-            background-color: var(--dark-red) !important;
-            border-color: var(--dark-red) !important;
-            color: white !important;
-        }
-        
-        .btn-info {
-            background-color: var(--black) !important;
-            border-color: var(--black) !important;
-            color: white !important;
-        }
-        
-        .btn-info:hover {
-            background-color: var(--dark-black) !important;
-            border-color: var(--dark-black) !important;
+        /* Hide scrollbar for mobile but keep functionality */
+        @media (max-width: 768px) {
+            .overflow-x-auto::-webkit-scrollbar {
+                display: none;
+            }
+            .overflow-x-auto {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen flex flex-col">
     <!-- Top Bar -->
-    <div class="bg-dark-custom text-white py-2">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="small">
-                    <i class="bi bi-telephone text-red-custom"></i> Hubungi Kami: +62 361-123456
-                </div>
-                <div class="small">
-                     Selamat berbelanja !
-                </div>
+    <div class="bg-dark-900 text-white py-2 hidden md:block">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center text-sm">
+                <div><i class="bi bi-telephone text-primary-600"></i> +62 361-123456</div>
+                <div>Selamat berbelanja!</div>
             </div>
         </div>
     </div>
 
-    <!-- Main Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="bi bi-shop"></i> Pelangi Traditional Weaving
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: white;">
-                <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Search Bar -->
-                <div class="mx-auto d-none d-lg-block" style="width: 400px;">
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-primary-600 to-primary-700 shadow-lg sticky top-0 z-50" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="{{ route('home') }}" class="text-white font-bold text-xl">
+                    <i class="bi bi-shop"></i> Pelangi Weaving
+                </a>
+                
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden lg:block flex-1 max-w-md mx-8">
                     <form action="{{ route('products.index') }}" method="GET">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control search-box" placeholder="Cari produk tenun...">
-                            <button class="btn btn-light" type="submit" style="border-radius: 0 24px 24px 0;">
+                        <div class="relative">
+                            <input type="text" name="search" 
+                                   class="w-full pl-4 pr-12 py-2 rounded-full border-2 border-white/20 bg-white/10 text-white placeholder-white/70 focus:bg-white focus:text-gray-800 focus:placeholder-gray-400 transition"
+                                   placeholder="Cari produk tenun...">
+                            <button type="submit" class="absolute right-0 top-0 h-full px-4 text-white hover:text-gray-200">
                                 <i class="bi bi-search"></i>
                             </button>
                         </div>
                     </form>
                 </div>
                 
-                <ul class="navbar-nav ms-auto align-items-center">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="{{ route('products.index') }}" class="text-white hover:text-gray-200">Produk</a>
+                    
                     @auth('pelanggan')
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center gap-2" href="{{ route('cart.index') }}">
-                            @php
-                                $cartCount = Auth::guard('pelanggan')->user()->carts()->sum('jumlah');
-                            @endphp
-                            @if($cartCount > 0)
-                            <span class="badge rounded-pill" style="background: #FFFFFF; color: #DC2626; font-size: 0.75rem; padding: 0.3rem 0.6rem;">
-                                {{ $cartCount }}
-                            </span>
-                            @endif
-                            <span><i class="bi bi-cart3"></i> Keranjang</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('orders.index') }}">
-                            <i class="bi bi-box-seam"></i> Pesanan
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    <a href="{{ route('cart.index') }}" class="text-white hover:text-gray-200">
+                        <i class="bi bi-cart3"></i> Keranjang
+                        @php
+                            $cartCount = Auth::guard('pelanggan')->user()->carts()->sum('jumlah');
+                        @endphp
+                        @if($cartCount > 0)
+                        <span class="bg-white text-primary-600 text-xs px-2 py-0.5 rounded-full ml-1">{{ $cartCount }}</span>
+                        @endif
+                    </a>
+                    <a href="{{ route('orders.index') }}" class="text-white hover:text-gray-200">
+                        <i class="bi bi-box-seam"></i> Pesanan
+                    </a>
+                    
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="text-white hover:text-gray-200 flex items-center gap-1">
                             <i class="bi bi-person-circle"></i> {{ Auth::guard('pelanggan')->user()->nama }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a href="{{ route('profile.index') }}" class="dropdown-item">
-                                    <i class="bi bi-person-fill"></i> Profile Saya
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="bi bi-box-arrow-right"></i> Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
+                            <i class="bi bi-chevron-down text-xs"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" 
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2">
+                            <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                <i class="bi bi-person-fill"></i> Profile
+                            </a>
+                            <hr class="my-2">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                     @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">
-                            <i class="bi bi-box-arrow-in-right"></i> Masuk
-                        </a>
-                    </li>
-                    <li class="nav-item ms-2">
-                        <a class="btn btn-light btn-sm" href="{{ route('register') }}" style="border-radius: 20px; font-weight: 600;">
-                            Daftar
-                        </a>
-                    </li>
+                    <a href="{{ route('login') }}" class="text-white hover:text-gray-200">Masuk</a>
+                    <a href="{{ route('register') }}" class="bg-white text-primary-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100">
+                        Daftar
+                    </a>
                     @endauth
-                </ul>
+                </div>
+                
+                <button @click="open = !open" class="md:hidden text-white">
+                    <i class="bi text-2xl" :class="open ? 'bi-x' : 'bi-list'"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div x-show="open" class="md:hidden pb-4">
+                <!-- Mobile Search -->
+                <form action="{{ route('products.index') }}" method="GET" class="mb-4">
+                    <div class="relative">
+                        <input type="text" name="search" 
+                               class="w-full pl-4 pr-12 py-2 rounded-full border-2 border-white/20 bg-white/10 text-white placeholder-white/70"
+                               placeholder="Cari produk tenun...">
+                        <button type="submit" class="absolute right-0 top-0 h-full px-4 text-white">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <a href="{{ route('products.index') }}" class="block text-white py-2">Produk</a>
+                @auth('pelanggan')
+                <a href="{{ route('cart.index') }}" class="block text-white py-2">Keranjang</a>
+                <a href="{{ route('orders.index') }}" class="block text-white py-2">Pesanan</a>
+                <a href="{{ route('profile.index') }}" class="block text-white py-2">Profile</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="block text-white py-2">Logout</button>
+                </form>
+                @else
+                <a href="{{ route('login') }}" class="block text-white py-2">Masuk</a>
+                <a href="{{ route('register') }}" class="block text-white py-2">Daftar</a>
+                @endauth
             </div>
         </div>
     </nav>
-
+    
     <!-- Category Bar -->
-    <div class="bg-white border-bottom py-2 shadow-sm">
-        <div class="container">
-            <div class="d-flex gap-3 overflow-auto">
-                <a href="{{ route('products.index') }}" class="text-decoration-none text-dark hover-red">
-                    <i class="bi bi-grid text-red-custom"></i> Semua Produk
+    <div class="bg-white border-b shadow-sm py-2 md:py-3">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-3 md:gap-6 overflow-x-auto whitespace-nowrap pb-1">
+                <a href="{{ route('products.index') }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
+                    <i class="bi bi-grid text-primary-600"></i> Semua Produk
                 </a>
-                <a href="{{ route('products.index', ['category' => 1]) }}" class="text-decoration-none text-dark hover-red">
-                    <i class="bi bi-star text-red-custom"></i> Songket Premium
+                <a href="{{ route('products.index', ['category' => 1]) }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
+                    <i class="bi bi-star text-primary-600"></i> Songket Premium
                 </a>
-                <a href="{{ route('products.index', ['category' => 2]) }}" class="text-decoration-none text-dark hover-red">
-                    <i class="bi bi-heart text-red-custom"></i> Endek Bali
+                <a href="{{ route('products.index', ['category' => 2]) }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
+                    <i class="bi bi-heart text-primary-600"></i> Endek Bali
                 </a>
-                <a href="{{ route('products.index', ['category' => 3]) }}" class="text-decoration-none text-dark hover-red">
-                    <i class="bi bi-bag text-red-custom"></i> Selendang
+                <a href="{{ route('products.index', ['category' => 3]) }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
+                    <i class="bi bi-bag text-primary-600"></i> Selendang
                 </a>
             </div>
         </div>
@@ -304,65 +204,62 @@
 
     <!-- Alerts -->
     @if(session('success'))
-    <div class="container mt-3">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="max-w-7xl mx-auto px-4 mt-4" x-data="{ show: true }">
+        <div x-show="show" class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex justify-between">
+            <span><i class="bi bi-check-circle"></i> {{ session('success') }}</span>
+            <button @click="show = false" class="text-green-600 hover:text-green-800">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
     </div>
     @endif
 
     @if(session('error'))
-    <div class="container mt-3">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-circle"></i> {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="max-w-7xl mx-auto px-4 mt-4" x-data="{ show: true }">
+        <div x-show="show" class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex justify-between">
+            <span><i class="bi bi-exclamation-circle"></i> {{ session('error') }}</span>
+            <button @click="show = false" class="text-red-600 hover:text-red-800">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
     </div>
     @endif
 
     <!-- Content -->
-    @yield('content')
+    <main class="flex-1">
+        @yield('content')
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-dark-custom text-white mt-auto">
+    <footer class="bg-dark-900 text-white mt-auto">
         <!-- Main Footer -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div class="max-w-7xl mx-auto px-4 py-8 md:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
                 <!-- Brand Section -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-2 mb-4">
-                        <i class="bi bi-shop text-red-500 text-3xl"></i>
-                        <h3 class="text-2xl font-bold">Pelangi Traditional Weaving Sidemen</h3>
+                        <i class="bi bi-shop text-primary-600 text-3xl"></i>
+                        <h3 class="text-2xl font-bold">Pelangi Traditional Weaving</h3>
                     </div>
-                    <p class="text-gray-400 mb-4 leading-relaxed">
+                    <p class="text-gray-400 mb-4 leading-relaxed text-sm">
                         UKM tenun tradisional di Desa Sidemen sejak 1979. Menyediakan kain songket berkualitas premium 
                         dengan motif flora dan fauna khas Bali. Benang katun dan sutra dengan pengerjaan teliti dan penuh kesabaran.
                     </p>
                     <div class="flex items-center gap-4 text-sm text-gray-400 mb-6">
-                        <div>
-                            <i class="bi bi-clock-fill text-red-500 me-1"></i>
-                            Sejak 1979
-                        </div>
-                        <div>
-                            <i class="bi bi-star-fill text-yellow-500 me-1"></i>
-                            Rating 4.8
-                        </div>
-                        <div>
-                            <i class="bi bi-award-fill text-red-500 me-1"></i>
-                            40+ ATBM
-                        </div>
+                        <div><i class="bi bi-clock-fill text-primary-600 mr-1"></i> Sejak 1979</div>
+                        <div><i class="bi bi-star-fill text-yellow-500 mr-1"></i> Rating 4.8</div>
+                        <div><i class="bi bi-award-fill text-primary-600 mr-1"></i> 40+ ATBM</div>
                     </div>
                     
                     <!-- Social Media -->
                     <div class="flex items-center gap-3">
-                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors">
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition">
                             <i class="bi bi-facebook"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors">
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition">
                             <i class="bi bi-instagram"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors">
+                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition">
                             <i class="bi bi-whatsapp"></i>
                         </a>
                     </div>
@@ -371,45 +268,27 @@
                 <!-- Menu Cepat -->
                 <div>
                     <h4 class="font-bold text-lg mb-4">Menu Cepat</h4>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="{{ route('home') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Beranda
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('products.index') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Produk
-                            </a>
-                        </li>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Beranda
+                        </a></li>
+                        <li><a href="{{ route('products.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Produk
+                        </a></li>
                         @auth('pelanggan')
-                        <li>
-                            <a href="{{ route('cart.index') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Keranjang
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('orders.index') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Pesanan Saya
-                            </a>
-                        </li>
+                        <li><a href="{{ route('cart.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Keranjang
+                        </a></li>
+                        <li><a href="{{ route('orders.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Pesanan Saya
+                        </a></li>
                         @else
-                        <li>
-                            <a href="{{ route('login') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Login
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('register') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Daftar
-                            </a>
-                        </li>
+                        <li><a href="{{ route('login') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Login
+                        </a></li>
+                        <li><a href="{{ route('register') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Daftar
+                        </a></li>
                         @endauth
                     </ul>
                 </div>
@@ -417,73 +296,44 @@
                 <!-- Kategori Produk -->
                 <div>
                     <h4 class="font-bold text-lg mb-4">Kategori Produk</h4>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="{{ route('products.index', ['kategori' => 'kain-tenun']) }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Kain Tenun
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('products.index', ['kategori' => 'selendang']) }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Selendang
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('products.index', ['kategori' => 'tas']) }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Tas Tenun
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('products.index', ['kategori' => 'aksesoris']) }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Aksesoris
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('products.index') }}" class="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-2">
-                                <i class="bi bi-chevron-right text-xs"></i>
-                                Lihat Semua
-                            </a>
-                        </li>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="{{ route('products.index', ['kategori' => 'kain-tenun']) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Kain Tenun
+                        </a></li>
+                        <li><a href="{{ route('products.index', ['kategori' => 'selendang']) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Selendang
+                        </a></li>
+                        <li><a href="{{ route('products.index', ['kategori' => 'tas']) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Tas Tenun
+                        </a></li>
+                        <li><a href="{{ route('products.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Lihat Semua
+                        </a></li>
                     </ul>
                 </div>
 
                 <!-- Hubungi Kami -->
                 <div>
                     <h4 class="font-bold text-lg mb-4">Hubungi Kami</h4>
-                    <ul class="space-y-4">
+                    <ul class="space-y-4 text-sm">
                         <li class="flex items-start gap-3">
-                            <i class="bi bi-geo-alt-fill text-red-500 text-xl mt-1"></i>
-                            <div>
-                                <p class="text-gray-400 text-sm">
-                                    Jl. Sidemen, Kec. Sidemen<br>
-                                    Kabupaten Karangasem, Bali 80864<br>
-                                    Indonesia
-                                </p>
+                            <i class="bi bi-geo-alt-fill text-primary-600 text-xl mt-1"></i>
+                            <div class="text-gray-400">
+                                Jl. Sidemen, Kec. Sidemen<br>
+                                Kabupaten Karangasem, Bali 80864
                             </div>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="bi bi-telephone-fill text-red-500 text-xl"></i>
-                            <div>
-                                <p class="text-gray-400 text-sm">+62 361-123456</p>
-                                <p class="text-gray-400 text-sm">WhatsApp: +62 812-3456-7890</p>
+                            <i class="bi bi-telephone-fill text-primary-600 text-xl"></i>
+                            <div class="text-gray-400">
+                                +62 361-123456<br>
+                                WhatsApp: +62 812-3456-7890
                             </div>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="bi bi-envelope-fill text-red-500 text-xl"></i>
-                            <div>
-                                <p class="text-gray-400 text-sm">info@pelangiweaving.com</p>
-                                <p class="text-gray-400 text-sm">support@pelangiweaving.com</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i class="bi bi-clock-fill text-red-500 text-xl"></i>
-                            <div>
-                                <p class="text-gray-400 text-sm">Senin - Minggu</p>
-                                <p class="text-gray-400 text-sm">08:00 - 18:00 WITA</p>
+                            <i class="bi bi-envelope-fill text-primary-600 text-xl"></i>
+                            <div class="text-gray-400">
+                                info@pelangiweaving.com
                             </div>
                         </li>
                     </ul>
@@ -493,31 +343,29 @@
 
         <!-- Payment & Shipping -->
         <div class="border-t border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
-                    <!-- Payment -->
+            <div class="max-w-7xl mx-auto px-4 py-4 md:py-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-center">
                     <div>
-                        <p class="text-xs text-gray-500 mb-3">Metode Pembayaran</p>
-                        <div class="flex flex-wrap justify-center gap-2">
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">QRIS</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">Virtual Account</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">Credit Card</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">E-Wallet</span>
+                        <p class="text-xs text-gray-500 mb-2 md:mb-3">Metode Pembayaran</p>
+                        <div class="flex flex-wrap justify-center gap-1.5 md:gap-2">
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">QRIS</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">Virtual Account</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">Credit Card</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">E-Wallet</span>
                         </div>
-                        <p class="text-xs text-gray-600 mt-2">Powered by Midtrans</p>
+                        <p class="text-xs text-gray-600 mt-1 md:mt-2">Powered by Midtrans</p>
                     </div>
                     
-                    <!-- Shipping -->
                     <div>
-                        <p class="text-xs text-gray-500 mb-3">Jasa Pengiriman</p>
-                        <div class="flex flex-wrap justify-center gap-2">
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">JNE</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">TIKI</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">POS</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">J&T</span>
-                            <span class="bg-gray-800 text-white px-3 py-1 rounded text-xs">SiCepat</span>
+                        <p class="text-xs text-gray-500 mb-2 md:mb-3">Jasa Pengiriman</p>
+                        <div class="flex flex-wrap justify-center gap-1.5 md:gap-2">
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">JNE</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">TIKI</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">POS</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">J&T</span>
+                            <span class="bg-gray-800 text-white px-2 md:px-3 py-0.5 md:py-1 rounded text-xs">SiCepat</span>
                         </div>
-                        <p class="text-xs text-gray-600 mt-2">Powered by RajaOngkir</p>
+                        <p class="text-xs text-gray-600 mt-1 md:mt-2">Powered by RajaOngkir</p>
                     </div>
                 </div>
             </div>
@@ -525,56 +373,36 @@
 
         <!-- Bottom Footer -->
         <div class="border-t border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p class="text-sm text-gray-400 text-center md:text-left">
-                        &copy; {{ date('Y') }} <span class="text-red-500 font-semibold">Pelangi Traditional Weaving Sidemen</span>. 
+            <div class="max-w-7xl mx-auto px-4 py-4 md:py-6">
+                <div class="text-center">
+                    <p class="text-xs md:text-sm text-gray-400">
+                        &copy; {{ date('Y') }} <span class="text-primary-600 font-semibold">Pelangi Traditional Weaving Sidemen</span>. 
                         All rights reserved.
-                        <a href="{{ route('admin.login') }}" class="text-gray-600 hover:text-gray-500 transition-colors ms-3" style="font-size: 0.7rem; opacity: 0.5;">•</a>
+                        <a href="{{ route('admin.login') }}" class="text-gray-600 hover:text-gray-500 transition ml-3 text-xs opacity-50">•</a>
                     </p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="btn position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg" 
-            style="width: 50px; height: 50px; background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); border: none; display: none; z-index: 1000; transition: all 0.3s;">
-        <i class="bi bi-arrow-up text-white" style="font-size: 1.5rem;"></i>
-    </button>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/6281234567890?text=Halo%20Pelangi%20Weaving,%20saya%20ingin%20bertanya%20tentang%20produk" 
+       target="_blank"
+       class="fixed bottom-20 md:bottom-20 right-3 md:right-4 z-50 w-12 h-12 md:w-14 md:h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl flex items-center justify-center transition-all transform hover:scale-110 group">
+        <i class="bi bi-whatsapp text-xl md:text-2xl"></i>
+        <span class="hidden md:block absolute right-16 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            Chat Customer Service
+        </span>
+    </a>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Back to Top functionality
-        const backToTopBtn = document.getElementById('backToTop');
-        
-        window.addEventListener('scroll', function() {
-            if (window.pageYOffset > 300) {
-                backToTopBtn.style.display = 'block';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
-        });
-        
-        backToTopBtn.addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // Hover effect
-        backToTopBtn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.boxShadow = '0 8px 20px rgba(220, 38, 38, 0.4)';
-        });
-        
-        backToTopBtn.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-            this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-        });
-    </script>
+    <!-- Back to Top -->
+    <div x-data="{ show: false }" @scroll.window="show = window.pageYOffset > 300" x-show="show" x-cloak
+         class="fixed bottom-3 md:bottom-4 right-3 md:right-4 z-50">
+        <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" 
+                class="w-10 h-10 md:w-12 md:h-12 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-all transform hover:scale-110">
+            <i class="bi bi-arrow-up text-sm md:text-base"></i>
+        </button>
+    </div>
     
     @stack('scripts')
 </body>

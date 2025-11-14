@@ -31,13 +31,29 @@ class DetailPesanan extends Model
         return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
+    public function produk(): BelongsTo
+    {
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 
+    public function varian(): BelongsTo
+    {
+        return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
+    }
+
     public function productVariant(): BelongsTo
     {
         return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
+    }
+    
+    // Accessor untuk harga
+    public function getHargaAttribute()
+    {
+        return $this->harga_satuan;
     }
 }

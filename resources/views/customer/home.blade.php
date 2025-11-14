@@ -3,213 +3,155 @@
 @section('title', 'Beranda - Pelangi Traditional Weaving Sidemen')
 
 @section('content')
-<style>
-    .hero-banner {
-        margin-bottom: 2rem;
-    }
-    
-    .hero-slide {
-        border-radius: 0 0 24px 24px;
-        overflow: hidden;
-    }
-    
-    .category-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        transition: all 0.3s;
-        border: 2px solid #F0F0F0;
-    }
-    
-    .category-card:hover {
-        border-color: #8B0000;
-        box-shadow: 0 4px 16px rgba(139,0,0,0.15);
-    }
-    
-    .category-icon {
-        font-size: 3rem;
-        color: #8B0000;
-        margin-bottom: 1rem;
-    }
-    
-    .product-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        transition: all 0.3s;
-        border: 1px solid #E0E0E0;
-    }
-    
-    .product-card:hover {
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        border-color: #8B0000;
-    }
-    
-    .product-image {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-        background: #F8F8F8;
-    }
-    
-    .price-tag {
-        color: #DC143C;
-        font-size: 1.25rem;
-        font-weight: 700;
-    }
-    
-
-</style>
-
-<!-- Hero Banner Modern Minimalist -->
-<section class="hero-banner">
-    <div class="container">
-        <div class="row align-items-center" style="min-height: 450px;">
-            <div class="col-lg-6">
-                <div class="mb-3">
-                    <span class="badge" style="background: #FFF5F0; color: #DC143C; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px;">
-                        ✨ Koleksi Terbaru
-                    </span>
-                </div>
-                <h1 class="display-4 fw-bold mb-3" style="color: #1a1a1a; line-height: 1.2;">
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-primary-50 to-white py-8 md:py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
+            <div>
+                <span class="bg-primary-100 text-primary-700 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold">
+                    ✨ Koleksi Terbaru
+                </span>
+                <h1 class="text-3xl md:text-5xl font-bold mt-4 md:mt-6 mb-3 md:mb-4">
                     Kain Tenun Bali<br>
-                    <span style="color: #DC143C;">Berkualitas Premium</span>
+                    <span class="text-primary-600">Berkualitas Premium</span>
                 </h1>
-                <p class="fs-5 mb-4" style="color: #666; line-height: 1.6;">
-                    Kain songket dengan motif flora & fauna khas Bali sejak 1979.<br>
-                    Benang katun dan sutra berkualitas premium. Pengiriman ke seluruh Indonesia.
+                <p class="text-gray-600 text-sm md:text-lg mb-6 md:mb-8">
+                    Kain songket dengan motif flora & fauna khas Bali sejak 1979.
+                    Benang katun dan sutra berkualitas premium.
                 </p>
-                <div class="d-flex gap-3">
-                    <a href="{{ route('products.index') }}" class="btn btn-lg px-4" style="background: #DC143C; color: white; border-radius: 12px; font-weight: 600; border: none;">
-                        <i class="bi bi-bag me-2"></i>Belanja Sekarang
+                <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
+                    <a href="{{ route('products.index') }}" 
+                       class="bg-primary-600 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-semibold hover:bg-primary-700 transition text-center text-sm md:text-base">
+                        <i class="bi bi-bag"></i> Belanja Sekarang
                     </a>
-                    <a href="{{ route('products.index') }}" class="btn btn-lg px-4" style="background: white; color: #1a1a1a; border-radius: 12px; font-weight: 600; border: 2px solid #e5e5e5;">
-                        <i class="bi bi-grid me-2"></i>Lihat Katalog
+                    <a href="{{ route('products.index') }}" 
+                       class="border-2 border-gray-300 text-gray-700 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-semibold hover:border-primary-600 hover:text-primary-600 transition text-center text-sm md:text-base">
+                        <i class="bi bi-grid"></i> Lihat Katalog
                     </a>
                 </div>
             </div>
-
+            <div class="hidden md:block">
+                <div class="bg-gradient-to-br from-primary-200 to-primary-100 rounded-3xl h-96 flex items-center justify-center">
+                    <i class="bi bi-shop text-primary-600 text-9xl"></i>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Categories -->
-<section class="py-5 bg-white">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold mb-0">Kategori Pilihan</h3>
-            <a href="{{ route('products.index') }}" class="text-decoration-none" style="color: #FF6600; font-weight: 600;">
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold">Kategori Pilihan</h2>
+            <a href="{{ route('products.index') }}" class="text-primary-600 hover:text-primary-700 font-semibold">
                 Lihat Semua <i class="bi bi-arrow-right"></i>
             </a>
         </div>
         
-        <!-- Auto-scroll Categories -->
-        <div class="categories-slider-wrapper">
-            <div class="categories-slider" id="categoriesSlider">
+        <!-- Auto-scroll carousel -->
+        <div class="relative overflow-hidden" x-data="{ paused: false }">
+            <div class="flex gap-6 animate-scroll" 
+                 @mouseenter="paused = true" 
+                 @mouseleave="paused = false"
+                 :style="paused ? 'animation-play-state: paused' : 'animation-play-state: running'">
                 @foreach($categories as $category)
-                <a href="{{ route('products.index', ['category' => $category->id_kategori]) }}" class="text-decoration-none">
-                    <div class="category-card">
-                        <div class="category-icon">
-                            <i class="bi bi-{{ $loop->index % 4 == 0 ? 'star' : ($loop->index % 4 == 1 ? 'heart' : ($loop->index % 4 == 2 ? 'bag' : 'gem')) }}"></i>
-                        </div>
-                        <h6 class="fw-bold text-dark">{{ $category->nama_kategori }}</h6>
-                        <p class="text-muted small mb-0">{{ $category->products_count }} produk</p>
+                <a href="{{ route('products.index', ['category' => $category->id]) }}" 
+                   class="bg-white border-2 border-gray-200 rounded-xl p-6 text-center hover:border-primary-600 hover:shadow-lg transition group flex-shrink-0 w-64">
+                    <div class="text-5xl mb-4 group-hover:scale-110 transition">
+                        @if($category->id == 1)
+                            <i class="bi bi-star text-primary-600"></i>
+                        @elseif($category->id == 2)
+                            <i class="bi bi-heart text-primary-600"></i>
+                        @elseif($category->id == 3)
+                            <i class="bi bi-bag text-primary-600"></i>
+                        @else
+                            <i class="bi bi-grid text-primary-600"></i>
+                        @endif
                     </div>
+                    <h3 class="font-bold text-lg">{{ $category->nama_kategori }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">{{ $category->products_count }} produk</p>
                 </a>
                 @endforeach
                 
                 <!-- Duplicate for seamless loop -->
                 @foreach($categories as $category)
-                <a href="{{ route('products.index', ['category' => $category->id_kategori]) }}" class="text-decoration-none">
-                    <div class="category-card">
-                        <div class="category-icon">
-                            <i class="bi bi-{{ $loop->index % 4 == 0 ? 'star' : ($loop->index % 4 == 1 ? 'heart' : ($loop->index % 4 == 2 ? 'bag' : 'gem')) }}"></i>
-                        </div>
-                        <h6 class="fw-bold text-dark">{{ $category->nama_kategori }}</h6>
-                        <p class="text-muted small mb-0">{{ $category->products_count }} produk</p>
+                <a href="{{ route('products.index', ['category' => $category->id]) }}" 
+                   class="bg-white border-2 border-gray-200 rounded-xl p-6 text-center hover:border-primary-600 hover:shadow-lg transition group flex-shrink-0 w-64">
+                    <div class="text-5xl mb-4 group-hover:scale-110 transition">
+                        @if($category->id == 1)
+                            <i class="bi bi-star text-primary-600"></i>
+                        @elseif($category->id == 2)
+                            <i class="bi bi-heart text-primary-600"></i>
+                        @elseif($category->id == 3)
+                            <i class="bi bi-bag text-primary-600"></i>
+                        @else
+                            <i class="bi bi-grid text-primary-600"></i>
+                        @endif
                     </div>
+                    <h3 class="font-bold text-lg">{{ $category->nama_kategori }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">{{ $category->products_count }} produk</p>
                 </a>
                 @endforeach
             </div>
         </div>
+        
+        <style>
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+            
+            .animate-scroll {
+                animation: scroll 20s linear infinite;
+            }
+        </style>
     </div>
-    
-    <style>
-    .categories-slider-wrapper {
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .categories-slider {
-        display: flex;
-        gap: 1.5rem;
-        animation: scroll 30s linear infinite;
-        width: fit-content;
-    }
-    
-    .categories-slider:hover {
-        animation-play-state: paused;
-    }
-    
-    .categories-slider .category-card {
-        min-width: 200px;
-    }
-    
-    @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .categories-slider .category-card {
-            min-width: 150px;
-        }
-    }
-    </style>
 </section>
 
 <!-- Featured Products -->
-<section class="py-5">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold mb-0">Produk Unggulan</h3>
-            <a href="{{ route('products.index') }}" class="text-decoration-none" style="color: #FF6600; font-weight: 600;">
+<section class="py-8 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-6 md:mb-8">
+            <h2 class="text-xl md:text-3xl font-bold">Produk Unggulan</h2>
+            <a href="{{ route('products.index') }}" class="text-primary-600 hover:text-primary-700 font-semibold text-sm md:text-base">
                 Lihat Semua <i class="bi bi-arrow-right"></i>
             </a>
         </div>
         
-        <div class="row g-4">
+        <!-- Grid layout for products -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
             @foreach($featuredProducts as $product)
-            <div class="col-6 col-md-3">
-                <div class="product-card">
-                    <a href="{{ route('products.show', $product->slug) }}">
-                        @if($product->images->first())
-                        <img src="{{ Storage::url($product->images->first()->path) }}" class="product-image" alt="{{ $product->nama_produk }}">
-                        @else
-                        <div class="product-image bg-light d-flex align-items-center justify-content-center">
-                            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-                        </div>
-                        @endif
-                    </a>
-                    
-                    <div class="p-3">
-                        <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none text-dark">
-                            <h6 class="mb-2" style="height: 40px; overflow: hidden;">{{ $product->nama_produk }}</h6>
-                        </a>
-                        <div class="price-tag mb-2">{!! $product->getFormattedPrice() !!}</div>
-                        <div class="text-muted small mb-3">
-                            <i class="bi bi-box-seam me-1"></i>
-                            <span>Stok: {{ $product->stok }}</span>
-                        </div>
-                        <a href="{{ route('products.show', $product->slug) }}" class="btn btn-primary-custom btn-sm w-100">
-                            <i class="bi bi-cart-plus"></i> Beli
-                        </a>
+            <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition">
+                <a href="{{ route('products.show', $product->slug) }}">
+                    @if($product->images->first())
+                    <img src="{{ asset('storage/' . $product->images->first()->path) }}" 
+                         alt="{{ $product->nama_produk }}"
+                         class="w-full h-32 md:h-48 object-cover">
+                    @else
+                    <div class="w-full h-32 md:h-48 bg-gray-200 flex items-center justify-center">
+                        <i class="bi bi-image text-gray-400 text-2xl md:text-4xl"></i>
                     </div>
+                    @endif
+                </a>
+                
+                <div class="p-3 md:p-4">
+                    <a href="{{ route('products.show', $product->slug) }}" 
+                       class="font-bold text-sm md:text-base text-gray-800 hover:text-primary-600 line-clamp-2">
+                        {{ $product->nama_produk }}
+                    </a>
+                    <p class="text-primary-600 font-bold text-base md:text-xl mt-1 md:mt-2">
+                        {!! $product->getFormattedPrice() !!}
+                    </p>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1">Stok: {{ $product->stok }}</p>
+                    <a href="{{ route('products.show', $product->slug) }}" 
+                       class="block mt-2 md:mt-3 bg-primary-600 text-white text-center py-1.5 md:py-2 rounded-lg hover:bg-primary-700 transition text-xs md:text-sm">
+                        <i class="bi bi-cart-plus"></i> Beli
+                    </a>
                 </div>
             </div>
             @endforeach
@@ -217,118 +159,58 @@
     </div>
 </section>
 
-<!-- Keunggulan Section -->
-<section class="py-5 bg-white">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h3 class="fw-bold mb-3">Mengapa Memilih Kami?</h3>
-            <p class="text-muted">Keunggulan Pelangi Traditional Weaving Sidemen</p>
-        </div>
+<!-- Features -->
+<section class="py-8 md:py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-xl md:text-3xl font-bold text-center mb-8 md:mb-12">Mengapa Memilih Kami?</h2>
         
-        <div class="row g-4">
-            <div class="col-md-3 col-6">
-                <div class="text-center p-4">
-                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
-                        <i class="bi bi-award-fill"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">Sejak 1979</h5>
-                    <p class="text-muted small">UKM pertama di Desa Sidemen dengan pengalaman 46+ tahun</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+            <div class="text-center">
+                <div class="text-3xl md:text-5xl text-primary-600 mb-2 md:mb-4">
+                    <i class="bi bi-award"></i>
                 </div>
+                <h3 class="font-bold text-sm md:text-base mb-1 md:mb-2">Kualitas Premium</h3>
+                <p class="text-xs md:text-sm text-gray-600">Benang katun & sutra berkualitas tinggi</p>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-4">
-                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
-                        <i class="bi bi-hand-thumbs-up-fill"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">Kualitas Premium</h5>
-                    <p class="text-muted small">Tenun rapat, halus, dibuat dengan kesabaran dan ketelitian</p>
+            
+            <div class="text-center">
+                <div class="text-3xl md:text-5xl text-primary-600 mb-2 md:mb-4">
+                    <i class="bi bi-hand-thumbs-up"></i>
                 </div>
+                <h3 class="font-bold text-sm md:text-base mb-1 md:mb-2">Handmade</h3>
+                <p class="text-xs md:text-sm text-gray-600">Dikerjakan dengan tangan oleh pengrajin ahli</p>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-4">
-                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
-                        <i class="bi bi-palette-fill"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">Motif Autentik</h5>
-                    <p class="text-muted small">Motif flora & fauna khas Bali dengan beragam pilihan warna</p>
+            
+            <div class="text-center">
+                <div class="text-3xl md:text-5xl text-primary-600 mb-2 md:mb-4">
+                    <i class="bi bi-truck"></i>
                 </div>
+                <h3 class="font-bold text-sm md:text-base mb-1 md:mb-2">Pengiriman Cepat</h3>
+                <p class="text-xs md:text-sm text-gray-600">Ke seluruh Indonesia</p>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-4">
-                    <div class="mb-3" style="font-size: 3rem; color: #DC143C;">
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">Rating 4.8</h5>
-                    <p class="text-muted small">Kepuasan pelanggan terbukti di Google Maps</p>
+            
+            <div class="text-center">
+                <div class="text-3xl md:text-5xl text-primary-600 mb-2 md:mb-4">
+                    <i class="bi bi-shield-check"></i>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Tentang Singkat -->
-<section class="py-5" style="background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <span class="badge bg-danger mb-3">Tentang Kami</span>
-                <h2 class="fw-bold mb-4">Melestarikan Warisan Budaya Bali</h2>
-                <p class="mb-3">
-                    Tenun Trisna Tradisional Weaving adalah UKM pertama di Desa Sidemen yang berdiri sejak 1979. 
-                    Kami memiliki 40 ATBM dan alat pemintal benang (jantra).
-                </p>
-                <p class="mb-4">
-                    Setiap kain songket kami dibuat dengan teknik tradisional, menggunakan motif flora dan fauna khas Bali. 
-                    Tersedia dalam benang katun dan sutra dengan berbagai varian motif.
-                </p>
-                <a href="{{ route('products.index') }}" class="btn btn-danger btn-lg">
-                    <i class="bi bi-bag me-2"></i>Lihat Produk
-                </a>
-            </div>
-            <div class="col-lg-6">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center p-4">
-                            <h3 class="fw-bold text-danger mb-2">40+</h3>
-                            <p class="text-muted small mb-0">ATBM & Alat Tenun</p>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center p-4">
-                            <h3 class="fw-bold text-danger mb-2">46+</h3>
-                            <p class="text-muted small mb-0">Tahun Pengalaman</p>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center p-4">
-                            <h3 class="fw-bold text-danger mb-2">35-50</h3>
-                            <p class="text-muted small mb-0">Kain per Minggu</p>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center p-4">
-                            <h3 class="fw-bold text-danger mb-2">4.8★</h3>
-                            <p class="text-muted small mb-0">Rating Google</p>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="font-bold text-sm md:text-base mb-1 md:mb-2">Terpercaya</h3>
+                <p class="text-xs md:text-sm text-gray-600">Sejak 1979</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="card border-0" style="background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); border-radius: 16px;">
-            <div class="card-body text-center text-white py-5">
-                <h2 class="fw-bold mb-3">Bergabunglah Bersama Kami!</h2>
-                <p class="lead mb-4">Daftar sekarang dan nikmati kemudahan berbelanja kain tenun berkualitas premium</p>
-                <a href="{{ route('register') }}" class="btn btn-light btn-lg px-5" style="border-radius: 24px; font-weight: 600;">
-                    <i class="bi bi-person-plus me-2"></i>Daftar Sekarang
-                </a>
-            </div>
-        </div>
+<section class="py-8 md:py-16 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4">Siap Berbelanja?</h2>
+        <p class="text-base md:text-xl mb-6 md:mb-8 text-primary-100">
+            Temukan koleksi kain tenun terbaik kami dan dapatkan penawaran spesial
+        </p>
+        <a href="{{ route('products.index') }}" 
+           class="inline-block bg-white text-primary-600 px-6 md:px-8 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-gray-100 transition">
+            Mulai Belanja <i class="bi bi-arrow-right"></i>
+        </a>
     </div>
 </section>
 @endsection

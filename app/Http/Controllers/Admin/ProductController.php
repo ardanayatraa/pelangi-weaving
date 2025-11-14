@@ -60,6 +60,8 @@ class ProductController extends Controller
             'stok' => 'required|integer|min:0',
             'berat' => 'required|numeric|min:0',
             'status' => 'nullable|in:aktif,nonaktif',
+            'is_made_to_order' => 'nullable|boolean',
+            'lead_time_days' => 'nullable|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
         
@@ -68,6 +70,7 @@ class ProductController extends Controller
         }
         
         $validated['status'] = $validated['status'] ?? 'aktif';
+        $validated['is_made_to_order'] = $request->has('is_made_to_order');
         
         $product = Produk::create($validated);
         
@@ -116,12 +119,16 @@ class ProductController extends Controller
             'stok' => 'required|integer|min:0',
             'berat' => 'required|numeric|min:0',
             'status' => 'nullable|in:aktif,nonaktif',
+            'is_made_to_order' => 'nullable|boolean',
+            'lead_time_days' => 'nullable|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
         
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['nama_produk']);
         }
+        
+        $validated['is_made_to_order'] = $request->has('is_made_to_order');
         
         $product->update($validated);
         

@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+    @extends('layouts.customer')
 
 @section('title', 'Pesanan Saya - Pelangi Weaving')
 
@@ -14,16 +14,16 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
     <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Pesanan Saya</h1>
-        <p class="text-gray-600 mt-1">Kelola dan lacak pesanan Anda</p>
+    <div class="mb-4 md:mb-6">
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900">Pesanan Saya</h1>
+        <p class="text-sm md:text-base text-gray-600 mt-1">Kelola dan lacak pesanan Anda</p>
     </div>
 
     <!-- Filter Tabs -->
-    <div class="bg-white rounded-lg border border-gray-200 mb-6">
-        <div class="flex overflow-x-auto">
+    <div class="bg-white rounded-lg border border-gray-200 mb-4 md:mb-6">
+        <div class="flex overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300">
             <a href="{{ route('orders.index') }}" 
                class="px-6 py-4 text-sm font-medium border-b-2 whitespace-nowrap {{ !request('status') ? 'text-orange-500 border-orange-500' : 'text-gray-600 border-transparent hover:text-orange-500' }}">
                 <i class="bi bi-list-ul mr-2"></i>Semua
@@ -114,22 +114,34 @@
             <div class="px-6 py-4">
                 @foreach($order->items as $item)
                 @php
-                    $product = $item->product;
-                    $variant = $item->productVariant;
-                    $imageUrl = $product->gambar_utama ?? 'products/default.jpg';
+                    $produk = $item->produk;
+                    $varian = $item->varian;
+                    
+                    // Get image URL
+                    $imageUrl = null;
+                    if ($varian && $varian->gambar_varian) {
+                        $imageUrl = $varian->gambar_varian;
+                    } elseif ($produk && $produk->images->first()) {
+                        $imageUrl = $produk->images->first()->path;
+                    }
                 @endphp
                 <div class="flex gap-4 py-3 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
-                    <img src="{{ asset('storage/' . $imageUrl) }}" 
-                         alt="{{ $product->nama_produk }}"
-                         class="w-20 h-20 object-cover rounded border border-gray-200">
+                    @if($imageUrl)
+                        <img src="{{ asset('storage/' . $imageUrl) }}" 
+                             alt="{{ $produk->nama_produk }}"
+                             class="w-20 h-20 object-cover rounded border border-gray-200"
+                             onerror="this.src='{{ asset('images/placeholder.png') }}'">
+                    @else
+                        <div class="w-20 h-20 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
+                            <i class="bi bi-image text-gray-400 text-2xl"></i>
+                        </div>
+                    @endif
                     
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-gray-900 mb-1">{{ $product->nama_produk }}</h4>
-                        @if($variant)
+                        <h4 class="font-semibold text-gray-900 mb-1">{{ $produk->nama_produk }}</h4>
+                        @if($varian)
                         <p class="text-sm text-gray-600 mb-1">
-                            @if($variant->warna) {{ $variant->warna }} @endif
-                            @if($variant->ukuran) • {{ $variant->ukuran }} @endif
-                            @if($variant->jenis_benang) • {{ $variant->jenis_benang }} @endif
+                            {{ $varian->nama_varian }}
                         </p>
                         @endif
                         <p class="text-sm text-gray-600">{{ $item->jumlah }} × Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</p>

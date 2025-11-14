@@ -3,14 +3,14 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Product;
-use App\Models\ProductVariant;
+use App\Models\Produk;
+use App\Models\VarianProduk;
 
 class ProductVariantSeeder extends Seeder
 {
     public function run(): void
     {
-        $products = Product::all();
+        $products = Produk::all();
         
         $colors = [
             'Merah Marun',
@@ -67,7 +67,7 @@ class ProductVariantSeeder extends Seeder
                         $weightAdjustment = $sizes[$size] > 0 ? ($sizes[$size] / 1000000) * $product->berat : 0;
                         $finalWeight = $product->berat + $weightAdjustment;
                         
-                        ProductVariant::create([
+                        VarianProduk::create([
                             'id_produk' => $product->id_produk,
                             'nama_varian' => "$color - $size",
                             'kode_varian' => $kodeVarian,

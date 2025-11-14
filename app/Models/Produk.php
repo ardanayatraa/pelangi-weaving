@@ -20,12 +20,16 @@ class Produk extends Model
         'stok',
         'berat',
         'status',
+        'is_made_to_order',
+        'lead_time_days',
     ];
 
     protected $casts = [
         'harga' => 'decimal:2',
         'berat' => 'decimal:2',
         'stok' => 'integer',
+        'is_made_to_order' => 'boolean',
+        'lead_time_days' => 'integer',
     ];
 
     public function category(): BelongsTo

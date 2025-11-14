@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Category;
+use App\Models\Kategori;
 
 class CategorySeeder extends Seeder
 {
@@ -11,18 +11,18 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'nama_kategori' => 'Kain Songket Premium',
-                'slug' => 'kain-songket-premium',
+                'nama_kategori' => 'Songket Premium',
+                'slug' => 'songket-premium',
                 'deskripsi' => 'Koleksi kain songket premium dengan benang emas dan perak asli, cocok untuk acara pernikahan dan upacara adat',
             ],
             [
-                'nama_kategori' => 'Kain Endek Bali',
-                'slug' => 'kain-endek-bali',
+                'nama_kategori' => 'Endek Bali',
+                'slug' => 'endek-bali',
                 'deskripsi' => 'Kain endek khas Bali dengan motif tradisional yang ditenun menggunakan teknik ikat',
             ],
             [
-                'nama_kategori' => 'Selendang & Syal',
-                'slug' => 'selendang-syal',
+                'nama_kategori' => 'Selendang',
+                'slug' => 'selendang',
                 'deskripsi' => 'Selendang dan syal tenun dengan berbagai motif dan warna yang elegan',
             ],
             [
@@ -43,7 +43,7 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            Category::create($category);
+            Kategori::create($category);
         }
 
         echo "✅ Kategori berhasil di-seed!\n";

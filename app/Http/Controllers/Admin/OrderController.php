@@ -54,7 +54,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Pesanan::with(['pelanggan', 'items.product', 'items.productVariant', 'payment', 'pengiriman'])
+        $order = Pesanan::with(['pelanggan', 'items.produk.images', 'items.varian', 'payment', 'pengiriman'])
             ->findOrFail($id);
         
         return view('admin.orders.show', compact('order'));
@@ -66,9 +66,39 @@ class OrderController extends Controller
         
         $validated = $request->validate([
             'status_pesanan' => 'required|in:baru,diproses,dikirim,selesai,batal',
+            'no_resi' => 'nullable|string|max:100',
         ]);
         
-        $order->update($validated);
+        $order->update(['status_pesanan' => $validated['status_pesanan']]);
+        
+        // Update no resi jika ada
+        if ($request->filled('no_resi')) {
+            // Buat pengiriman jika belum ada
+            if (!$order->pengiriman) {
+                $order->pengiriman()->create([
+                    'no_resi' => $validated['no_resi'],
+                    'ongkir' => $order->ongkir,
+                    'status_pengiriman' => 'menunggu',
+                ]);
+            } else {
+                $order->pengiriman->update(['no_resi' => $validated['no_resi']]);
+            }
+        }
+        
+        // Update status pengiriman berdasarkan status pesanan
+        if ($order->pengiriman) {
+            if ($validated['status_pesanan'] == 'dikirim') {
+                $order->pengiriman->update([
+                    'status_pengiriman' => 'dalam_perjalanan',
+                    'tanggal_kirim' => $order->pengiriman->tanggal_kirim ?? now(),
+                ]);
+            } elseif ($validated['status_pesanan'] == 'selesai') {
+                $order->pengiriman->update([
+                    'status_pengiriman' => 'sampai',
+                    'tanggal_terima' => $order->pengiriman->tanggal_terima ?? now(),
+                ]);
+            }
+        }
         
         return redirect()->route('admin.orders.show', $id)
             ->with('success', 'Status pesanan berhasil diupdate!');
@@ -82,7 +112,6 @@ class OrderController extends Controller
             'kurir' => 'required|string|max:50',
             'layanan' => 'required|string|max:50',
             'no_resi' => 'required|string|max:100',
-            'estimasi_pengiriman' => 'nullable|string|max:50',
             'status_pengiriman' => 'required|in:menunggu,dalam_perjalanan,sampai',
         ]);
         

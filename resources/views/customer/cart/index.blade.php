@@ -3,264 +3,179 @@
 @section('title', 'Keranjang Belanja')
 
 @section('content')
-<style>
-    .cart-item-card {
-        background: white;
-        border-radius: 12px;
-        border: 1px solid #E0E0E0;
-        margin-bottom: 16px;
-        transition: all 0.3s;
-    }
-    
-    .cart-item-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    
-    .cart-checkbox {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-    }
-    
-    .cart-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-    
-    .quantity-control {
-        display: flex;
-        align-items: center;
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    .quantity-btn {
-        width: 32px;
-        height: 32px;
-        border: none;
-        background: white;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .quantity-btn:hover {
-        background: #F5F5F5;
-        color: #FF6600;
-    }
-    
-    .quantity-input {
-        width: 50px;
-        height: 32px;
-        border: none;
-        text-align: center;
-        font-weight: 600;
-    }
-    
-    .summary-card {
-        background: white;
-        border-radius: 12px;
-        border: 1px solid #E0E0E0;
-        position: sticky;
-        top: 20px;
-    }
-    
-    .btn-checkout {
-        background: #FF6600;
-        color: white;
-        border: none;
-        padding: 14px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        width: 100%;
-        transition: all 0.3s;
-    }
-    
-    .btn-checkout:hover {
-        background: #FF8533;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255,102,0,0.3);
-    }
-    
-    .empty-cart {
-        text-align: center;
-        padding: 60px 20px;
-    }
-    
-    .empty-cart-icon {
-        font-size: 5rem;
-        color: #E0E0E0;
-        margin-bottom: 20px;
-    }
-</style>
-
-<div class="container py-4">
-    <h2 class="fw-bold mb-4">
-        <i class="bi bi-cart3"></i> Keranjang Belanja
-    </h2>
-    
-    @if($cartItems->count() > 0)
-    <div class="row">
-        <!-- Cart Items -->
-        <div class="col-lg-8">
-            <!-- Select All -->
-            <div class="card border-0 shadow-sm mb-3" style="border-radius: 12px;">
-                <div class="card-body py-3">
-                    <div class="form-check">
-                        <input class="form-check-input cart-checkbox" type="checkbox" id="selectAll" onchange="toggleSelectAll(this)">
-                        <label class="form-check-label fw-semibold" for="selectAll">
-                            Pilih Semua ({{ $cartItems->count() }} Produk)
-                        </label>
-                        <button type="button" class="btn btn-link text-danger float-end" onclick="deleteSelected()">
-                            <i class="bi bi-trash"></i> Hapus
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+<div class="bg-gray-50 min-h-screen py-4 md:py-8">
+    <div class="max-w-7xl mx-auto px-4">
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
+            <i class="bi bi-cart3"></i> Keranjang Belanja
+        </h1>
+        
+        @if($cartItems->count() > 0)
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             <!-- Cart Items -->
-            @foreach($cartItems as $item)
-            <div class="cart-item-card">
-                <div class="card-body p-3">
-                    <div class="row align-items-center">
+            <div class="lg:col-span-2 space-y-3 md:space-y-4">
+                <!-- Select All -->
+                <div class="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" checked
+                               class="w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-600">
+                        <span class="font-semibold text-gray-900">Pilih Semua ({{ $cartItems->count() }} Produk)</span>
+                    </label>
+                    <button type="button" onclick="deleteSelected()" 
+                            class="text-red-600 hover:text-red-700 font-medium text-sm">
+                        <i class="bi bi-trash"></i> Hapus
+                    </button>
+                </div>
+
+                <!-- Cart Items -->
+                @foreach($cartItems as $item)
+                <div class="bg-white rounded-lg shadow-sm p-3 md:p-4 hover:shadow-md transition">
+                    <div class="flex gap-2 md:gap-4">
                         <!-- Checkbox -->
-                        <div class="col-auto">
-                            <input class="form-check-input cart-checkbox item-checkbox" type="checkbox" value="{{ $item->id_keranjang }}" onchange="updateSummary()">
+                        <div class="flex items-start pt-1 md:pt-2">
+                            <input type="checkbox" value="{{ $item->id_keranjang }}" onchange="updateSummary()" checked
+                                   class="item-checkbox w-4 h-4 md:w-5 md:h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-600">
                         </div>
 
                         <!-- Product Image -->
-                        <div class="col-auto">
+                        <div class="flex-shrink-0">
                             <a href="{{ route('products.show', $item->product->slug) }}">
                                 @if($item->product->images->first())
-                                <img src="{{ Storage::url($item->product->images->first()->path) }}" class="cart-image" alt="{{ $item->product->nama_produk }}">
+                                <img src="{{ asset('storage/' . $item->product->images->first()->path) }}" 
+                                     alt="{{ $item->product->nama_produk }}"
+                                     class="w-16 h-16 md:w-24 md:h-24 object-cover rounded-lg">
                                 @else
-                                <div class="cart-image bg-light d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-image text-muted"></i>
+                                <div class="w-16 h-16 md:w-24 md:h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <i class="bi bi-image text-gray-400 text-xl md:text-2xl"></i>
                                 </div>
                                 @endif
                             </a>
                         </div>
 
                         <!-- Product Info -->
-                        <div class="col">
-                            <a href="{{ route('products.show', $item->product->slug) }}" class="text-decoration-none text-dark">
-                                <h6 class="mb-1 fw-semibold">{{ $item->product->nama_produk }}</h6>
+                        <div class="flex-1 min-w-0">
+                            <a href="{{ route('products.show', $item->product->slug) }}" 
+                               class="font-semibold text-sm md:text-base text-gray-900 hover:text-primary-600 line-clamp-2 mb-2">
+                                {{ $item->product->nama_produk }}
                             </a>
+                            
                             @if($item->productVariant)
-                            <div class="text-muted small mb-2">
-                                <span class="badge bg-light text-dark">{{ $item->productVariant->warna }}</span>
-                                <span class="badge bg-light text-dark">{{ $item->productVariant->ukuran }}</span>
-                                @if($item->productVariant->jenis_benang)
-                                <span class="badge bg-light text-dark">{{ $item->productVariant->jenis_benang }}</span>
-                                @endif
+                            <div class="mb-2">
+                                <span class="inline-block bg-primary-100 text-primary-700 text-xs font-semibold px-2 md:px-3 py-0.5 md:py-1 rounded-full">
+                                    <i class="bi bi-palette"></i> {{ $item->productVariant->nama_varian }}
+                                </span>
                             </div>
                             @endif
-                            
-                            <!-- Price & Quantity -->
-                            <div class="d-flex align-items-center justify-content-between mt-3">
+
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-2 md:mt-3 gap-2">
+                                <!-- Price -->
                                 <div>
-                                    <div class="fw-bold" style="color: #FF6600; font-size: 1.1rem;">
-                                        Rp {{ number_format($item->productVariant ? $item->productVariant->harga : $item->product->harga, 0, ',', '.') }}
-                                    </div>
+                                    @php
+                                        $harga = $item->productVariant ? $item->productVariant->harga : $item->product->harga;
+                                    @endphp
+                                    <p class="text-base md:text-xl font-bold text-primary-600">
+                                        Rp {{ number_format($harga, 0, ',', '.') }}
+                                    </p>
                                 </div>
-                                
-                                <div class="d-flex align-items-center gap-3">
-                                    <!-- Quantity Control -->
-                                    <div class="quantity-control">
-                                        <button type="button" class="quantity-btn" onclick="updateQuantity({{ $item->id_keranjang }}, 'decrease')">-</button>
-                                        <input type="number" class="quantity-input" id="qty-{{ $item->id_keranjang }}" value="{{ $item->jumlah }}" min="1" max="{{ $item->productVariant ? $item->productVariant->stok : $item->product->stok }}" readonly>
-                                        <button type="button" class="quantity-btn" onclick="updateQuantity({{ $item->id_keranjang }}, 'increase')">+</button>
-                                    </div>
-                                    
-                                    <!-- Delete Button -->
-                                    <form action="{{ route('cart.remove', $item->id_keranjang) }}" method="POST" class="d-inline" id="delete-form-{{ $item->id_keranjang }}">
+
+                                <!-- Quantity Controls -->
+                                <div class="flex items-center gap-1 md:gap-2">
+                                    <form action="{{ route('cart.update', $item->id_keranjang) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="jumlah" value="{{ max(1, $item->jumlah - 1) }}">
+                                        <button type="submit" 
+                                                class="w-8 h-8 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                                                {{ $item->jumlah <= 1 ? 'disabled' : '' }}>
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                    </form>
+
+                                    <span class="w-12 text-center font-semibold">{{ $item->jumlah }}</span>
+
+                                    <form action="{{ route('cart.update', $item->id_keranjang) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="jumlah" value="{{ $item->jumlah + 1 }}">
+                                        <button type="submit" 
+                                                class="w-8 h-8 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                                                {{ $item->jumlah >= $item->product->stok ? 'disabled' : '' }}>
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </form>
+
+                                    <form action="{{ route('cart.remove', $item->id_keranjang) }}" method="POST" class="inline ml-2">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-link text-danger p-0" onclick="confirmDelete({{ $item->id_keranjang }})">
+                                        <button type="submit" onclick="return confirm('Hapus item ini?')"
+                                                class="w-8 h-8 text-red-600 hover:bg-red-50 rounded-lg transition">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                 </div>
                             </div>
+
+                            <!-- Subtotal -->
+                            <div class="mt-2 text-right">
+                                <p class="text-sm text-gray-600">Subtotal:</p>
+                                <p class="text-lg font-bold text-gray-900">
+                                    Rp {{ number_format($harga * $item->jumlah, 0, ',', '.') }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
-        </div>
 
-        <!-- Summary -->
-        <div class="col-lg-4">
-            <div class="summary-card">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4">Ringkasan Belanja</h5>
+            <!-- Summary Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm p-6 sticky top-20">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Ringkasan Belanja</h3>
                     
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="text-muted">Total Harga (<span id="selectedCount">0</span> Produk)</span>
-                        <span class="fw-semibold" id="subtotalDisplay">Rp 0</span>
+                    <div class="space-y-3 mb-4 pb-4 border-b">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-600">Total Harga (<span id="selectedCount">0</span> barang)</span>
+                            <span class="font-semibold" id="totalPrice">Rp 0</span>
+                        </div>
                     </div>
-                    
-                    <hr>
-                    
-                    <div class="d-flex justify-content-between mb-4">
-                        <span class="fw-bold">Total</span>
-                        <span class="fw-bold" style="color: #FF6600; font-size: 1.5rem;" id="totalDisplay">Rp 0</span>
+
+                    <div class="flex justify-between text-lg font-bold mb-6">
+                        <span>Total</span>
+                        <span class="text-primary-600" id="grandTotal">Rp 0</span>
                     </div>
-                    
-                    <button type="button" class="btn-checkout" onclick="checkout()" id="checkoutBtn" disabled>
-                        Beli (<span id="checkoutCount">0</span>)
+
+                    <button type="button" onclick="checkout()" id="checkoutBtn"
+                            class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            disabled>
+                        Lanjut ke Pembayaran
                     </button>
-                    
-                    <div class="mt-3 text-center">
-                        <small class="text-muted">
-                            <i class="bi bi-shield-check"></i> Transaksi Aman & Terpercaya
-                        </small>
-                    </div>
+
+                    <a href="{{ route('products.index') }}" 
+                       class="block text-center text-primary-600 hover:text-primary-700 mt-4 text-sm font-medium">
+                        <i class="bi bi-arrow-left"></i> Lanjut Belanja
+                    </a>
                 </div>
             </div>
-
-
         </div>
-    </div>
-    @else
-    <!-- Empty Cart -->
-    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-        <div class="card-body">
-            <div class="empty-cart">
-                <div class="empty-cart-icon">
-                    <i class="bi bi-cart-x"></i>
-                </div>
-                <h4 class="fw-bold mb-3">Keranjang Belanja Kosong</h4>
-                <p class="text-muted mb-4">Yuk, isi keranjangmu dengan produk tenun pilihan!</p>
-                <a href="{{ route('products.index') }}" class="btn btn-primary-custom btn-lg px-5" style="border-radius: 24px;">
-                    <i class="bi bi-shop"></i> Mulai Belanja
-                </a>
-            </div>
+        @else
+        <!-- Empty Cart -->
+        <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+            <i class="bi bi-cart-x text-gray-300 text-6xl mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Keranjang Belanja Kosong</h3>
+            <p class="text-gray-600 mb-6">Yuk, isi keranjangmu dengan produk tenun pilihan!</p>
+            <a href="{{ route('products.index') }}" 
+               class="inline-block bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition">
+                <i class="bi bi-shop"></i> Mulai Belanja
+            </a>
         </div>
+        @endif
     </div>
-    @endif
 </div>
 
 <script>
-// Cart items data
-@php
-$cartData = $cartItems->map(function($item) {
-    return [
-        'id' => $item->id_keranjang,
-        'jumlah' => $item->jumlah,
-        'harga' => $item->productVariant ? $item->productVariant->harga : $item->product->harga,
-        'stok' => $item->productVariant ? $item->productVariant->stok : $item->product->stok
-    ];
-});
-@endphp
-const cartItems = @json($cartData);
-
 function toggleSelectAll(checkbox) {
-    document.querySelectorAll('.item-checkbox').forEach(cb => {
+    const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+    itemCheckboxes.forEach(cb => {
         cb.checked = checkbox.checked;
     });
     updateSummary();
@@ -268,79 +183,59 @@ function toggleSelectAll(checkbox) {
 
 function updateSummary() {
     const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-    const count = checkboxes.length;
-    let total = 0;
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const allCheckboxes = document.querySelectorAll('.item-checkbox');
     
-    checkboxes.forEach(cb => {
-        const itemId = parseInt(cb.value);
-        const item = cartItems.find(i => i.id === itemId);
-        if (item) {
-            const qty = parseInt(document.getElementById('qty-' + itemId).value);
-            total += item.harga * qty;
+    // Update select all checkbox
+    selectAllCheckbox.checked = checkboxes.length === allCheckboxes.length && allCheckboxes.length > 0;
+    
+    let total = 0;
+    let count = 0;
+    
+    checkboxes.forEach(checkbox => {
+        const cartItem = checkbox.closest('.bg-white.rounded-lg');
+        const subtotalElement = cartItem.querySelector('.text-lg.font-bold.text-gray-900');
+        if (subtotalElement) {
+            const priceText = subtotalElement.textContent;
+            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+            total += price;
+            count++;
         }
     });
     
     document.getElementById('selectedCount').textContent = count;
-    document.getElementById('checkoutCount').textContent = count;
-    document.getElementById('subtotalDisplay').textContent = 'Rp ' + total.toLocaleString('id-ID');
-    document.getElementById('totalDisplay').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('totalPrice').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('grandTotal').textContent = 'Rp ' + total.toLocaleString('id-ID');
     
-    document.getElementById('checkoutBtn').disabled = count === 0;
-}
-
-function updateQuantity(cartId, action) {
-    const input = document.getElementById('qty-' + cartId);
-    const item = cartItems.find(i => i.id === cartId);
-    let currentQty = parseInt(input.value);
-    
-    if (action === 'increase' && currentQty < item.stok) {
-        currentQty++;
-    } else if (action === 'decrease' && currentQty > 1) {
-        currentQty--;
-    }
-    
-    input.value = currentQty;
-    
-    // Update ke server
-    fetch(`/cart/${cartId}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({ jumlah: currentQty })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Update item in array
-        const itemIndex = cartItems.findIndex(i => i.id === cartId);
-        if (itemIndex !== -1) {
-            cartItems[itemIndex].jumlah = currentQty;
-        }
-        updateSummary();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Gagal update jumlah');
-    });
-}
-
-function confirmDelete(cartId) {
-    if (confirm('Hapus produk dari keranjang?')) {
-        document.getElementById('delete-form-' + cartId).submit();
-    }
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    checkoutBtn.disabled = count === 0;
 }
 
 function deleteSelected() {
     const checkboxes = document.querySelectorAll('.item-checkbox:checked');
     if (checkboxes.length === 0) {
-        alert('Pilih produk yang ingin dihapus');
+        alert('Pilih item yang ingin dihapus');
         return;
     }
     
-    if (confirm(`Hapus ${checkboxes.length} produk dari keranjang?`)) {
-        checkboxes.forEach(cb => {
-            document.getElementById('delete-form-' + cb.value).submit();
+    if (confirm(`Hapus ${checkboxes.length} item dari keranjang?`)) {
+        // Delete each item one by one
+        const ids = Array.from(checkboxes).map(cb => cb.value);
+        let completed = 0;
+        
+        ids.forEach(id => {
+            fetch(`/cart/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                }
+            }).then(() => {
+                completed++;
+                if (completed === ids.length) {
+                    window.location.reload();
+                }
+            });
         });
     }
 }
@@ -348,20 +243,16 @@ function deleteSelected() {
 function checkout() {
     const checkboxes = document.querySelectorAll('.item-checkbox:checked');
     if (checkboxes.length === 0) {
-        alert('Pilih produk yang ingin dibeli');
+        alert('Pilih item yang ingin dibeli');
         return;
     }
     
-    // Redirect ke checkout dengan selected items
-    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-    window.location.href = '{{ route("checkout.index") }}?items=' + selectedIds.join(',');
+    const ids = Array.from(checkboxes).map(cb => cb.value);
+    window.location.href = '{{ route("checkout.index") }}?items=' + ids.join(',');
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    // Check all by default
-    document.getElementById('selectAll').checked = true;
-    document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = true);
     updateSummary();
 });
 </script>

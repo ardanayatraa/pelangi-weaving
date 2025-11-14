@@ -145,6 +145,25 @@
                         </label>
                     </div>
 
+                    <div class="flex items-center justify-between py-2 border-b border-gray-200" x-data="{ madeToOrder: {{ old('is_made_to_order') ? 'true' : 'false' }} }">
+                        <label class="text-xs font-semibold text-gray-700">Made to Order</label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_made_to_order" value="1" class="sr-only peer" {{ old('is_made_to_order') ? 'checked' : '' }} x-model="madeToOrder">
+                            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                    </div>
+
+                    <div x-show="madeToOrder" x-cloak x-transition>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Waktu Pengerjaan (Hari)</label>
+                        <input type="number" 
+                               name="lead_time_days" 
+                               value="{{ old('lead_time_days', 7) }}"
+                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
+                               min="1"
+                               placeholder="7">
+                        <p class="mt-1 text-xs text-gray-500">Estimasi waktu pengerjaan pesanan</p>
+                    </div>
+
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Urutan Tampilan</label>
                         <input type="number" 

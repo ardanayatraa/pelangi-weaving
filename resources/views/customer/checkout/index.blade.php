@@ -18,12 +18,12 @@
 
 <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
     @csrf
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             <!-- Main Form -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Customer Info -->
-                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                <div class="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
                     <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
                         <i class="bi bi-person-circle text-red-600 mr-2"></i>
                         Informasi Pembeli
@@ -223,11 +223,11 @@
                             <div class="flex-1 min-w-0">
                                 <h4 class="text-sm font-medium text-gray-900 truncate">{{ $product->nama_produk }}</h4>
                                 @if($variant)
-                                <p class="text-xs text-gray-600">
-                                    @if($variant->warna) {{ $variant->warna }} @endif
-                                    @if($variant->ukuran) - {{ $variant->ukuran }} @endif
-                                    @if($variant->jenis_benang) - {{ $variant->jenis_benang }} @endif
-                                </p>
+                                <div class="mt-1">
+                                    <span class="inline-block bg-primary-100 text-primary-700 text-xs font-semibold px-2 py-0.5 rounded">
+                                        <i class="bi bi-palette"></i> {{ $variant->nama_varian }}
+                                    </span>
+                                </div>
                                 @endif
                                 <p class="text-sm font-semibold text-gray-900 mt-1">
                                     {{ $item->jumlah }} × Rp {{ number_format($harga, 0, ',', '.') }}
