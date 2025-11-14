@@ -227,8 +227,16 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     @auth('pelanggan')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('cart.index') }}">
-                            <i class="bi bi-cart3"></i> Keranjang
+                        <a class="nav-link d-flex align-items-center gap-2" href="{{ route('cart.index') }}">
+                            @php
+                                $cartCount = Auth::guard('pelanggan')->user()->carts()->sum('jumlah');
+                            @endphp
+                            @if($cartCount > 0)
+                            <span class="badge rounded-pill" style="background: #FFFFFF; color: #DC2626; font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                {{ $cartCount }}
+                            </span>
+                            @endif
+                            <span><i class="bi bi-cart3"></i> Keranjang</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -522,16 +530,52 @@
                     <p class="text-sm text-gray-400 text-center md:text-left">
                         &copy; {{ date('Y') }} <span class="text-red-500 font-semibold">Pelangi Traditional Weaving Sidemen</span>. 
                         All rights reserved.
+                        <a href="{{ route('admin.login') }}" class="text-gray-600 hover:text-gray-500 transition-colors ms-3" style="font-size: 0.7rem; opacity: 0.5;">•</a>
                     </p>
-                    <div class="flex items-center gap-6">
-                        <a href="{{ route('admin.login') }}" class="text-sm text-gray-400 hover:text-red-500 transition-colors">Admin</a>
-                    </div>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="btn position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg" 
+            style="width: 50px; height: 50px; background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); border: none; display: none; z-index: 1000; transition: all 0.3s;">
+        <i class="bi bi-arrow-up text-white" style="font-size: 1.5rem;"></i>
+    </button>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Back to Top functionality
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Hover effect
+        backToTopBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 8px 20px rgba(220, 38, 38, 0.4)';
+        });
+        
+        backToTopBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+        });
+    </script>
+    
     @stack('scripts')
 </body>
 </html>

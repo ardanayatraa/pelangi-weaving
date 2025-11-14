@@ -2,43 +2,77 @@
 
 @section('title', 'Profile Saya')
 
+@push('styles')
+<style>
+    .nav-tabs .nav-link {
+        color: #6B7280;
+        border: none;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    .nav-tabs .nav-link:hover {
+        color: #DC2626;
+        border-bottom-color: rgba(220, 38, 38, 0.3);
+    }
+    .nav-tabs .nav-link.active {
+        color: #DC2626;
+        border-bottom-color: #DC2626;
+        background: transparent;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container py-5">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-lg-3 mb-4">
-            <div class="card card-custom">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-person-circle" style="font-size: 80px; color: var(--primary-red);"></i>
+    <!-- Header Profile -->
+    <div class="card card-custom mb-4" style="background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); border: none;">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="d-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; backdrop-filter: blur(10px);">
+                        <i class="bi bi-person-fill text-white" style="font-size: 40px;"></i>
                     </div>
-                    <h5 class="fw-bold mb-1">{{ $pelanggan->nama }}</h5>
-                    <p class="text-muted small mb-3">{{ $pelanggan->email }}</p>
-                    
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('orders.index') }}" class="btn btn-outline-red btn-sm">
-                            <i class="bi bi-box-seam"></i> Pesanan Saya
+                </div>
+                <div class="col">
+                    <h4 class="text-white fw-bold mb-1">{{ $pelanggan->nama }}</h4>
+                    <p class="text-white mb-2" style="opacity: 0.9;">{{ $pelanggan->email }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('orders.index') }}" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                            <i class="bi bi-box-seam"></i> Pesanan
                         </a>
-                        <a href="{{ route('cart.index') }}" class="btn btn-outline-red btn-sm">
+                        <a href="{{ route('cart.index') }}" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
                             <i class="bi bi-cart3"></i> Keranjang
                         </a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <!-- Main Content -->
-        <div class="col-lg-9">
-            <!-- Profile Info -->
-            <div class="card card-custom mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="fw-bold mb-0">
-                            <i class="bi bi-person-fill text-red-custom"></i> Informasi Profile
-                        </h5>
-                    </div>
+        <div class="col-lg-8 mb-4">
+            <div class="card card-custom">
+                <div class="card-body p-0">
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs border-0" style="padding: 1rem 1rem 0 1rem;">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#profile-info" style="color: #6B7280; border: none; border-bottom: 3px solid transparent; padding-bottom: 1rem;">
+                                <i class="bi bi-person-fill"></i> Informasi Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#change-password" style="color: #6B7280; border: none; border-bottom: 3px solid transparent; padding-bottom: 1rem;">
+                                <i class="bi bi-shield-lock-fill"></i> Ubah Password
+                            </a>
+                        </li>
+                    </ul>
 
-                    <form action="{{ route('profile.update') }}" method="POST">
+                    <div class="tab-content p-4">
+                        <!-- Profile Info Tab -->
+                        <div class="tab-pane fade show active" id="profile-info">
+                            <form action="{{ route('profile.update') }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -88,23 +122,17 @@
                             </div>
                         </div>
 
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary-custom">
-                                <i class="bi bi-check-circle"></i> Simpan Perubahan
-                            </button>
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary-custom">
+                                        <i class="bi bi-check-circle"></i> Simpan Perubahan
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-            </div>
 
-            <!-- Change Password -->
-            <div class="card card-custom">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-4">
-                        <i class="bi bi-shield-lock-fill text-red-custom"></i> Ubah Password
-                    </h5>
-
-                    <form action="{{ route('profile.password') }}" method="POST">
+                        <!-- Change Password Tab -->
+                        <div class="tab-pane fade" id="change-password">
+                            <form action="{{ route('profile.password') }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -132,12 +160,41 @@
                             </div>
                         </div>
 
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary-custom">
-                                <i class="bi bi-shield-check"></i> Ubah Password
-                            </button>
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary-custom">
+                                        <i class="bi bi-shield-check"></i> Ubah Password
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Stats -->
+        <div class="col-lg-4">
+            <div class="card card-custom mb-3">
+                <div class="card-body p-3 text-center">
+                    <i class="bi bi-box-seam" style="font-size: 28px; color: #DC2626;"></i>
+                    <h4 class="fw-bold mt-2 mb-1" style="color: #1F2937;">{{ $pelanggan->orders()->count() }}</h4>
+                    <p class="text-muted small mb-0">Total Pesanan</p>
+                </div>
+            </div>
+
+            <div class="card card-custom mb-3">
+                <div class="card-body p-3 text-center">
+                    <i class="bi bi-clock-history" style="font-size: 28px; color: #DC2626;"></i>
+                    <h4 class="fw-bold mt-2 mb-1" style="color: #1F2937;">{{ $pelanggan->orders()->where('status_pesanan', 'pending')->count() }}</h4>
+                    <p class="text-muted small mb-0">Pesanan Pending</p>
+                </div>
+            </div>
+
+            <div class="card card-custom">
+                <div class="card-body p-3 text-center">
+                    <i class="bi bi-check-circle-fill" style="font-size: 28px; color: #10B981;"></i>
+                    <h4 class="fw-bold mt-2 mb-1" style="color: #1F2937;">{{ $pelanggan->orders()->where('status_pesanan', 'selesai')->count() }}</h4>
+                    <p class="text-muted small mb-0">Pesanan Selesai</p>
                 </div>
             </div>
         </div>
