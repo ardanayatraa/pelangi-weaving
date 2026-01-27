@@ -28,10 +28,13 @@ class DashboardController extends Controller
         // Pesanan pending
         $pendingOrders = Pesanan::where('status_pesanan', 'baru')->count();
         
-        // Produk stok rendah (< 10)
-        $lowStockProducts = Produk::where('stok', '<', 10)
-            ->where('status', 'aktif')
-            ->count();
+        // Produk dengan varian stok rendah (< 10)
+        $lowStockProducts = DB::table('varian_produk')
+            ->where('stok', '<', 10)
+            ->join('produk', 'varian_produk.id_produk', '=', 'produk.id_produk')
+            ->where('produk.status', 'aktif')
+            ->distinct('produk.id_produk')
+            ->count('produk.id_produk');
         
         // Recent orders
         $recentOrders = Pesanan::with(['pelanggan', 'payment'])
@@ -39,14 +42,14 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
         
-        // Top selling products (bulan ini)
+        // Top selling products (bulan ini) - simplified query
         $topProducts = DB::table('detail_pesanan')
             ->join('produk', 'detail_pesanan.id_produk', '=', 'produk.id_produk')
             ->join('pesanan', 'detail_pesanan.id_pesanan', '=', 'pesanan.id_pesanan')
             ->whereMonth('pesanan.created_at', date('m'))
             ->whereYear('pesanan.created_at', date('Y'))
             ->select('produk.nama_produk', DB::raw('SUM(detail_pesanan.jumlah) as total_terjual'))
-            ->groupBy('produk.id_produk', 'produk.nama_produk')
+            ->groupBy('produk.nama_produk')
             ->orderBy('total_terjual', 'desc')
             ->take(5)
             ->get();

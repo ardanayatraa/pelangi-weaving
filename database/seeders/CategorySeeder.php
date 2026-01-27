@@ -11,41 +11,37 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'nama_kategori' => 'Songket Premium',
-                'slug' => 'songket-premium',
-                'deskripsi' => 'Koleksi kain songket premium dengan benang emas dan perak asli, cocok untuk acara pernikahan dan upacara adat',
+                'nama_kategori' => 'Aksesoris (Selendang)',
+                'slug' => 'aksesoris-selendang',
+                'deskripsi' => 'Koleksi selendang songket dengan berbagai motif tradisional seperti tumpal, geometris, dan bunga',
             ],
             [
-                'nama_kategori' => 'Endek Bali',
-                'slug' => 'endek-bali',
-                'deskripsi' => 'Kain endek khas Bali dengan motif tradisional yang ditenun menggunakan teknik ikat',
+                'nama_kategori' => 'Kain Songket & Bawahan',
+                'slug' => 'kain-songket-bawahan',
+                'deskripsi' => 'Kain songket premium untuk bawahan dengan motif figur, bunga, dan klasik tradisional',
             ],
             [
-                'nama_kategori' => 'Selendang',
-                'slug' => 'selendang',
-                'deskripsi' => 'Selendang dan syal tenun dengan berbagai motif dan warna yang elegan',
+                'nama_kategori' => 'Kain Endek Katun',
+                'slug' => 'kain-endek-katun',
+                'deskripsi' => 'Kain endek berbahan katun dengan motif bunga, geometris, dan fauna khas Sidemen',
             ],
             [
-                'nama_kategori' => 'Kain Gringsing',
-                'slug' => 'kain-gringsing',
-                'deskripsi' => 'Kain gringsing langka dari Tenganan dengan teknik double ikat yang unik',
-            ],
-            [
-                'nama_kategori' => 'Kain Prada',
-                'slug' => 'kain-prada',
-                'deskripsi' => 'Kain dengan hiasan prada (emas) yang mewah untuk acara formal',
-            ],
-            [
-                'nama_kategori' => 'Kain Cepuk',
-                'slug' => 'kain-cepuk',
-                'deskripsi' => 'Kain cepuk khas Bali dengan motif geometris yang khas',
+                'nama_kategori' => 'Kain Endek Sutra (Premium)',
+                'slug' => 'kain-endek-sutra-premium',
+                'deskripsi' => 'Kain endek sutra premium dengan kualitas terbaik dan motif eksklusif',
             ],
         ];
 
         foreach ($categories as $category) {
-            Kategori::create($category);
+            $exists = Kategori::where('slug', $category['slug'])->exists();
+            if (!$exists) {
+                Kategori::create($category);
+                echo "Kategori {$category['nama_kategori']} berhasil ditambahkan!\n";
+            } else {
+                echo "Kategori {$category['nama_kategori']} sudah ada, dilewati.\n";
+            }
         }
 
-        echo "✅ Kategori berhasil di-seed!\n";
+        echo "Seeder Kategori selesai!\n";
     }
 }

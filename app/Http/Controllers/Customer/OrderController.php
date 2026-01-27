@@ -36,25 +36,30 @@ class OrderController extends Controller
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->firstOrFail();
         
-        // Handle payment callback dari Midtrans
+        // Handle payment callback
         if ($request->has('payment')) {
             $paymentStatus = $request->get('payment');
             Log::info('Payment callback detected', [
                 'status' => $paymentStatus,
-                'current_payment_status' => $order->payment->status_pembayaran ?? 'no payment'
+                'current_payment_status' => $order->payment->status_bayar ?? 'no payment'
             ]);
             
             if ($order->payment && in_array($paymentStatus, ['success', 'pending'])) {
-                // Cek status terbaru dari Midtrans
-                $this->checkPaymentStatus($order->payment);
-                $order->refresh();
+                // Update payment status (simplified)
+                if ($paymentStatus === 'success' && $order->payment->status_bayar !== 'paid') {
+                    $order->payment->update([
+                        'status_bayar' => 'paid',
+                        'tanggal_bayar' => now(),
+                    ]);
+                    $order->update(['status_pesanan' => 'diproses']);
+                }
                 
-                Log::info('Payment status after check', [
-                    'payment_status' => $order->payment->status_pembayaran,
+                Log::info('Payment status after update', [
+                    'payment_status' => $order->payment->status_bayar,
                     'order_status' => $order->status_pesanan
                 ]);
                 
-                $message = $order->payment->status_pembayaran == 'paid' 
+                $message = $order->payment->status_bayar == 'paid' 
                     ? 'Pembayaran berhasil! Pesanan Anda sedang diproses.' 
                     : 'Terima kasih! Pembayaran Anda sedang diverifikasi.';
                 
@@ -64,76 +69,6 @@ class OrderController extends Controller
         }
         
         return view('customer.orders.show', compact('order'));
-    }
-    
-    private function checkPaymentStatus($payment)
-    {
-        try {
-            Log::info('Checking payment status dari Midtrans', [
-                'order_id' => $payment->midtrans_order_id
-            ]);
-            
-            \Midtrans\Config::$serverKey = config('midtrans.server_key');
-            \Midtrans\Config::$isProduction = config('midtrans.is_production');
-            
-            $status = \Midtrans\Transaction::status($payment->midtrans_order_id);
-            
-            $transactionStatus = $status->transaction_status;
-            $fraudStatus = $status->fraud_status ?? null;
-            $paymentType = $status->payment_type ?? null;
-            
-            Log::info('Midtrans response', [
-                'transaction_status' => $transactionStatus,
-                'fraud_status' => $fraudStatus,
-                'payment_type' => $paymentType
-            ]);
-            
-            $updated = false;
-            
-            if ($transactionStatus == 'capture') {
-                if ($fraudStatus == 'accept') {
-                    Log::info('CAPTURE with ACCEPT - Updating to PAID');
-                    $payment->update([
-                        'status_pembayaran' => 'paid',
-                        'tipe_pembayaran' => $paymentType,
-                        'waktu_settlement' => now(),
-                    ]);
-                    $payment->order->update(['status_pesanan' => 'diproses']);
-                    $updated = true;
-                }
-            } elseif ($transactionStatus == 'settlement') {
-                Log::info('SETTLEMENT - Updating to PAID');
-                $payment->update([
-                    'status_pembayaran' => 'paid',
-                    'tipe_pembayaran' => $paymentType,
-                    'waktu_settlement' => now(),
-                ]);
-                $payment->order->update(['status_pesanan' => 'diproses']);
-                $updated = true;
-            } elseif ($transactionStatus == 'pending' && $paymentType) {
-                Log::info('PENDING with payment_type (Sandbox) - Updating to PAID');
-                // Sandbox: jika pending tapi ada payment_type, anggap sudah bayar
-                $payment->update([
-                    'status_pembayaran' => 'paid',
-                    'tipe_pembayaran' => $paymentType,
-                    'waktu_settlement' => now(),
-                ]);
-                $payment->order->update(['status_pesanan' => 'diproses']);
-                $updated = true;
-            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
-                Log::warning('Transaction ' . strtoupper($transactionStatus));
-                $payment->update([
-                    'status_pembayaran' => $transactionStatus == 'deny' ? 'failure' : $transactionStatus,
-                ]);
-                $payment->order->update(['status_pesanan' => 'batal']);
-                $updated = true;
-            }
-            
-            return $updated;
-        } catch (\Exception $e) {
-            Log::error('Error checking payment status: ' . $e->getMessage());
-            return false;
-        }
     }
 
     public function cancel($nomorInvoice)

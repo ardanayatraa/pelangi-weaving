@@ -19,6 +19,12 @@ class Pelanggan extends Authenticatable
         'password',
         'alamat',
         'telepon',
+        'whatsapp',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'email_verified',
+        'email_verified_at',
+        'points',
         'id_kota',
         'id_provinsi',
         'kode_pos',
@@ -31,6 +37,9 @@ class Pelanggan extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'tanggal_lahir' => 'date',
+        'email_verified' => 'boolean',
+        'points' => 'integer',
         'password' => 'hashed',
     ];
 
@@ -42,5 +51,27 @@ class Pelanggan extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Pesanan::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    public function pesanan(): HasMany
+    {
+        return $this->hasMany(Pesanan::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    public function customOrders(): HasMany
+    {
+        return $this->hasMany(CustomOrder::class, 'id_pelanggan', 'id_pelanggan');
+    }
+
+    // Methods sesuai class diagram
+    public function getCartTotal(): decimal
+    {
+        return $this->carts()->sum('jumlah');
+    }
+
+    // Route Key Name
+    public function getRouteKeyName()
+    {
+        return 'id_pelanggan';
     }
 }

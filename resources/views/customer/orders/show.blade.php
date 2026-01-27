@@ -63,12 +63,12 @@
 
                         <!-- Pembayaran -->
                         <div class="relative flex items-start">
-                            <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $order->payment && $order->payment->status_pembayaran == 'paid' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600' }} z-10">
-                                <i class="bi bi-{{ $order->payment && $order->payment->status_pembayaran == 'paid' ? 'check' : 'clock' }} text-sm"></i>
+                            <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $order->payment && $order->payment->status_bayar == 'paid' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600' }} z-10">
+                                <i class="bi bi-{{ $order->payment && $order->payment->status_bayar == 'paid' ? 'check' : 'clock' }} text-sm"></i>
                             </div>
                             <div class="ml-4 flex-1">
                                 <p class="font-semibold text-gray-900">Pembayaran</p>
-                                @if($order->payment && $order->payment->status_pembayaran == 'paid')
+                                @if($order->payment && $order->payment->status_bayar == 'paid')
                                 <p class="text-sm text-green-600">Pembayaran berhasil</p>
                                 @else
                                 <p class="text-sm text-gray-600">Menunggu pembayaran</p>
@@ -235,15 +235,15 @@
 
                 <!-- Payment Status -->
                 @if($order->payment)
-                <div class="mb-4 p-4 rounded-lg {{ $order->payment->status_pembayaran == 'paid' ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200' }}">
+                <div class="mb-4 p-4 rounded-lg {{ $order->payment->status_bayar == 'paid' ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200' }}">
                     <div class="flex items-center gap-2 mb-2">
-                        <i class="bi bi-{{ $order->payment->status_pembayaran == 'paid' ? 'check-circle-fill text-green-600' : 'clock-fill text-yellow-600' }}"></i>
-                        <span class="font-semibold {{ $order->payment->status_pembayaran == 'paid' ? 'text-green-900' : 'text-yellow-900' }}">
-                            {{ $order->payment->status_pembayaran == 'paid' ? 'Pembayaran Berhasil' : 'Menunggu Pembayaran' }}
+                        <i class="bi bi-{{ $order->payment->status_bayar == 'paid' ? 'check-circle-fill text-green-600' : 'clock-fill text-yellow-600' }}"></i>
+                        <span class="font-semibold {{ $order->payment->status_bayar == 'paid' ? 'text-green-900' : 'text-yellow-900' }}">
+                            {{ $order->payment->status_bayar == 'paid' ? 'Pembayaran Berhasil' : 'Menunggu Pembayaran' }}
                         </span>
                     </div>
-                    @if($order->payment->status_pembayaran != 'paid')
-                    <p class="text-sm {{ $order->payment->status_pembayaran == 'paid' ? 'text-green-700' : 'text-yellow-700' }}">
+                    @if($order->payment->status_bayar != 'paid')
+                    <p class="text-sm {{ $order->payment->status_bayar == 'paid' ? 'text-green-700' : 'text-yellow-700' }}">
                         Silakan selesaikan pembayaran Anda
                     </p>
                     @endif
@@ -251,13 +251,77 @@
                 @endif
 
                 <!-- Actions -->
-                <div class="space-y-2" x-data="{ showConfirmModal: false }">
-                    @if($order->payment && in_array($order->payment->status_pembayaran, ['unpaid', 'pending']) && !in_array($order->status_pesanan, ['batal', 'selesai']))
-                    <a href="{{ route('payment.show', $order->nomor_invoice) }}" 
-                       class="block w-full text-center px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold rounded-lg transition-all shadow-lg transform hover:scale-105">
+                <div class="space-y-2" x-data="{ showConfirmModal: false, showPaymentModal: false }">
+                    @if($order->payment && in_array($order->payment->status_bayar, ['unpaid', 'pending']) && !in_array($order->status_pesanan, ['batal', 'selesai']))
+                    <button @click="showPaymentModal = true" 
+                            class="block w-full text-center px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold rounded-lg transition-all shadow-lg transform hover:scale-105 mb-2">
                         <i class="bi bi-credit-card mr-2"></i>
                         Bayar Sekarang
+                    </button>
+                    
+                    <a href="{{ route('payment.show', $order->nomor_invoice) }}" 
+                       class="block w-full text-center px-4 py-3 border-2 border-red-300 text-red-600 hover:bg-red-50 font-semibold rounded-lg transition-colors">
+                        <i class="bi bi-eye mr-2"></i>
+                        Lihat Detail Pembayaran
                     </a>
+                    
+                    <!-- Quick Payment Modal -->
+                    <div x-show="showPaymentModal" x-cloak 
+                         class="fixed inset-0 z-[9999] overflow-y-auto flex items-center justify-center p-4 bg-black bg-opacity-50" 
+                         style="display: none;">
+                        <div @click.away="showPaymentModal = false" x-show="showPaymentModal" 
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 transform scale-90"
+                             x-transition:enter-end="opacity-100 transform scale-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100 transform scale-100"
+                             x-transition:leave-end="opacity-0 transform scale-90"
+                             class="relative bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border-4 border-red-500">
+                            <div class="bg-gradient-to-r from-red-50 to-red-100 px-6 py-4 border-b border-red-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                                        <i class="bi bi-credit-card text-white text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-900">Pembayaran Cepat</h3>
+                                        <p class="text-sm text-gray-600">Lanjutkan pembayaran pesanan</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6">
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-600 mb-1">Invoice:</p>
+                                    <p class="font-mono font-bold text-gray-900">{{ $order->nomor_invoice }}</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-600 mb-1">Total Pembayaran:</p>
+                                    <p class="text-2xl font-bold text-red-600">Rp {{ number_format($order->total_bayar, 0, ',', '.') }}</p>
+                                </div>
+                                
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                                    <p class="text-sm text-yellow-800">
+                                        <i class="bi bi-info-circle mr-1"></i>
+                                        Anda akan diarahkan ke halaman pembayaran Midtrans untuk menyelesaikan transaksi.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 flex justify-end gap-3">
+                                <button @click="showPaymentModal = false" 
+                                        class="px-5 py-2.5 bg-white hover:bg-gray-100 text-gray-700 font-semibold rounded-lg border border-gray-300 transition">
+                                    Batal
+                                </button>
+                                <button onclick="processQuickPayment()" 
+                                        id="quick-pay-button"
+                                        class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition hover:shadow-lg">
+                                    <i class="bi bi-credit-card mr-2"></i>
+                                    Bayar Sekarang
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     @endif
                     
                     @if($order->status_pesanan == 'dikirim')
@@ -323,7 +387,7 @@
                     </div>
                     @endif
                     
-                    @if(in_array($order->status_pesanan, ['baru']) && $order->payment && $order->payment->status_pembayaran != 'paid')
+                    @if(in_array($order->status_pesanan, ['baru']) && $order->payment && $order->payment->status_bayar != 'paid')
                     <form action="{{ route('orders.cancel', $order->nomor_invoice) }}" method="POST" 
                           onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?')">
                         @csrf
@@ -352,3 +416,139 @@
     </div>
 </div>
 @endsection
+
+@if($order->payment && in_array($order->payment->status_bayar, ['unpaid', 'pending']))
+<!-- Midtrans Snap -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+<script>
+// Quick Payment Function
+function processQuickPayment() {
+    const button = document.getElementById('quick-pay-button');
+    const originalText = button.innerHTML;
+    
+    // Show loading state
+    button.disabled = true;
+    button.innerHTML = '<div class="flex items-center justify-center"><svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memproses...</div>';
+    
+    // Initialize Midtrans Snap
+    snap.pay('{{ $order->payment->snap_token }}', {
+        onSuccess: function(result) {
+            console.log('=== QUICK PAYMENT SUCCESS ===');
+            console.log('Result:', result);
+            
+            // Show success message
+            showQuickPaymentResult('success', 'Pembayaran berhasil! Halaman akan dimuat ulang...');
+            
+            // Redirect to finish page
+            setTimeout(() => {
+                const finishUrl = '{{ route("payment.finish") }}?order_id=' + result.order_id;
+                window.location.href = finishUrl;
+            }, 2000);
+        },
+        onPending: function(result) {
+            console.log('=== QUICK PAYMENT PENDING ===');
+            console.log('Result:', result);
+            
+            // Show pending message
+            showQuickPaymentResult('pending', 'Pembayaran sedang diproses. Halaman akan dimuat ulang...');
+            
+            setTimeout(() => {
+                const finishUrl = '{{ route("payment.finish") }}?order_id=' + result.order_id;
+                window.location.href = finishUrl;
+            }, 2000);
+        },
+        onError: function(result) {
+            console.log('=== QUICK PAYMENT ERROR ===');
+            console.log('Result:', result);
+            
+            // Show error message
+            showQuickPaymentResult('error', 'Pembayaran gagal: ' + (result.status_message || 'Silakan coba lagi'));
+            
+            // Reset button
+            button.disabled = false;
+            button.innerHTML = originalText;
+        },
+        onClose: function() {
+            console.log('=== QUICK PAYMENT POPUP CLOSED ===');
+            
+            // Reset button
+            button.disabled = false;
+            button.innerHTML = originalText;
+            
+            // Show recovery message
+            showQuickPaymentRecovery();
+        }
+    });
+}
+
+// Show quick payment result notification
+function showQuickPaymentResult(type, message) {
+    const colors = {
+        success: 'bg-green-100 border-green-500 text-green-700',
+        error: 'bg-red-100 border-red-500 text-red-700',
+        pending: 'bg-yellow-100 border-yellow-500 text-yellow-700'
+    };
+    
+    const icons = {
+        success: 'bi-check-circle-fill',
+        error: 'bi-x-circle-fill',
+        pending: 'bi-clock-fill'
+    };
+    
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 max-w-sm p-4 border-l-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="bi ${icons[type]} text-xl mr-3"></i>
+            <div>
+                <p class="font-semibold">${message}</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
+// Show recovery message when quick payment popup is closed
+function showQuickPaymentRecovery() {
+    const recoveryNotification = document.createElement('div');
+    recoveryNotification.className = 'fixed top-4 right-4 max-w-sm p-4 border-l-4 rounded-lg shadow-lg z-50 bg-blue-100 border-blue-500 text-blue-700';
+    recoveryNotification.innerHTML = `
+        <div class="flex items-start">
+            <i class="bi bi-info-circle-fill text-xl mr-3 mt-0.5"></i>
+            <div class="flex-1">
+                <p class="font-semibold mb-2">Pembayaran Tertunda</p>
+                <p class="text-sm mb-3">Anda dapat melanjutkan pembayaran kapan saja melalui tombol "Bayar Sekarang" atau halaman detail pembayaran.</p>
+                <div class="flex gap-2">
+                    <button onclick="this.parentElement.parentElement.parentElement.parentElement.remove()" 
+                            class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition">
+                        Tutup
+                    </button>
+                    <a href="{{ route('payment.show', $order->nomor_invoice) }}" 
+                       class="text-xs bg-white hover:bg-blue-50 text-blue-700 border border-blue-300 px-3 py-1 rounded transition">
+                        Detail Pembayaran
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(recoveryNotification);
+    
+    // Auto remove after 10 seconds
+    setTimeout(() => {
+        if (recoveryNotification.parentNode) {
+            recoveryNotification.parentNode.removeChild(recoveryNotification);
+        }
+    }, 10000);
+}
+</script>
+@endif

@@ -12,9 +12,16 @@ use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
+    protected $midtransService;
+
+    public function __construct(MidtransService $midtransService)
+    {
+        $this->midtransService = $midtransService;
+    }
     public function index(Request $request)
     {
         // Get selected cart items from request (comma-separated IDs)
@@ -141,14 +148,22 @@ class CheckoutController extends Controller
                 'status_pengiriman' => 'menunggu',
             ]);
             
-            $midtransService = app(MidtransService::class);
-            $snapToken = $midtransService->createTransaction($order, $cartItems);
+            // Generate Midtrans Snap Token
+            $snapToken = null;
+            try {
+                $snapToken = $this->midtransService->createTransaction($order);
+                Log::info('Snap token generated for order: ' . $order->nomor_invoice);
+            } catch (\Exception $e) {
+                Log::error('Failed to generate snap token: ' . $e->getMessage());
+                // Continue without snap token - can be generated later
+            }
             
+            // Create payment record with snap token
             Pembayaran::create([
                 'id_pesanan' => $order->id_pesanan,
-                'midtrans_order_id' => $nomorInvoice,
+                'jumlah_bayar' => $totalBayar,
+                'status_bayar' => 'pending',
                 'snap_token' => $snapToken,
-                'status_pembayaran' => 'unpaid',
             ]);
             
             DB::commit();

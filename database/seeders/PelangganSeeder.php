@@ -54,10 +54,16 @@ class PelangganSeeder extends Seeder
         ];
 
         foreach ($pelanggan as $data) {
-            Pelanggan::create($data);
+            $exists = Pelanggan::where('email', $data['email'])->exists();
+            if (!$exists) {
+                Pelanggan::create($data);
+                echo "Pelanggan {$data['nama']} berhasil ditambahkan!\n";
+            } else {
+                echo "Pelanggan {$data['nama']} sudah ada, dilewati.\n";
+            }
         }
 
-        echo "✅ Pelanggan berhasil di-seed!\n";
+        echo "Seeder Pelanggan selesai!\n";
         echo "   Email: budi@gmail.com | Password: customer123\n";
         echo "   Email: siti@gmail.com | Password: customer123\n";
         echo "   Email: agung@gmail.com | Password: customer123\n";

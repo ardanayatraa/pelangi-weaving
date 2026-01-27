@@ -124,6 +124,6 @@ class OrderSeeder extends Seeder
             }
         }
         
-        $this->command->info('✅ Orders seeded successfully!');
+        $this->command->info('Orders seeded successfully!');
     }
 }

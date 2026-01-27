@@ -3,280 +3,259 @@
 @section('title', $product->nama_produk)
 
 @section('content')
-<div class="bg-white">
-    <div class="max-w-7xl mx-auto px-4 py-3 md:py-6">
+<div class="bg-white min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-6">
         <!-- Breadcrumb -->
-        <nav class="mb-3 md:mb-4 text-xs md:text-sm overflow-x-auto">
-            <ol class="flex items-center gap-2 text-gray-600 whitespace-nowrap">
+        <nav class="mb-6">
+            <ol class="flex items-center space-x-2 text-sm text-gray-600">
                 <li><a href="{{ route('home') }}" class="hover:text-primary-600">Home</a></li>
-                <li><i class="bi bi-chevron-right text-xs"></i></li>
+                <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
                 <li><a href="{{ route('products.index') }}" class="hover:text-primary-600">Produk</a></li>
-                <li><i class="bi bi-chevron-right text-xs"></i></li>
-                <li class="text-gray-800 truncate max-w-[150px] md:max-w-none">{{ $product->nama_produk }}</li>
+                <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+                <li><a href="{{ route('products.index', ['category' => $product->category->id_kategori]) }}" class="hover:text-primary-600">{{ $product->category->nama_kategori }}</a></li>
+                <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+                <li class="text-gray-900 font-medium">{{ Str::limit($product->nama_produk, 30) }}</li>
             </ol>
         </nav>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12" x-data="productData()">
             <!-- Left: Product Images -->
-            <div class="lg:col-span-5">
-                <div class="lg:sticky lg:top-20">
-                    <!-- Main Image with Zoom -->
-                    <div class="bg-gray-50 rounded-lg overflow-hidden mb-3 border border-gray-200 relative group cursor-zoom-in" 
-                         id="imageContainer"
-                         onmousemove="zoomImage(event)" 
-                         onmouseleave="resetZoom()">
-                        <img id="mainImage" 
-                             src="{{ asset('storage/' . ($product->images->first()->path ?? 'placeholder.png')) }}" 
-                             alt="{{ $product->nama_produk }}"
-                             class="w-full h-64 md:h-[500px] object-contain transition-transform duration-200"
-                             style="transform-origin: center center;">
+            <div>
+                <!-- Main Image -->
+                <div class="mb-6">
+                    <div class="relative bg-gray-50 rounded-2xl overflow-hidden aspect-square">
+                        <img :src="currentImage" 
+                             :alt="product.nama_produk"
+                             class="w-full h-full object-cover">
+                        
+                        <!-- Badge -->
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                BARU
+                            </span>
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Thumbnails -->
-                    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300">
-                        <!-- Product Main Images -->
-                        @foreach($product->images as $index => $image)
-                        <button onclick="changeMainImage('{{ asset('storage/' . $image->path) }}')" 
-                                class="thumbnail-btn flex-shrink-0 w-16 h-16 border-2 border-gray-200 rounded-lg overflow-hidden hover:border-primary-600 transition"
-                                data-image="{{ asset('storage/' . $image->path) }}">
-                            <img src="{{ asset('storage/' . $image->path) }}" 
-                                 alt="{{ $product->nama_produk }}"
+                <!-- Thumbnails -->
+                <div class="grid grid-cols-4 gap-3">
+                    <template x-for="(image, index) in productImages" :key="index">
+                        <button @click="changeMainImage(image)" 
+                                class="aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200"
+                                :class="currentImage === image ? 'border-primary-600 ring-2 ring-primary-200' : 'border-gray-200 hover:border-gray-300'">
+                            <img :src="image" 
+                                 :alt="product.nama_produk"
                                  class="w-full h-full object-cover">
                         </button>
-                        @endforeach
-
-                        <!-- Variant Images -->
-                        @foreach($product->activeVariants as $variant)
-                            @if($variant->gambar_varian)
-                            <button onclick="changeMainImage('{{ asset('storage/' . $variant->gambar_varian) }}'); selectVariant({{ $variant->id_varian }});" 
-                                    class="thumbnail-btn flex-shrink-0 w-16 h-16 border-2 border-gray-200 rounded-lg overflow-hidden hover:border-primary-600 transition group relative"
-                                    data-image="{{ asset('storage/' . $variant->gambar_varian) }}">
-                                <img src="{{ asset('storage/' . $variant->gambar_varian) }}" 
-                                     alt="{{ $variant->nama_varian }}"
-                                     class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition flex items-end justify-center pb-1">
-                                    <span class="text-[8px] text-white opacity-0 group-hover:opacity-100 transition font-semibold bg-black bg-opacity-50 px-1 rounded">{{ $variant->warna ?? 'Varian' }}</span>
-                                </div>
-                            </button>
-                            @endif
-                        @endforeach
-                    </div>
+                    </template>
                 </div>
             </div>
 
             <!-- Right: Product Info -->
-            <div class="lg:col-span-7">
+            <div>
                 <!-- Product Title -->
-                <h1 class="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">{{ $product->nama_produk }}</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $product->nama_produk }}</h1>
                 
-                <!-- Category Badge -->
-                <div class="mb-3 md:mb-4 flex items-center gap-2 flex-wrap">
-                    <span class="inline-block bg-primary-100 text-primary-700 text-sm px-3 py-1 rounded-full">
-                        {{ $product->category->nama_kategori }}
-                    </span>
-                    @if($product->is_made_to_order)
-                        <span class="inline-flex items-center bg-purple-100 text-purple-700 text-sm px-3 py-1 rounded-full font-semibold">
-                            <i class="bi bi-clock-history mr-1"></i> Made to Order
+                <!-- SKU -->
+                <p class="text-gray-600 mb-4">SKU: {{ $product->sku ?? 'KTB-001' }}</p>
+                
+                <!-- Rating -->
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center">
+                        @for($i = 1; $i <= 5; $i++)
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                        </svg>
+                        @endfor
+                    </div>
+                    <span class="ml-2 text-gray-600">4.2 (24 ulasan)</span>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-8">
+                    <div class="flex items-baseline space-x-3">
+                        <span class="text-4xl font-bold text-primary-600" x-text="formattedPrice">
+                            {!! $product->getFormattedPrice() !!}
                         </span>
-                    @endif
+                        @if($product->activeVariants->count() > 0 && $product->activeVariants->min('harga') < $product->activeVariants->max('harga'))
+                        <span class="text-xl text-gray-400 line-through">
+                            Rp {{ number_format($product->activeVariants->max('harga')) }}
+                        </span>
+                        @endif
+                    </div>
+                    <p class="text-green-600 text-sm mt-1">Hemat Rp 50.000 (10% OFF)</p>
                 </div>
-                
-                @if($product->is_made_to_order && $product->lead_time_days)
-                <div class="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                    <p class="text-sm text-purple-800">
-                        <i class="bi bi-info-circle mr-1"></i>
-                        <strong>Produk ini dibuat sesuai pesanan.</strong> Estimasi waktu pengerjaan: <strong>{{ $product->lead_time_days }} hari kerja</strong> setelah pembayaran dikonfirmasi.
-                    </p>
-                </div>
-                @endif
-
-                <!-- Price Section -->
-                <div class="bg-gray-50 rounded-lg p-3 md:p-4 mb-3 md:mb-4">
-                    <span id="displayPrice" class="text-xl md:text-3xl font-bold text-primary-600">
-                        {!! $product->getFormattedPrice() !!}
-                    </span>
-                </div>
-
-
 
                 <!-- Variants -->
                 @if($product->activeVariants->count() > 0)
-                <div class="mb-6 pb-6 border-b">
-                    <label class="block text-sm font-semibold text-gray-900 mb-2">
-                        Pilih Varian <span class="text-red-600">*</span>
+                <div class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-900 mb-4">
+                        Pilih Varian:
                     </label>
-                    <p class="text-xs text-gray-600 mb-3">Wajib pilih salah satu varian</p>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach($product->activeVariants as $variant)
-                        <button type="button" 
-                                onclick="selectVariant({{ $variant->id_varian }})" 
-                                id="variant-{{ $variant->id_varian }}"
-                                class="variant-btn border-2 border-gray-300 hover:border-primary-600 rounded-lg px-4 py-2 text-sm font-medium transition"
-                                {{ $variant->stok == 0 ? 'disabled' : '' }}>
-                            {{ $variant->nama_varian }}
-                        </button>
-                        @endforeach
+                    <div class="flex flex-wrap gap-3">
+                        <template x-for="variant in variants" :key="variant.id">
+                            <button type="button" 
+                                    @click="selectVariant(variant.id)"
+                                    class="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-200"
+                                    :class="selectedVariantId === variant.id ? 'border-primary-600 bg-primary-600 text-white' : 'border-gray-300 text-gray-700 hover:border-primary-600'"
+                                    :disabled="variant.stok === 0"
+                                    x-text="variant.nama.split(' - ')[0]">
+                            </button>
+                        </template>
                     </div>
                 </div>
                 @endif
 
-                <!-- Quantity & Stock -->
-                <div class="mb-6 pb-6 border-b">
-                    <div class="flex items-center justify-between mb-3">
-                        <label class="text-sm font-semibold text-gray-900">Jumlah</label>
-                        <span class="text-sm text-gray-600">Stok: <strong id="displayStock" class="text-gray-900">{{ $product->stok }}</strong></span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center border border-gray-300 rounded-lg">
-                            <button type="button" onclick="decreaseQty()" 
-                                    class="w-10 h-10 hover:bg-gray-50 transition">
-                                <i class="bi bi-dash"></i>
+                <!-- Quantity -->
+                <div class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-900 mb-4">
+                        Jumlah:
+                    </label>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center border-2 border-gray-300 rounded-xl">
+                            <button type="button" @click="decreaseQty()" 
+                                    class="w-12 h-12 flex items-center justify-center hover:bg-gray-50 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                </svg>
                             </button>
-                            <input type="number" id="quantity" value="1" min="1" max="{{ $product->stok }}"
-                                   class="w-16 text-center border-x border-gray-300 h-10 focus:outline-none">
-                            <button type="button" onclick="increaseQty()" 
-                                    class="w-10 h-10 hover:bg-gray-50 transition">
-                                <i class="bi bi-plus"></i>
+                            <input type="number" x-model="quantity" :min="1" :max="currentStock"
+                                   class="w-16 text-center border-0 focus:outline-none text-lg font-semibold">
+                            <button type="button" @click="increaseQty()" 
+                                    class="w-12 h-12 flex items-center justify-center hover:bg-gray-50 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
                             </button>
                         </div>
-                        <span class="text-sm text-gray-600">Maks. pembelian <span id="maxQty">{{ $product->stok }}</span> pcs</span>
+                        <span class="text-gray-600">Stok: <span class="font-semibold" x-text="currentStock">{{ $product->stok }}</span> pcs</span>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 @auth('pelanggan')
-                <form id="cartForm" action="{{ route('cart.add') }}" method="POST">
+                <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm">
                     @csrf
                     <input type="hidden" name="id_produk" value="{{ $product->id_produk }}">
-                    <input type="hidden" name="jumlah" id="form_quantity" value="1">
-                    <input type="hidden" name="id_varian" id="form_variant" value="">
-                    <input type="hidden" name="buy_now" id="form_buy_now" value="">
+                    <input type="hidden" name="jumlah" :value="quantity">
+                    <input type="hidden" name="id_varian" :value="selectedVariantId">
+                    <input type="hidden" name="buy_now" x-ref="buyNowInput" value="">
                     
-                    <div class="flex flex-col sm:flex-row gap-2 md:gap-3 mb-4 md:mb-6">
-                        <button type="button" onclick="addToCart()" 
-                                class="flex-1 bg-primary-50 border-2 border-primary-600 text-primary-600 py-2.5 md:py-3 rounded-lg font-semibold hover:bg-primary-100 transition text-sm md:text-base"
-                                {{ $product->stok == 0 ? 'disabled' : '' }}>
-                            <i class="bi bi-cart-plus"></i> Keranjang
+                    <div class="flex space-x-4 mb-8">
+                        <button type="button" @click="addToCart()" 
+                                class="flex-1 bg-primary-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-colors"
+                                :disabled="currentStock === 0">
+                            Tambah ke Keranjang
                         </button>
                         
-                        <button type="button" onclick="buyNow()"
-                                class="flex-1 bg-primary-600 text-white py-2.5 md:py-3 rounded-lg font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200 text-sm md:text-base"
-                                {{ $product->stok == 0 ? 'disabled' : '' }}>
-                            Beli Sekarang
+                        <button type="button" 
+                                class="w-16 h-16 border-2 border-gray-300 rounded-xl flex items-center justify-center hover:border-primary-600 hover:text-primary-600 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
                         </button>
                     </div>
                 </form>
                 @else
-                <a href="{{ route('login') }}" 
-                   class="block text-center bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition shadow-lg shadow-primary-200 mb-6">
-                    <i class="bi bi-box-arrow-in-right"></i> Login untuk Membeli
-                </a>
+                <div class="mb-8">
+                    <a href="{{ route('login') }}" 
+                       class="block text-center bg-primary-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-700 transition-colors">
+                        Login untuk Membeli
+                    </a>
+                </div>
                 @endauth
 
-                <!-- Additional Info -->
-                <div class="bg-gray-50 rounded-lg p-4 space-y-3 text-sm">
-                    <div class="flex items-start gap-3">
-                        <i class="bi bi-truck text-gray-600 mt-0.5"></i>
-                        <div>
-                            <p class="font-medium text-gray-900">Pengiriman</p>
-                            <p class="text-gray-600">Dikirim dari Sidemen, Karangasem, Bali</p>
-                            <p class="text-gray-600">Ongkir mulai dari Rp 10.000</p>
-                        </div>
+                <!-- Product Details -->
+                <div class="space-y-4">
+                    <div>
+                        <span class="font-semibold text-gray-900">Kategori:</span>
+                        <span class="text-gray-600 ml-2">{{ $product->category->nama_kategori }}</span>
                     </div>
-                    <div class="flex items-start gap-3">
-                        <i class="bi bi-box-seam text-gray-600 mt-0.5"></i>
-                        <div>
-                            <p class="font-medium text-gray-900">Berat Produk</p>
-                            <p class="text-gray-600">{{ $product->berat }} gram</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i class="bi bi-shield-check text-gray-600 mt-0.5"></i>
-                        <div>
-                            <p class="font-medium text-gray-900">Garansi</p>
-                            <p class="text-gray-600">Produk original 100% dengan garansi kualitas</p>
-                        </div>
+                    <div>
+                        <span class="font-semibold text-gray-900">Bahan:</span>
+                        <span class="text-gray-600 ml-2">
+                            @if($product->category->nama_kategori == 'Kain Endek Sutra (Premium)')
+                                Sutra Premium
+                            @elseif($product->category->nama_kategori == 'Kain Endek Katun')
+                                Katun Premium
+                            @else
+                                Katun Premium
+                            @endif
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Product Details Tabs -->
-        <div class="mt-8 border-t pt-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8">
-                    <div>
-                        <!-- Tabs -->
-                        <div class="flex gap-6 border-b mb-6">
-                            <button onclick="switchTab('description')" 
-                                    id="tab-description"
-                                    class="tab-btn pb-3 font-semibold transition border-b-2 border-primary-600 text-primary-600">
-                                Deskripsi Produk
-                            </button>
-                            <button onclick="switchTab('specs')" 
-                                    id="tab-specs"
-                                    class="tab-btn pb-3 font-semibold transition text-gray-600">
-                                Spesifikasi
-                            </button>
-                        </div>
-
-                        <!-- Description Tab -->
-                        <div id="content-description" class="tab-content prose max-w-none">
-                            <div class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $product->deskripsi }}</div>
-                        </div>
-
-                        <!-- Specs Tab -->
-                        <div id="content-specs" class="tab-content hidden">
-                            <table class="w-full">
-                                <tr class="border-b">
-                                    <td class="py-3 text-gray-600 w-1/3">Kategori</td>
-                                    <td class="py-3 font-medium">{{ $product->category->nama_kategori }}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-3 text-gray-600">Berat</td>
-                                    <td class="py-3 font-medium">{{ $product->berat }} gram</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-3 text-gray-600">Stok</td>
-                                    <td class="py-3 font-medium">{{ $product->stok }} pcs</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-3 text-gray-600">Kondisi</td>
-                                    <td class="py-3 font-medium">Baru</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-3 text-gray-600">Asal</td>
-                                    <td class="py-3 font-medium">Sidemen, Bali</td>
-                                </tr>
-                            </table>
+        <!-- Product Description & Details -->
+        <div class="mt-16 border-t pt-16">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Description -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Deskripsi Produk</h2>
+                    <div class="prose max-w-none text-gray-700 leading-relaxed">
+                        <p>{{ $product->deskripsi }}</p>
+                    </div>
+                    
+                    <!-- Specifications -->
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Spesifikasi</h3>
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <span class="font-semibold text-gray-900">Berat:</span>
+                                    <span class="text-gray-600 ml-2">{{ $product->berat }} gram</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-900">Kondisi:</span>
+                                    <span class="text-gray-600 ml-2">Baru</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-900">Asal:</span>
+                                    <span class="text-gray-600 ml-2">Sidemen, Bali</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-900">Garansi:</span>
+                                    <span class="text-gray-600 ml-2">Kualitas Original</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Seller Info -->
-                <div class="lg:col-span-4">
-                    <div class="border border-gray-200 rounded-lg p-4 sticky top-20">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                                <i class="bi bi-shop text-primary-600 text-xl"></i>
+                <div>
+                    <div class="bg-gray-50 rounded-2xl p-6 sticky top-6">
+                        <div class="flex items-center mb-6">
+                            <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm3 6V7h6v3H7z" clip-rule="evenodd"></path>
+                                </svg>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900">Pelangi Weaving</p>
-                                <p class="text-xs text-gray-600">Sidemen, Bali</p>
+                                <h3 class="font-bold text-gray-900">Pelangi Weaving</h3>
+                                <p class="text-gray-600 text-sm">Sidemen, Bali</p>
                             </div>
                         </div>
-                        <div class="space-y-2 text-sm mb-4">
+                        
+                        <div class="space-y-3 text-sm mb-6">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Sejak</span>
-                                <span class="font-medium text-gray-900">1979</span>
+                                <span class="font-semibold text-gray-900">1979</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Lokasi</span>
-                                <span class="font-medium text-gray-900">Karangasem, Bali</span>
+                                <span class="text-gray-600">Produk</span>
+                                <span class="font-semibold text-gray-900">50+ Motif</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Rating</span>
+                                <span class="font-semibold text-gray-900">4.9/5</span>
                             </div>
                         </div>
-                        <a href="{{ route('products.index') }}" class="block w-full text-center border border-primary-600 text-primary-600 py-2 rounded-lg hover:bg-primary-50 transition text-sm font-medium">
-                            <i class="bi bi-shop"></i> Lihat Produk Lain
+                        
+                        <a href="{{ route('products.index') }}" 
+                           class="block w-full text-center border-2 border-primary-600 text-primary-600 py-3 rounded-xl hover:bg-primary-50 transition font-semibold">
+                            Lihat Produk Lain
                         </a>
                     </div>
                 </div>
@@ -285,24 +264,30 @@
 
         <!-- Related Products -->
         @if($relatedProducts->count() > 0)
-        <div class="mt-12 border-t pt-8">
-            <h2 class="text-xl font-bold mb-6">Produk Serupa</h2>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="mt-16 border-t pt-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Produk Serupa</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 @foreach($relatedProducts as $related)
-                <a href="{{ route('products.show', $related->slug) }}" class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition group">
-                    @if($related->images->first())
-                    <img src="{{ asset('storage/' . $related->images->first()->path) }}" 
-                         alt="{{ $related->nama_produk }}"
-                         class="w-full h-40 object-cover group-hover:scale-105 transition">
-                    @else
-                    <div class="w-full h-40 bg-gray-100 flex items-center justify-center">
-                        <i class="bi bi-image text-gray-300 text-3xl"></i>
-                    </div>
-                    @endif
-                    <div class="p-3">
-                        <p class="text-sm text-gray-800 line-clamp-2 mb-2 group-hover:text-primary-600">{{ $related->nama_produk }}</p>
-                        <p class="text-primary-600 font-bold">{!! $related->getFormattedPrice() !!}</p>
-                        <p class="text-xs text-gray-600 mt-1">Stok: {{ $related->stok }}</p>
+                <a href="{{ route('products.show', $related->slug) }}" class="group">
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300">
+                        @if($related->images->first())
+                        <img src="{{ asset('storage/' . $related->images->first()->path) }}" 
+                             alt="{{ $related->nama_produk }}"
+                             class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        @else
+                        <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        @endif
+                        <div class="p-4">
+                            <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                                {{ $related->nama_produk }}
+                            </h3>
+                            <p class="text-primary-600 font-bold text-lg">{!! $related->getFormattedPrice() !!}</p>
+                            <p class="text-gray-600 text-sm mt-1">Stok: {{ $related->stok }}</p>
+                        </div>
                     </div>
                 </a>
                 @endforeach
@@ -313,177 +298,126 @@
 </div>
 
 <script>
-let selectedVariantId = null;
-
-// Variant data
-const variants = {
-    @foreach($product->activeVariants as $variant)
-    {{ $variant->id_varian }}: {
-        harga: {{ $variant->harga ?? $product->harga }},
-        stok: {{ $variant->stok }},
-        nama: '{{ $variant->nama_varian }}',
-        gambar: '{{ $variant->gambar_varian ? asset('storage/' . $variant->gambar_varian) : '' }}'
-    },
-    @endforeach
-};
-
-// Change main image
-function changeMainImage(imageSrc) {
-    document.getElementById('mainImage').src = imageSrc;
-    
-    // Update active thumbnail
-    document.querySelectorAll('.thumbnail-btn').forEach(btn => {
-        btn.classList.remove('border-primary-600', 'ring-2', 'ring-primary-200');
-        btn.classList.add('border-gray-200');
-    });
-    
-    // Add active class to clicked thumbnail
-    const activeThumb = document.querySelector(`.thumbnail-btn[data-image="${imageSrc}"]`);
-    if (activeThumb) {
-        activeThumb.classList.remove('border-gray-200');
-        activeThumb.classList.add('border-primary-600', 'ring-2', 'ring-primary-200');
-    }
-}
-
-// Zoom image on hover
-function zoomImage(event) {
-    const container = event.currentTarget;
-    const img = document.getElementById('mainImage');
-    const rect = container.getBoundingClientRect();
-    
-    // Calculate mouse position relative to container
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    
-    // Apply zoom and position
-    img.style.transformOrigin = `${x}% ${y}%`;
-    img.style.transform = 'scale(2)';
-}
-
-// Reset zoom
-function resetZoom() {
-    const img = document.getElementById('mainImage');
-    img.style.transform = 'scale(1)';
-    img.style.transformOrigin = 'center center';
-}
-
-// Select variant
-function selectVariant(variantId) {
-    // Remove active class from all variants
-    document.querySelectorAll('.variant-btn').forEach(btn => {
-        btn.classList.remove('border-primary-600', 'bg-primary-50', 'text-primary-600');
-        btn.classList.add('border-gray-300');
-    });
-    
-    // Add active class to selected variant
-    const selectedBtn = document.getElementById('variant-' + variantId);
-    if (selectedBtn) {
-        selectedBtn.classList.remove('border-gray-300');
-        selectedBtn.classList.add('border-primary-600', 'bg-primary-50', 'text-primary-600');
-    }
-    
-    // Store selected variant
-    selectedVariantId = variantId;
-    
-    // Update price and stock
-    const variant = variants[variantId];
-    if (variant) {
-        // Update price
-        const formattedPrice = 'Rp ' + variant.harga.toLocaleString('id-ID');
-        document.getElementById('displayPrice').textContent = formattedPrice;
+function productData() {
+    return {
+        // Product data
+        product: {
+            nama_produk: '{{ $product->nama_produk }}',
+            stok: {{ $product->stok }}
+        },
         
-        // Update stock
-        document.getElementById('displayStock').textContent = variant.stok;
-        document.getElementById('maxQty').textContent = variant.stok;
+        // Images
+        productImages: [
+            @foreach($product->images as $image)
+            '{{ asset('storage/' . $image->path) }}'{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        ],
+        currentImage: '{{ asset('storage/' . ($product->images->first()->path ?? 'placeholder.png')) }}',
         
-        // Update quantity input max
-        const qtyInput = document.getElementById('quantity');
-        qtyInput.max = variant.stok;
+        // Variants
+        variants: [
+            @foreach($product->activeVariants as $variant)
+            {
+                id: {{ $variant->id_varian }},
+                nama: "{{ addslashes($variant->nama_varian) }}",
+                harga: {{ $variant->harga ?? 0 }},
+                stok: {{ $variant->stok ?? 0 }},
+                gambar: "{{ $variant->gambar_varian ? asset('storage/' . $variant->gambar_varian) : '' }}",
+                imageIndex: {{ $loop->index }} // Map variant to product image by index
+            }{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        ],
         
-        // Reset quantity to 1 if current exceeds new max
-        if (parseInt(qtyInput.value) > variant.stok) {
-            qtyInput.value = Math.min(1, variant.stok);
+        // State
+        selectedVariantId: null,
+        quantity: 1,
+        
+        // Computed properties
+        get currentStock() {
+            if (this.selectedVariantId) {
+                const variant = this.variants.find(v => v.id === this.selectedVariantId);
+                return variant ? variant.stok : 0;
+            }
+            return this.product.stok;
+        },
+        
+        get formattedPrice() {
+            if (this.selectedVariantId) {
+                const variant = this.variants.find(v => v.id === this.selectedVariantId);
+                if (variant) {
+                    return 'Rp ' + variant.harga.toLocaleString('id-ID');
+                }
+            }
+            return '{!! $product->getFormattedPrice() !!}';
+        },
+        
+        // Methods
+        changeMainImage(imageSrc) {
+            this.currentImage = imageSrc;
+        },
+        
+        selectVariant(variantId) {
+            console.log('Selecting variant:', variantId);
+            this.selectedVariantId = variantId;
+            
+            const variant = this.variants.find(v => v.id === variantId);
+            if (variant) {
+                // Use variant's specific image if available, otherwise use product image by index
+                if (variant.gambar) {
+                    this.changeMainImage(variant.gambar);
+                } else if (this.productImages[variant.imageIndex]) {
+                    this.changeMainImage(this.productImages[variant.imageIndex]);
+                }
+            }
+            
+            // Reset quantity if exceeds new stock
+            if (this.quantity > this.currentStock) {
+                this.quantity = Math.min(1, this.currentStock);
+            }
+        },
+        
+        increaseQty() {
+            if (this.quantity < this.currentStock) {
+                this.quantity++;
+            }
+        },
+        
+        decreaseQty() {
+            if (this.quantity > 1) {
+                this.quantity--;
+            }
+        },
+        
+        addToCart() {
+            if (this.variants.length > 0 && !this.selectedVariantId) {
+                alert('Silakan pilih varian terlebih dahulu');
+                return;
+            }
+            
+            if (this.currentStock === 0) {
+                alert('Stok tidak tersedia');
+                return;
+            }
+            
+            this.$refs.buyNowInput.value = '';
+            document.getElementById('addToCartForm').submit();
+        },
+        
+        buyNow() {
+            if (this.variants.length > 0 && !this.selectedVariantId) {
+                alert('Silakan pilih varian terlebih dahulu');
+                return;
+            }
+            
+            if (this.currentStock === 0) {
+                alert('Stok tidak tersedia');
+                return;
+            }
+            
+            this.$refs.buyNowInput.value = '1';
+            document.getElementById('addToCartForm').submit();
         }
-        
-        // Change main image if variant has image
-        if (variant.gambar) {
-            changeMainImage(variant.gambar);
-        }
     }
-    
-    // Update form hidden input
-    document.getElementById('form_variant').value = variantId;
-}
-
-// Tab switching
-function switchTab(tabName) {
-    // Hide all tab contents
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.add('hidden');
-    });
-    
-    // Remove active class from all tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-b-2', 'border-primary-600', 'text-primary-600');
-        btn.classList.add('text-gray-600');
-    });
-    
-    // Show selected tab content
-    document.getElementById('content-' + tabName).classList.remove('hidden');
-    
-    // Add active class to selected tab
-    const activeTab = document.getElementById('tab-' + tabName);
-    activeTab.classList.add('border-b-2', 'border-primary-600', 'text-primary-600');
-    activeTab.classList.remove('text-gray-600');
-}
-
-function increaseQty() {
-    const input = document.getElementById('quantity');
-    const max = parseInt(input.max);
-    const current = parseInt(input.value);
-    if (current < max) {
-        input.value = current + 1;
-    }
-}
-
-function decreaseQty() {
-    const input = document.getElementById('quantity');
-    const current = parseInt(input.value);
-    if (current > 1) {
-        input.value = current - 1;
-    }
-}
-
-function addToCart() {
-    // Check if product has variants
-    const hasVariants = document.querySelectorAll('.variant-btn').length > 0;
-    
-    if (hasVariants && !selectedVariantId) {
-        alert('Silakan pilih varian terlebih dahulu');
-        return;
-    }
-    
-    const quantity = document.getElementById('quantity').value;
-    document.getElementById('form_quantity').value = quantity;
-    document.getElementById('form_variant').value = selectedVariantId || '';
-    document.getElementById('form_buy_now').value = '';
-    document.getElementById('cartForm').submit();
-}
-
-function buyNow() {
-    // Check if product has variants
-    const hasVariants = document.querySelectorAll('.variant-btn').length > 0;
-    
-    if (hasVariants && !selectedVariantId) {
-        alert('Silakan pilih varian terlebih dahulu');
-        return;
-    }
-    
-    const quantity = document.getElementById('quantity').value;
-    document.getElementById('form_quantity').value = quantity;
-    document.getElementById('form_variant').value = selectedVariantId || '';
-    document.getElementById('form_buy_now').value = '1';
-    document.getElementById('cartForm').submit();
 }
 </script>
 @endsection

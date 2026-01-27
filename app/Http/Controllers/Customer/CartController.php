@@ -13,7 +13,7 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = Keranjang::with(['product', 'productVariant.product'])
-            ->where('id_pelanggan', Auth::id())
+            ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->get();
         
         $subtotal = $cartItems->sum(function($item) {
@@ -41,11 +41,11 @@ class CartController extends Controller
         }
         
         // If "Buy Now" - clear cart first and add only this item, then redirect to checkout
-        if ($request->has('buy_now')) {
-            Keranjang::where('id_pelanggan', Auth::id())->delete();
+        if ($request->has('buy_now') && $request->buy_now == '1') {
+            Keranjang::where('id_pelanggan', Auth::guard('pelanggan')->id())->delete();
             
             Keranjang::create([
-                'id_pelanggan' => Auth::id(),
+                'id_pelanggan' => Auth::guard('pelanggan')->id(),
                 'id_produk' => $validated['id_produk'],
                 'id_varian' => $validated['id_varian'],
                 'jumlah' => $validated['jumlah'],
@@ -55,7 +55,7 @@ class CartController extends Controller
         }
         
         // Normal "Add to Cart" flow
-        $cartItem = Keranjang::where('id_pelanggan', Auth::id())
+        $cartItem = Keranjang::where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->where('id_produk', $validated['id_produk'])
             ->where('id_varian', $validated['id_varian'])
             ->first();
@@ -73,7 +73,7 @@ class CartController extends Controller
             $cartItem->update(['jumlah' => $newQuantity]);
         } else {
             Keranjang::create([
-                'id_pelanggan' => Auth::id(),
+                'id_pelanggan' => Auth::guard('pelanggan')->id(),
                 'id_produk' => $validated['id_produk'],
                 'id_varian' => $validated['id_varian'],
                 'jumlah' => $validated['jumlah'],
@@ -87,7 +87,7 @@ class CartController extends Controller
     {
         $cart = Keranjang::findOrFail($id);
         
-        if ($cart->id_pelanggan != Auth::id()) {
+        if ($cart->id_pelanggan != Auth::guard('pelanggan')->id()) {
             abort(403);
         }
         
@@ -112,7 +112,7 @@ class CartController extends Controller
     {
         $cart = Keranjang::findOrFail($id);
         
-        if ($cart->id_pelanggan != Auth::id()) {
+        if ($cart->id_pelanggan != Auth::guard('pelanggan')->id()) {
             abort(403);
         }
         
@@ -123,7 +123,7 @@ class CartController extends Controller
 
     public function clear()
     {
-        Keranjang::where('id_pelanggan', Auth::id())->delete();
+        Keranjang::where('id_pelanggan', Auth::guard('pelanggan')->id())->delete();
         
         return back()->with('success', 'Keranjang berhasil dikosongkan!');
     }

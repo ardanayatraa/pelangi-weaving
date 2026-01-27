@@ -2,7 +2,7 @@
 
 Sistem penjualan online untuk kain songket tradisional dengan fitur lengkap untuk customer dan admin.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Buat Database
 Buka **phpMyAdmin** atau **MySQL Command Line**, lalu jalankan:
@@ -50,7 +50,7 @@ php artisan serve
 
 Buka browser: `http://localhost:8000`
 
-## 👤 Default Login
+## Default Login
 
 ### Admin
 - Email: `admin@pelangiweaving.com`
@@ -63,24 +63,24 @@ Buka browser: `http://localhost:8000`
 ## 📦 Fitur Utama
 
 ### Customer
-- ✅ Registrasi & Login
-- ✅ Browse produk songket
-- ✅ Filter by kategori
-- ✅ Lihat detail produk & varian
-- ✅ Keranjang belanja
-- ✅ Checkout & pembayaran
-- ✅ Tracking pesanan
-- ✅ Multiple alamat pengiriman
+- Registrasi & Login
+- Browse produk songket
+- Filter by kategori
+- Lihat detail produk & varian
+- Keranjang belanja
+- Checkout & pembayaran
+- Tracking pesanan
+- Multiple alamat pengiriman
 
 ### Admin
-- ✅ Dashboard penjualan
-- ✅ Kelola kategori
-- ✅ Kelola produk & varian
-- ✅ Kelola pesanan
-- ✅ Laporan penjualan
-- ✅ Manajemen user
+- Dashboard penjualan
+- Kelola kategori
+- Kelola produk & varian
+- Kelola pesanan
+- Laporan penjualan
+- Manajemen user
 
-## 🗄️ Database Schema
+## Database Schema
 
 ### Tables
 1. **users** - Data user (admin & customer)
@@ -103,7 +103,7 @@ Buka browser: `http://localhost:8000`
 - **Payment**: Midtrans (ready)
 - **Shipping**: RajaOngkir (ready)
 
-## 📝 Sample Data
+## Sample Data
 
 Setelah seeding, akan ada:
 - 2 users (1 admin, 1 customer)

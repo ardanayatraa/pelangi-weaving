@@ -28,74 +28,69 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Produk *</label>
                         <input type="text" 
-                               name="name" 
-                               value="{{ old('name') }}"
-                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('name') border-red-500 @enderror"
+                               name="nama_produk" 
+                               value="{{ old('nama_produk') }}"
+                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('nama_produk') border-red-500 @enderror"
                                placeholder="Contoh: Songket Bali Motif Pucuk Rebung"
                                required>
-                        @error('name')
+                        @error('nama_produk')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori *</label>
-                        <select name="category_id" 
-                                class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('category_id') border-red-500 @enderror"
+                        <select name="id_kategori" 
+                                class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('id_kategori') border-red-500 @enderror"
                                 required>
                             <option value="">Pilih Kategori</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
+                                <option value="{{ $category->id_kategori }}" {{ old('id_kategori') == $category->id_kategori ? 'selected' : '' }}>
+                                    {{ $category->nama_kategori }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('category_id')
+                        @error('id_kategori')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Deskripsi *</label>
-                        <textarea name="description" 
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Deskripsi</label>
+                        <textarea name="deskripsi" 
                                   rows="4"
-                                  class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('description') border-red-500 @enderror"
-                                  placeholder="Jelaskan detail produk, bahan, motif, dan keunikannya..."
-                                  required>{{ old('description') }}</textarea>
-                        @error('description')
+                                  class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('deskripsi') border-red-500 @enderror"
+                                  placeholder="Jelaskan detail produk, bahan, motif, dan keunikannya...">{{ old('deskripsi') }}</textarea>
+                        @error('deskripsi')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Harga Dasar (Rp) *</label>
-                            <input type="number" 
-                                   name="base_price" 
-                                   value="{{ old('base_price') }}"
-                                   class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('base_price') border-red-500 @enderror"
-                                   placeholder="2500000"
-                                   min="0"
-                                   required>
-                            @error('base_price')
-                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Berat (gram) *</label>
                             <input type="number" 
-                                   name="weight" 
-                                   value="{{ old('weight', 500) }}"
-                                   class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('weight') border-red-500 @enderror"
+                                   name="berat" 
+                                   value="{{ old('berat', 500) }}"
+                                   class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400 @error('berat') border-red-500 @enderror"
                                    placeholder="500"
                                    min="0"
                                    required>
-                            @error('weight')
+                            @error('berat')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
+
+                    <div class="mt-4 bg-yellow-50 border border-yellow-200 p-3 rounded">
+                        <div class="flex">
+                            <i class="bi bi-info-circle text-yellow-600 mr-2"></i>
+                            <p class="text-xs text-yellow-700">
+                                <strong>Catatan:</strong> Harga dan Stok diatur melalui <strong>Varian Produk</strong> setelah produk berhasil dibuat.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -132,16 +127,9 @@
                     <div class="flex items-center justify-between py-2 border-b border-gray-200">
                         <label class="text-xs font-semibold text-gray-700">Status Aktif</label>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="is_active" value="1" class="sr-only peer" {{ old('is_active', true) ? 'checked' : '' }}>
+                            <input type="hidden" name="status" value="nonaktif">
+                            <input type="checkbox" name="status" value="aktif" class="sr-only peer" {{ old('status', 'aktif') == 'aktif' ? 'checked' : '' }}>
                             <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                        </label>
-                    </div>
-
-                    <div class="flex items-center justify-between py-2 border-b border-gray-200">
-                        <label class="text-xs font-semibold text-gray-700">Produk Unggulan</label>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="is_featured" value="1" class="sr-only peer" {{ old('is_featured') ? 'checked' : '' }}>
-                            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
                         </label>
                     </div>
 
@@ -162,16 +150,6 @@
                                min="1"
                                placeholder="7">
                         <p class="mt-1 text-xs text-gray-500">Estimasi waktu pengerjaan pesanan</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Urutan Tampilan</label>
-                        <input type="number" 
-                               name="sort_order" 
-                               value="{{ old('sort_order', 0) }}"
-                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                               min="0">
-                        <p class="mt-1 text-xs text-gray-500">Semakin kecil angka, semakin awal ditampilkan</p>
                     </div>
                 </div>
             </div>

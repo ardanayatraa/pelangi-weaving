@@ -37,13 +37,9 @@ class Pengiriman extends Model
         return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
-    public function isSampai(): bool
+    // Methods sesuai class diagram
+    public function updateStatus(): void
     {
-        return $this->status_pengiriman === 'sampai';
-    }
-
-    public function isDalamPerjalanan(): bool
-    {
-        return $this->status_pengiriman === 'dalam_perjalanan';
+        // Implementation for updating shipping status
     }
 }

@@ -28,7 +28,7 @@ class MidtransService
                 'email' => $order->pelanggan->email,
                 'phone' => $order->pelanggan->telepon,
                 'shipping_address' => [
-                    'address' => $order->pengiriman->alamat_pengiriman ?? $order->pelanggan->alamat,
+                    'address' => $order->alamat_pengiriman ?? $order->pelanggan->alamat,
                     'city' => $order->pelanggan->id_kota ?? '',
                     'postal_code' => $order->pelanggan->kode_pos ?? '',
                 ],
@@ -75,6 +75,44 @@ class MidtransService
         }
 
         return $items;
+    }
+
+    public function createCustomOrderTransaction($customOrder)
+    {
+        $params = [
+            'transaction_details' => [
+                'order_id' => $customOrder->nomor_custom_order,
+                'gross_amount' => (int) $customOrder->dp_amount,
+            ],
+            'customer_details' => [
+                'first_name' => $customOrder->pelanggan->nama,
+                'email' => $customOrder->pelanggan->email,
+                'phone' => $customOrder->pelanggan->telepon,
+                'shipping_address' => [
+                    'address' => $customOrder->pelanggan->alamat,
+                    'city' => $customOrder->pelanggan->id_kota ?? '',
+                    'postal_code' => $customOrder->pelanggan->kode_pos ?? '',
+                ],
+            ],
+            'item_details' => [
+                [
+                    'id' => 'CUSTOM_DP_' . $customOrder->id_custom_order,
+                    'price' => (int) $customOrder->dp_amount,
+                    'quantity' => 1,
+                    'name' => 'DP Custom Order - ' . $customOrder->nama_custom,
+                ]
+            ],
+            'callbacks' => [
+                'finish' => route('custom-orders.payment.finish', $customOrder->nomor_custom_order),
+            ],
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            return $snapToken;
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to create custom order transaction: ' . $e->getMessage());
+        }
     }
 
     public function getTransactionStatus($orderId)

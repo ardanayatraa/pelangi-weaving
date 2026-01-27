@@ -12,18 +12,17 @@ class Pembayaran extends Model
 
     protected $fillable = [
         'id_pesanan',
-        'midtrans_order_id',
+        'jumlah_bayar',
+        'transfer_receipt',
+        'nomor_rekening',
+        'status_bayar',
+        'tanggal_bayar',
         'snap_token',
-        'tipe_pembayaran',
-        'status_pembayaran',
-        'waktu_transaksi',
-        'waktu_settlement',
-        'fraud_status',
     ];
 
     protected $casts = [
-        'waktu_transaksi' => 'datetime',
-        'waktu_settlement' => 'datetime',
+        'tanggal_bayar' => 'datetime',
+        'jumlah_bayar' => 'decimal:2',
     ];
 
     public function order(): BelongsTo
@@ -31,18 +30,14 @@ class Pembayaran extends Model
         return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
     }
 
+    // Methods sesuai class diagram
     public function isPaid(): bool
     {
-        return $this->status_pembayaran === 'paid';
+        return $this->status_bayar === 'paid';
     }
 
-    public function isPending(): bool
+    public function canBeRefunded(): bool
     {
-        return $this->status_pembayaran === 'pending';
-    }
-
-    public function isUnpaid(): bool
-    {
-        return $this->status_pembayaran === 'unpaid';
+        return $this->isPaid() && $this->tanggal_bayar > now()->subDays(7);
     }
 }

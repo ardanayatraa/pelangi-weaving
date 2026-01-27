@@ -31,4 +31,10 @@ class GambarProduk extends Model
     {
         return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
     }
+
+    // Methods sesuai class diagram
+    public function getImageUrl(): string
+    {
+        return asset('storage/' . $this->path);
+    }
 }

@@ -50,10 +50,10 @@ class DetailPesanan extends Model
     {
         return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
     }
-    
-    // Accessor untuk harga
-    public function getHargaAttribute()
+
+    // Methods sesuai class diagram
+    public function calculateSubtotal(): decimal
     {
-        return $this->harga_satuan;
+        return $this->jumlah * $this->harga_satuan;
     }
 }

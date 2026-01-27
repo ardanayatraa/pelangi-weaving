@@ -14,6 +14,7 @@ class Pesanan extends Model
 
     protected $fillable = [
         'id_pelanggan',
+        'id_custom_order',
         'nomor_invoice',
         'tanggal_pesanan',
         'subtotal',
@@ -35,6 +36,11 @@ class Pesanan extends Model
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
 
+    public function customOrder(): BelongsTo
+    {
+        return $this->belongsTo(CustomOrder::class, 'id_custom_order', 'id_custom_order');
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(DetailPesanan::class, 'id_pesanan', 'id_pesanan');
@@ -48,5 +54,16 @@ class Pesanan extends Model
     public function pengiriman(): HasOne
     {
         return $this->hasOne(Pengiriman::class, 'id_pesanan', 'id_pesanan');
+    }
+
+    public function shipping(): HasOne
+    {
+        return $this->hasOne(Pengiriman::class, 'id_pesanan', 'id_pesanan');
+    }
+
+    // Methods sesuai class diagram
+    public function canBeCancelled(): bool
+    {
+        return in_array($this->status_pesanan, ['baru', 'diproses']);
     }
 }

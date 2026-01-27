@@ -28,10 +28,30 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800">{{ $product->nama_produk }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-gray-800">{{ $product->category->nama_kategori }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800">Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {{ $product->variants_count }} varian
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-800">
+                        @if($product->variants->count() > 0)
+                            @php
+                                $minPrice = $product->variants->min('harga');
+                                $maxPrice = $product->variants->max('harga');
+                            @endphp
+                            @if($minPrice == $maxPrice)
+                                Rp {{ number_format($minPrice, 0, ',', '.') }}
+                            @else
+                                Rp {{ number_format($minPrice, 0, ',', '.') }} - {{ number_format($maxPrice, 0, ',', '.') }}
+                            @endif
+                        @else
+                            <span class="text-gray-500 italic">Belum ada varian</span>
+                        @endif
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $product->stok > 10 ? 'bg-green-100 text-green-800' : ($product->stok > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
-                            {{ $product->stok }} unit
+                        @php
+                            $totalStok = $product->variants->sum('stok');
+                        @endphp
+                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $totalStok > 10 ? 'bg-green-100 text-green-800' : ($totalStok > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                            {{ $totalStok }} unit
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">

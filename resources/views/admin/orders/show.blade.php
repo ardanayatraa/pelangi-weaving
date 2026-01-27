@@ -177,8 +177,8 @@
                 </div>
                 <div>
                     <p class="text-xs text-gray-600 mb-1">Status</p>
-                    <p class="font-semibold text-sm {{ $order->payment->status_pembayaran == 'paid' ? 'text-green-700' : 'text-yellow-700' }}">
-                        {{ ucfirst($order->payment->status_pembayaran) }}
+                    <p class="font-semibold text-sm {{ $order->payment->status_bayar == 'paid' ? 'text-green-700' : 'text-yellow-700' }}">
+                        {{ ucfirst($order->payment->status_bayar) }}
                     </p>
                 </div>
                 @if($order->payment->tanggal_bayar)

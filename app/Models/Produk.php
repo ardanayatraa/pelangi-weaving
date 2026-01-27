@@ -13,21 +13,22 @@ class Produk extends Model
 
     protected $fillable = [
         'id_kategori',
+        'id_jenis',
         'nama_produk',
         'slug',
         'deskripsi',
-        'harga',
-        'stok',
         'berat',
         'status',
         'is_made_to_order',
         'lead_time_days',
+        'views',
+        'rating',
     ];
 
     protected $casts = [
-        'harga' => 'decimal:2',
         'berat' => 'decimal:2',
-        'stok' => 'integer',
+        'rating' => 'decimal:2',
+        'views' => 'integer',
         'is_made_to_order' => 'boolean',
         'lead_time_days' => 'integer',
     ];
@@ -35,6 +36,11 @@ class Produk extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+    }
+
+    public function jenis(): BelongsTo
+    {
+        return $this->belongsTo(Jenis::class, 'id_jenis', 'id_jenis');
     }
 
     public function variants(): HasMany
@@ -50,42 +56,81 @@ class Produk extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(GambarProduk::class, 'id_produk', 'id_produk');
+        return $this->hasMany(GambarProduk::class, 'id_produk', 'id_produk')
+            ->orderBy('is_primary', 'desc');
     }
 
-    public function getPriceRange()
+    public function primaryImage()
     {
-        $variants = $this->activeVariants;
-        
-        if ($variants->isEmpty()) {
-            return null;
-        }
-
-        $prices = $variants->pluck('harga');
-        
-        return [
-            'min' => $prices->min(),
-            'max' => $prices->max(),
-        ];
+        return $this->hasOne(GambarProduk::class, 'id_produk', 'id_produk')
+            ->where('is_primary', true);
     }
 
+    // Methods sesuai class diagram
     public function hasVariants(): bool
     {
         return $this->activeVariants()->exists();
     }
 
+    public function getTotalStock(): int
+    {
+        // Stok hanya ada di varian, bukan di produk utama
+        return $this->activeVariants()->sum('stok');
+    }
+
+    /**
+     * Accessor untuk mendapatkan stok total (backward compatibility)
+     */
+    public function getStokAttribute(): int
+    {
+        return $this->getTotalStock();
+    }
+
+    /**
+     * Accessor untuk mendapatkan harga terendah (backward compatibility)
+     */
+    public function getHargaAttribute()
+    {
+        return $this->activeVariants()->min('harga') ?? 0;
+    }
+
+    /**
+     * Helper untuk menampilkan harga yang diformat
+     * Jika ada range harga, tampilkan range
+     */
     public function getFormattedPrice(): string
     {
-        if ($this->hasVariants()) {
-            $range = $this->getPriceRange();
-            
-            if ($range && $range['min'] != $range['max']) {
-                return 'Rp ' . number_format($range['min'], 0, ',', '.') . ' - Rp ' . number_format($range['max'], 0, ',', '.');
-            }
-            
-            return 'Rp ' . number_format($range['min'], 0, ',', '.');
+        $min = $this->activeVariants()->min('harga');
+        $max = $this->activeVariants()->max('harga');
+
+        if (!$min) return 'Rp 0';
+
+        if ($min == $max) {
+            return 'Rp ' . number_format($min, 0, ',', '.');
         }
-        
-        return 'Rp ' . number_format($this->harga, 0, ',', '.');
+
+        return 'Rp ' . number_format($min, 0, ',', '.') . ' - ' . number_format($max, 0, ',', '.');
+    }
+
+    /**
+     * Generate SKU untuk produk
+     */
+    public function getSku(): string
+    {
+        $categoryCode = strtoupper(substr($this->category->nama_kategori ?? 'PRD', 0, 3));
+        return $categoryCode . '-' . str_pad($this->id_produk, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Accessor untuk SKU
+     */
+    public function getSkuAttribute(): string
+    {
+        return $this->getSku();
+    }
+
+    public function updateStatus(): void
+    {
+        // Implementation for updating product status
     }
 }

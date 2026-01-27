@@ -36,7 +36,8 @@ class Keranjang extends Model
         return $this->belongsTo(VarianProduk::class, 'id_varian', 'id_varian');
     }
 
-    public function getSubtotalAttribute(): float
+    // Methods sesuai class diagram
+    public function getSubtotal(): decimal
     {
         $harga = $this->productVariant ? $this->productVariant->harga : $this->product->harga;
         return $this->jumlah * $harga;

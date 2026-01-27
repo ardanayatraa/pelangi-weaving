@@ -39,15 +39,19 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         @if($order->payment)
-                            @if($order->payment->status_pembayaran === 'paid')
+                            @if($order->payment->status_bayar === 'paid')
                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
-                            @elseif($order->payment->status_pembayaran === 'pending')
+                            @elseif($order->payment->status_bayar === 'pending')
                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                            @elseif($order->payment->status_bayar === 'failed')
+                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Gagal</span>
+                            @elseif($order->payment->status_bayar === 'expired')
+                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Expired</span>
                             @else
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">{{ ucfirst($order->payment->status_pembayaran) }}</span>
+                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">{{ ucfirst($order->payment->status_bayar) }}</span>
                             @endif
                         @else
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Belum Bayar</span>
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-gray-800">{{ $order->created_at->format('d M Y, H:i') }}</td>

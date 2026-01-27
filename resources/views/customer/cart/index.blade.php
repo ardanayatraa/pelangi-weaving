@@ -98,7 +98,7 @@
                                         <input type="hidden" name="jumlah" value="{{ $item->jumlah + 1 }}">
                                         <button type="submit" 
                                                 class="w-8 h-8 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                                                {{ $item->jumlah >= $item->product->stok ? 'disabled' : '' }}>
+                                                {{ $item->jumlah >= ($item->productVariant ? $item->productVariant->stok : $item->product->stok) ? 'disabled' : '' }}>
                                             <i class="bi bi-plus"></i>
                                         </button>
                                     </form>

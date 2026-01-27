@@ -41,8 +41,14 @@ class VarianProduk extends Model
         return $this->hasMany(GambarProduk::class, 'id_varian', 'id_varian');
     }
 
+    // Methods sesuai class diagram
     public function isInStock(): bool
     {
         return $this->stok > 0;
+    }
+
+    public function getPrimaryImage(): string
+    {
+        return $this->gambar_varian ?? $this->product->images()->where('is_primary', true)->first()?->path ?? '';
     }
 }

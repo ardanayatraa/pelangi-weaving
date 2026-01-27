@@ -6,35 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pelangi Traditional Weaving Sidemen')</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#FEF2F2',
-                            100: '#FEE2E2',
-                            200: '#FECACA',
-                            300: '#FCA5A5',
-                            400: '#F87171',
-                            500: '#EF4444',
-                            600: '#DC2626',
-                            700: '#B91C1C',
-                            800: '#991B1B',
-                            900: '#7F1D1D',
-                        },
-                        dark: {
-                            800: '#1F2937',
-                            900: '#111827',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    @vite(['resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <style>
@@ -68,139 +40,192 @@
             }
         }
     </style>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <!-- Top Bar -->
-    <div class="bg-dark-900 text-white py-2 hidden md:block">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center text-sm">
-                <div><i class="bi bi-telephone text-primary-600"></i> +62 361-123456</div>
-                <div>Selamat berbelanja!</div>
-            </div>
-        </div>
-    </div>
 
     <!-- Navbar -->
-    <nav class="bg-gradient-to-r from-primary-600 to-primary-700 shadow-lg sticky top-0 z-50" x-data="{ open: false }">
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50" x-data="{ open: false }">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <a href="{{ route('home') }}" class="text-white font-bold text-xl">
-                    <i class="bi bi-shop"></i> Pelangi Weaving
+            <div class="flex justify-between items-center h-14">
+                <!-- Logo -->
+                <a href="{{ route('home') }}" class="flex items-center group">
+                    <div class="relative">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                            PW
+                        </div>
+                        <!-- Subtle glow effect -->
+                        <div class="absolute inset-0 bg-primary-600 rounded-xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                    </div>
+                    <div class="ml-3 hidden sm:block">
+                        <div class="font-bold text-gray-900 text-lg">Pelangi</div>
+                        <div class="text-xs text-gray-600 -mt-1">Traditional Weaving</div>
+                    </div>
                 </a>
                 
-                <!-- Search Bar (Desktop) -->
-                <div class="hidden lg:block flex-1 max-w-md mx-8">
-                    <form action="{{ route('products.index') }}" method="GET">
-                        <div class="relative">
-                            <input type="text" name="search" 
-                                   class="w-full pl-4 pr-12 py-2 rounded-full border-2 border-white/20 bg-white/10 text-white placeholder-white/70 focus:bg-white focus:text-gray-800 focus:placeholder-gray-400 transition"
-                                   placeholder="Cari produk tenun...">
-                            <button type="submit" class="absolute right-0 top-0 h-full px-4 text-white hover:text-gray-200">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
+                <!-- Navigation Menu (Center) -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="{{ route('home') }}" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
+                        Home
+                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
+                    </a>
+                    <a href="{{ route('products.index') }}" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
+                        Produk
+                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
+                    </a>
+                    <a href="{{ route('custom-orders.index') }}" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
+                        Custom Order
+                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
+                    </a>
+                    <a href="#" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
+                        Tentang
+                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
+                    </a>
+                    <a href="#" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
+                        Kontak
+                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
+                    </a>
                 </div>
                 
-                <div class="hidden md:flex items-center gap-6">
-                    <a href="{{ route('products.index') }}" class="text-white hover:text-gray-200">Produk</a>
+                <!-- Right Side -->
+                <div class="hidden md:flex items-center space-x-2">
+                    <!-- Search Bar -->
+                    <form action="{{ route('products.index') }}" method="GET" class="relative group">
+                        <div class="relative">
+                            <input type="text" name="search" 
+                                   class="w-64 pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition-all duration-200 bg-gray-50 focus:bg-white group-hover:bg-white"
+                                   placeholder="Cari produk tenun...">
+                            <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                                <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <button type="submit" class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-primary-600 text-white p-1.5 rounded-lg hover:bg-primary-700 transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                    </form>
                     
                     @auth('pelanggan')
-                    <a href="{{ route('cart.index') }}" class="text-white hover:text-gray-200">
-                        <i class="bi bi-cart3"></i> Keranjang
-                        @php
-                            $cartCount = Auth::guard('pelanggan')->user()->carts()->sum('jumlah');
-                        @endphp
-                        @if($cartCount > 0)
-                        <span class="bg-white text-primary-600 text-xs px-2 py-0.5 rounded-full ml-1">{{ $cartCount }}</span>
-                        @endif
-                    </a>
-                    <a href="{{ route('orders.index') }}" class="text-white hover:text-gray-200">
-                        <i class="bi bi-box-seam"></i> Pesanan
+                    <!-- Cart Icon -->
+                    <a href="{{ route('cart.index') }}" class="relative group">
+                        <div class="relative p-2.5 hover:bg-primary-50 rounded-xl transition-all duration-200 group-hover:shadow-md">
+                            <i class="bi bi-bag text-lg text-gray-700 group-hover:text-primary-600 transition-colors"></i>
+                            @php
+                                $cartCount = Auth::guard('pelanggan')->user()->carts()->sum('jumlah');
+                            @endphp
+                            @if($cartCount > 0)
+                            <span class="absolute -top-1 -right-1 bg-primary-600 text-white text-xs min-w-[18px] h-4.5 rounded-full flex items-center justify-center font-semibold shadow-lg animate-pulse">
+                                {{ $cartCount > 99 ? '99+' : $cartCount }}
+                            </span>
+                            @endif
+                        </div>
                     </a>
                     
+                    <!-- User Menu -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="text-white hover:text-gray-200 flex items-center gap-1">
-                            <i class="bi bi-person-circle"></i> {{ Auth::guard('pelanggan')->user()->nama }}
-                            <i class="bi bi-chevron-down text-xs"></i>
+                        <button @click="open = !open" class="flex items-center space-x-2 p-2 hover:bg-primary-50 rounded-xl transition-all duration-200 group">
+                            <div class="w-8 h-8 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center group-hover:from-primary-200 group-hover:to-primary-300 transition-all">
+                                <i class="bi bi-person-fill text-sm text-primary-600"></i>
+                            </div>
+                            <div class="hidden xl:block text-left">
+                                <div class="text-sm font-semibold text-gray-900">{{ Auth::guard('pelanggan')->user()->nama }}</div>
+                                <div class="text-xs text-gray-600">Pelanggan</div>
+                            </div>
+                            <i class="bi bi-chevron-down text-xs text-gray-500 group-hover:text-primary-600 transition-colors"></i>
                         </button>
-                        <div x-show="open" @click.away="open = false" 
-                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2">
-                            <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                <i class="bi bi-person-fill"></i> Profile
+                        <div x-show="open" @click.away="open = false" x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <p class="text-sm font-semibold text-gray-900">{{ Auth::guard('pelanggan')->user()->nama }}</p>
+                                <p class="text-xs text-gray-600">{{ Auth::guard('pelanggan')->user()->email }}</p>
+                            </div>
+                            <a href="{{ route('profile.index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                <i class="bi bi-person mr-3 text-lg"></i>
+                                Profil Saya
                             </a>
-                            <hr class="my-2">
+                            <a href="{{ route('orders.index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                <i class="bi bi-bag-check mr-3 text-lg"></i>
+                                Pesanan Saya
+                            </a>
+                            <a href="{{ route('cart.index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                <i class="bi bi-bag mr-3 text-lg"></i>
+                                Keranjang
+                            </a>
+                            <hr class="my-2 border-gray-100">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                <button type="submit" class="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                    <i class="bi bi-box-arrow-right mr-3 text-lg"></i>
+                                    Keluar
                                 </button>
                             </form>
                         </div>
                     </div>
                     @else
-                    <a href="{{ route('login') }}" class="text-white hover:text-gray-200">Masuk</a>
-                    <a href="{{ route('register') }}" class="bg-white text-primary-600 px-4 py-2 rounded-full font-semibold hover:bg-gray-100">
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 font-medium px-3 py-2 transition">Masuk</a>
+                    <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition">
                         Daftar
                     </a>
                     @endauth
                 </div>
                 
-                <button @click="open = !open" class="md:hidden text-white">
-                    <i class="bi text-2xl" :class="open ? 'bi-x' : 'bi-list'"></i>
+                <!-- Mobile menu button -->
+                <button @click="open = !open" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path x-show="open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
             </div>
             
             <!-- Mobile Menu -->
-            <div x-show="open" class="md:hidden pb-4">
+            <div x-show="open" x-cloak class="md:hidden border-t border-gray-200 py-4">
                 <!-- Mobile Search -->
-                <form action="{{ route('products.index') }}" method="GET" class="mb-4">
-                    <div class="relative">
-                        <input type="text" name="search" 
-                               class="w-full pl-4 pr-12 py-2 rounded-full border-2 border-white/20 bg-white/10 text-white placeholder-white/70"
-                               placeholder="Cari produk tenun...">
-                        <button type="submit" class="absolute right-0 top-0 h-full px-4 text-white">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
+                <form action="{{ route('products.index') }}" method="GET" class="px-4 mb-4">
+                    <input type="text" name="search" 
+                           class="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary-600"
+                           placeholder="Cari produk tenun...">
                 </form>
                 
-                <a href="{{ route('products.index') }}" class="block text-white py-2">Produk</a>
-                @auth('pelanggan')
-                <a href="{{ route('cart.index') }}" class="block text-white py-2">Keranjang</a>
-                <a href="{{ route('orders.index') }}" class="block text-white py-2">Pesanan</a>
-                <a href="{{ route('profile.index') }}" class="block text-white py-2">Profile</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="block text-white py-2">Logout</button>
-                </form>
-                @else
-                <a href="{{ route('login') }}" class="block text-white py-2">Masuk</a>
-                <a href="{{ route('register') }}" class="block text-white py-2">Daftar</a>
-                @endauth
+                <div class="space-y-1">
+                    <a href="{{ route('home') }}" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Home</a>
+                    <a href="{{ route('products.index') }}" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Produk</a>
+                    <a href="{{ route('custom-orders.index') }}" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Custom Order</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Tentang</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Kontak</a>
+                    
+                    @auth('pelanggan')
+                    <div class="border-t border-gray-200 pt-2 mt-2">
+                        <a href="{{ route('cart.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Keranjang</a>
+                        <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Pesanan</a>
+                        <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
+                        </form>
+                    </div>
+                    @else
+                    <div class="border-t border-gray-200 pt-2 mt-2">
+                        <a href="{{ route('login') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Masuk</a>
+                        <a href="{{ route('register') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Daftar</a>
+                    </div>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
-    
-    <!-- Category Bar -->
-    <div class="bg-white border-b shadow-sm py-2 md:py-3">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex gap-3 md:gap-6 overflow-x-auto whitespace-nowrap pb-1">
-                <a href="{{ route('products.index') }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
-                    <i class="bi bi-grid text-primary-600"></i> Semua Produk
-                </a>
-                <a href="{{ route('products.index', ['category' => 1]) }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
-                    <i class="bi bi-star text-primary-600"></i> Songket Premium
-                </a>
-                <a href="{{ route('products.index', ['category' => 2]) }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
-                    <i class="bi bi-heart text-primary-600"></i> Endek Bali
-                </a>
-                <a href="{{ route('products.index', ['category' => 3]) }}" class="text-gray-800 hover:text-primary-600 transition font-medium text-sm md:text-base">
-                    <i class="bi bi-bag text-primary-600"></i> Selendang
-                </a>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Alerts -->
     @if(session('success'))
@@ -282,6 +307,9 @@
                         <li><a href="{{ route('orders.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
                             <i class="bi bi-chevron-right text-xs"></i> Pesanan Saya
                         </a></li>
+                        <li><a href="{{ route('custom-orders.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Custom Order
+                        </a></li>
                         @else
                         <li><a href="{{ route('login') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
                             <i class="bi bi-chevron-right text-xs"></i> Login
@@ -297,14 +325,17 @@
                 <div>
                     <h4 class="font-bold text-lg mb-4">Kategori Produk</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><a href="{{ route('products.index', ['kategori' => 'kain-tenun']) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
-                            <i class="bi bi-chevron-right text-xs"></i> Kain Tenun
+                        <li><a href="{{ route('products.index', ['category' => 1]) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Selendang Songket
                         </a></li>
-                        <li><a href="{{ route('products.index', ['kategori' => 'selendang']) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
-                            <i class="bi bi-chevron-right text-xs"></i> Selendang
+                        <li><a href="{{ route('products.index', ['category' => 2]) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Kain Songket Premium
                         </a></li>
-                        <li><a href="{{ route('products.index', ['kategori' => 'tas']) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
-                            <i class="bi bi-chevron-right text-xs"></i> Tas Tenun
+                        <li><a href="{{ route('products.index', ['category' => 3]) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Kain Endek Katun
+                        </a></li>
+                        <li><a href="{{ route('products.index', ['category' => 4]) }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
+                            <i class="bi bi-chevron-right text-xs"></i> Kain Endek Sutra
                         </a></li>
                         <li><a href="{{ route('products.index') }}" class="text-gray-400 hover:text-primary-600 transition flex items-center gap-2">
                             <i class="bi bi-chevron-right text-xs"></i> Lihat Semua
