@@ -74,9 +74,17 @@ Route::middleware(['pelanggan'])->group(function () {
         Route::put('/{nomorCustomOrder}', [CustomerCustomOrderController::class, 'update'])->name('update');
         Route::post('/{nomorCustomOrder}/cancel', [CustomerCustomOrderController::class, 'cancel'])->name('cancel');
         Route::post('/{nomorCustomOrder}/submit', [CustomerCustomOrderController::class, 'submitForApproval'])->name('submit');
+        
+        // DP Payment
         Route::get('/{nomorCustomOrder}/payment', [CustomerCustomOrderController::class, 'payment'])->name('payment');
         Route::post('/{nomorCustomOrder}/payment', [CustomerCustomOrderController::class, 'processPayment'])->name('payment.process');
         Route::get('/{nomorCustomOrder}/payment/finish', [CustomerCustomOrderController::class, 'paymentFinish'])->name('payment.finish');
+        
+        // Final Payment (Pelunasan)
+        Route::get('/{nomorCustomOrder}/final-payment', [CustomerCustomOrderController::class, 'finalPayment'])->name('final-payment');
+        Route::post('/{nomorCustomOrder}/final-payment', [CustomerCustomOrderController::class, 'processFinalPayment'])->name('final-payment.process');
+        Route::get('/{nomorCustomOrder}/final-payment/finish', [CustomerCustomOrderController::class, 'finalPaymentFinish'])->name('final-payment.finish');
+        
         Route::delete('/{nomorCustomOrder}/image', [CustomerCustomOrderController::class, 'removeImage'])->name('remove-image');
     });
     
@@ -148,6 +156,7 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
         Route::post('/{nomorCustomOrder}/approve', [AdminCustomOrderController::class, 'approve'])->name('approve');
         Route::post('/{nomorCustomOrder}/reject', [AdminCustomOrderController::class, 'reject'])->name('reject');
         Route::post('/{nomorCustomOrder}/update-progress', [AdminCustomOrderController::class, 'updateProgress'])->name('update-progress');
+        Route::post('/{nomorCustomOrder}/mark-completed', [AdminCustomOrderController::class, 'markCompleted'])->name('mark-completed');
         Route::delete('/{nomorCustomOrder}', [AdminCustomOrderController::class, 'destroy'])->name('destroy');
     });
     

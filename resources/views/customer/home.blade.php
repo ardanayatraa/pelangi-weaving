@@ -123,105 +123,26 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             @foreach($categories as $category)
             <a href="{{ route('products.index', ['category' => $category->id]) }}" 
-               class="group relative bg-white rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-200 transform hover:-translate-y-2">
+               class="group relative bg-white rounded-2xl p-8 text-center hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary-200 transform hover:-translate-y-2">
                 
-                <!-- Product Slideshow -->
-                <div class="relative mb-6 overflow-hidden rounded-2xl" x-data="{ currentSlide: 0, slides: {{ $category->products->count() }} }" x-init="setInterval(() => { currentSlide = (currentSlide + 1) % slides }, 3000)">
-                    <div class="w-20 h-20 md:w-24 md:h-24 mx-auto relative">
-                        @if($category->products->count() > 0)
-                            @foreach($category->products as $index => $product)
-                            <div x-show="currentSlide === {{ $index }}" 
-                                 x-transition:enter="transition ease-in-out duration-500"
-                                 x-transition:enter-start="opacity-0 transform scale-95"
-                                 x-transition:enter-end="opacity-100 transform scale-100"
-                                 x-transition:leave="transition ease-in-out duration-500"
-                                 x-transition:leave-start="opacity-100 transform scale-100"
-                                 x-transition:leave-end="opacity-0 transform scale-95"
-                                 class="absolute inset-0">
-                                @if($product->images->first())
-                                <img src="{{ asset('storage/' . $product->images->first()->path) }}" 
-                                     alt="{{ $product->nama_produk }}"
-                                     class="w-full h-full object-cover rounded-2xl shadow-md group-hover:scale-110 transition-transform duration-500">
-                                @else
-                                <div class="w-full h-full bg-gradient-to-br 
-                                    @if($category->id == 1) from-pink-100 to-pink-200 
-                                    @elseif($category->id == 2) from-purple-100 to-purple-200
-                                    @elseif($category->id == 3) from-blue-100 to-blue-200
-                                    @else from-green-100 to-green-200 @endif
-                                    rounded-2xl flex items-center justify-center">
-                                    <div class="text-center">
-                                        <div class="text-xs font-medium text-gray-600 opacity-75">
-                                            {{ Str::limit($product->nama_produk, 15) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
-                            </div>
-                            @endforeach
-                        @else
-                            <!-- Simple placeholder tanpa icon -->
-                            <div class="w-full h-full bg-gradient-to-br 
-                                @if($category->id == 1) from-pink-100 to-pink-200 
-                                @elseif($category->id == 2) from-purple-100 to-purple-200
-                                @elseif($category->id == 3) from-blue-100 to-blue-200
-                                @else from-green-100 to-green-200 @endif
-                                rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <div class="text-center">
-                                    <div class="text-sm font-semibold 
-                                        @if($category->id == 1) text-pink-600 
-                                        @elseif($category->id == 2) text-purple-600
-                                        @elseif($category->id == 3) text-blue-600
-                                        @else text-green-600 @endif">
-                                        @if($category->id == 1)
-                                            Selendang
-                                        @elseif($category->id == 2)
-                                            Songket
-                                        @elseif($category->id == 3)
-                                            Endek Katun
-                                        @else
-                                            Endek Sutra
-                                        @endif
-                                    </div>
-                                    <div class="text-xs text-gray-500 mt-1">Coming Soon</div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <!-- Slide indicators -->
-                    @if($category->products->count() > 1)
-                    <div class="flex justify-center mt-2 space-x-1">
-                        @foreach($category->products as $index => $product)
-                        <div class="w-1.5 h-1.5 rounded-full transition-colors duration-200"
-                             :class="currentSlide === {{ $index }} ? 'bg-primary-600' : 'bg-gray-300'"></div>
-                        @endforeach
-                    </div>
-                    @endif
-                    
-                    <!-- Floating dot with count -->
-                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
-                        <span class="text-white text-xs font-bold">{{ $category->products_count }}</span>
-                    </div>
+                <!-- Category Name (No Icon/Image) -->
+                <div class="mb-4">
+                    <h3 class="font-bold text-xl text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                        {{ $category->nama_kategori }}
+                    </h3>
+                    <p class="text-sm text-gray-600">{{ $category->products_count }} Produk Tersedia</p>
                 </div>
                 
-                <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                    @if($category->id == 1)
-                        Selendang
-                    @elseif($category->id == 2)
-                        Kain Songket
-                    @elseif($category->id == 3)
-                        Endek Katun
-                    @else
-                        Endek Sutra
-                    @endif
-                </h3>
-                <p class="text-sm text-gray-600 mb-4">{{ $category->products_count }} Produk Tersedia</p>
-                
                 <!-- Arrow -->
-                <div class="flex justify-center">
+                <div class="flex justify-center mt-4">
                     <svg class="w-5 h-5 text-primary-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                     </svg>
+                </div>
+                
+                <!-- Floating badge with count -->
+                <div class="absolute top-4 right-4 px-3 py-1 bg-primary-600 rounded-full">
+                    <span class="text-white text-xs font-bold">{{ $category->products_count }}</span>
                 </div>
             </a>
             @endforeach
@@ -298,27 +219,6 @@
             </div>
             @endforeach
         </div>
-    </div>
-</section>
-
-<!-- Newsletter Section -->
-<section class="py-16 bg-primary-600">
-    <div class="max-w-4xl mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-            Dapatkan Update Terbaru
-        </h2>
-        <p class="text-xl text-primary-100 mb-8">
-            Berlangganan newsletter kami untuk mendapatkan info produk terbaru dan penawaran spesial
-        </p>
-        <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input type="email" 
-                   class="flex-1 px-6 py-3 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-white/50" 
-                   placeholder="Masukkan email Anda">
-            <button type="submit" 
-                    class="bg-white text-primary-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
-                Berlangganan
-            </button>
-        </form>
     </div>
 </section>
 @endsection

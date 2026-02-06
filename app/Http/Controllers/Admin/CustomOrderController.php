@@ -221,6 +221,40 @@ class CustomOrderController extends Controller
             ->with('success', 'Progress berhasil diupdate!');
     }
 
+    public function markCompleted(Request $request, $nomorCustomOrder)
+    {
+        $customOrder = CustomOrder::where('nomor_custom_order', $nomorCustomOrder)->firstOrFail();
+        
+        if ($customOrder->status !== 'in_production') {
+            return back()->with('error', 'Custom order tidak dalam status produksi!');
+        }
+        
+        $validated = $request->validate([
+            'catatan_admin' => 'nullable|string|max:1000'
+        ]);
+        
+        $admin = Auth::guard('admin')->user();
+        
+        $customOrder->update([
+            'status' => 'completed',
+            'updated_by' => $admin->id_admin
+        ]);
+        
+        // Update progress history
+        $progressHistory = $customOrder->progress_history ?? [];
+        $progressHistory[] = [
+            'status' => 'completed',
+            'catatan' => $validated['catatan_admin'] ?? 'Produksi selesai, menunggu pelunasan',
+            'admin' => $admin->nama,
+            'timestamp' => now()->toISOString()
+        ];
+        $customOrder->progress_history = $progressHistory;
+        $customOrder->save();
+        
+        return redirect()->route('admin.custom-orders.show', $nomorCustomOrder)
+            ->with('success', 'Custom order berhasil ditandai selesai! Customer dapat melakukan pelunasan.');
+    }
+
     public function destroy($nomorCustomOrder)
     {
         $customOrder = CustomOrder::where('nomor_custom_order', $nomorCustomOrder)->firstOrFail();

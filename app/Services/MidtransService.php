@@ -65,6 +65,7 @@ class MidtransService
             ];
         }
 
+        // Add shipping cost
         if ($order->ongkir > 0) {
             $items[] = [
                 'id' => 'SHIPPING',
@@ -73,6 +74,22 @@ class MidtransService
                 'name' => 'Ongkos Kirim',
             ];
         }
+
+        // Add discount (negative price)
+        $items[] = [
+            'id' => 'DISCOUNT',
+            'price' => -50000,
+            'quantity' => 1,
+            'name' => 'Diskon Promo',
+        ];
+
+        // Add admin fee
+        $items[] = [
+            'id' => 'ADMIN_FEE',
+            'price' => 2500,
+            'quantity' => 1,
+            'name' => 'Biaya Admin',
+        ];
 
         return $items;
     }

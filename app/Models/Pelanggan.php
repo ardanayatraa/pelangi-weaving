@@ -20,11 +20,6 @@ class Pelanggan extends Authenticatable
         'alamat',
         'telepon',
         'whatsapp',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'email_verified',
-        'email_verified_at',
-        'points',
         'id_kota',
         'id_provinsi',
         'kode_pos',
@@ -36,10 +31,6 @@ class Pelanggan extends Authenticatable
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'tanggal_lahir' => 'date',
-        'email_verified' => 'boolean',
-        'points' => 'integer',
         'password' => 'hashed',
     ];
 

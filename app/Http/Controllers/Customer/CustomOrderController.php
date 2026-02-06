@@ -310,20 +310,227 @@ class CustomOrderController extends Controller
         
         $payment = $customOrder->payment;
         
-        // Update payment status to paid (simplified)
-        if ($payment->status_bayar !== 'paid') {
-            $payment->update([
-                'status_bayar' => 'paid',
-                'tanggal_bayar' => now(),
+        Log::info('Custom Order Payment Finish:', [
+            'nomor_custom_order' => $nomorCustomOrder,
+            'status_bayar' => $payment->status_bayar
+        ]);
+        
+        // PERBAIKAN: Cek status pembayaran dari Midtrans sebelum update
+        try {
+            $status = $this->midtransService->getTransactionStatus($nomorCustomOrder);
+            
+            Log::info('Status dari Midtrans (Custom Order):', [
+                'transaction_status' => $status->transaction_status ?? 'unknown',
+                'fraud_status' => $status->fraud_status ?? 'unknown'
             ]);
-            $customOrder->update(['status' => 'in_production']);
+            
+            $transactionStatus = $status->transaction_status ?? null;
+            $fraudStatus = $status->fraud_status ?? 'accept';
+            
+            // Update status berdasarkan response Midtrans
+            if (in_array($transactionStatus, ['capture', 'settlement'])) {
+                if ($transactionStatus == 'capture' && $fraudStatus == 'challenge') {
+                    // Jika capture tapi fraud challenge, set pending
+                    $payment->update([
+                        'status_bayar' => 'pending',
+                        'status_pembayaran' => 'pending',
+                    ]);
+                    $message = 'Pembayaran DP Anda sedang diverifikasi. Mohon tunggu konfirmasi.';
+                } else {
+                    // Pembayaran berhasil
+                    $payment->update([
+                        'status_bayar' => 'paid',
+                        'status_pembayaran' => 'paid',
+                        'tanggal_bayar' => now(),
+                    ]);
+                    $customOrder->update(['status' => 'in_production']);
+                    $message = 'Pembayaran DP berhasil! Custom order Anda akan segera diproduksi.';
+                }
+            } elseif ($transactionStatus == 'pending') {
+                $payment->update([
+                    'status_bayar' => 'pending',
+                    'status_pembayaran' => 'pending',
+                ]);
+                $message = 'Pembayaran DP Anda sedang diproses. Silakan selesaikan pembayaran.';
+            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                $payment->update([
+                    'status_bayar' => 'failed',
+                    'status_pembayaran' => 'cancel',
+                ]);
+                $message = 'Pembayaran DP gagal atau dibatalkan. Silakan coba lagi.';
+            } else {
+                // Status tidak dikenali, set pending untuk safety
+                $payment->update([
+                    'status_bayar' => 'pending',
+                    'status_pembayaran' => 'pending',
+                ]);
+                $message = 'Status pembayaran sedang diverifikasi. Mohon tunggu konfirmasi.';
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Error checking custom order payment status: ' . $e->getMessage());
+            
+            // Jika error saat cek Midtrans, jangan langsung set paid
+            // Biarkan status tetap pending untuk safety
+            if ($payment->status_bayar !== 'paid') {
+                $payment->update([
+                    'status_bayar' => 'pending',
+                    'status_pembayaran' => 'pending',
+                ]);
+            }
+            
+            $message = 'Pembayaran DP Anda sedang diverifikasi. Mohon tunggu konfirmasi atau cek kembali nanti.';
         }
         
-        $message = $payment->status_bayar == 'paid' 
-            ? 'Pembayaran DP berhasil! Custom order Anda akan segera diproduksi.' 
-            : 'Terima kasih! Pembayaran DP Anda sedang diverifikasi.';
+        return redirect()->route('custom-orders.show', $nomorCustomOrder)
+            ->with($payment->status_bayar == 'paid' ? 'success' : 'info', $message);
+    }
+    
+    // ==================== FINAL PAYMENT (PELUNASAN) ====================
+    
+    public function finalPayment($nomorCustomOrder)
+    {
+        $customOrder = CustomOrder::with(['jenis', 'pelanggan'])
+            ->where('nomor_custom_order', $nomorCustomOrder)
+            ->where('id_pelanggan', Auth::guard('pelanggan')->id())
+            ->firstOrFail();
+            
+        // Validasi: hanya bisa bayar pelunasan jika status completed dan DP sudah dibayar
+        if ($customOrder->status !== 'completed' || !$customOrder->isDpPaid() || $customOrder->isFullyPaid()) {
+            return redirect()->route('custom-orders.show', $nomorCustomOrder)
+                ->with('error', 'Pembayaran pelunasan tidak dapat dilakukan!');
+        }
+        
+        // Calculate remaining amount (sisa 50%)
+        $remainingAmount = $customOrder->harga_final - $customOrder->dp_amount;
+        
+        // Generate or get Midtrans snap token
+        $snapToken = $this->generateFinalPaymentToken($customOrder, $remainingAmount);
+        
+        return view('customer.custom-orders.final-payment', compact('customOrder', 'remainingAmount', 'snapToken'));
+    }
+    
+    private function generateFinalPaymentToken($customOrder, $amount)
+    {
+        try {
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $customOrder->nomor_custom_order . '-FINAL',
+                    'gross_amount' => (int) $amount,
+                ],
+                'customer_details' => [
+                    'first_name' => $customOrder->pelanggan->nama,
+                    'email' => $customOrder->pelanggan->email,
+                    'phone' => $customOrder->pelanggan->telepon,
+                ],
+                'item_details' => [
+                    [
+                        'id' => 'FINAL_PAYMENT_' . $customOrder->id_custom_order,
+                        'price' => (int) $amount,
+                        'quantity' => 1,
+                        'name' => 'Pelunasan Custom Order - ' . $customOrder->nama_custom,
+                    ]
+                ],
+                'callbacks' => [
+                    'finish' => route('custom-orders.final-payment.finish', $customOrder->nomor_custom_order),
+                ],
+            ];
+            
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            
+            Log::info('Final payment snap token generated', [
+                'custom_order' => $customOrder->nomor_custom_order,
+                'amount' => $amount
+            ]);
+            
+            return $snapToken;
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to generate final payment token: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    public function processFinalPayment(Request $request, $nomorCustomOrder)
+    {
+        // This method is for AJAX if needed
+        $customOrder = CustomOrder::where('nomor_custom_order', $nomorCustomOrder)
+            ->where('id_pelanggan', Auth::guard('pelanggan')->id())
+            ->firstOrFail();
+            
+        if ($customOrder->status !== 'completed' || !$customOrder->isDpPaid() || $customOrder->isFullyPaid()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pembayaran pelunasan tidak dapat dilakukan!'
+            ], 400);
+        }
+        
+        $remainingAmount = $customOrder->harga_final - $customOrder->dp_amount;
+        $snapToken = $this->generateFinalPaymentToken($customOrder, $remainingAmount);
+        
+        return response()->json([
+            'success' => true,
+            'snap_token' => $snapToken,
+            'amount' => $remainingAmount
+        ]);
+    }
+    
+    public function finalPaymentFinish(Request $request, $nomorCustomOrder)
+    {
+        $customOrder = CustomOrder::where('nomor_custom_order', $nomorCustomOrder)
+            ->where('id_pelanggan', Auth::guard('pelanggan')->id())
+            ->firstOrFail();
+            
+        Log::info('Final Payment Finish:', [
+            'nomor_custom_order' => $nomorCustomOrder,
+            'status' => $customOrder->status
+        ]);
+        
+        // Cek status pembayaran dari Midtrans
+        try {
+            $orderId = $nomorCustomOrder . '-FINAL';
+            $status = $this->midtransService->getTransactionStatus($orderId);
+            
+            Log::info('Final Payment Status dari Midtrans:', [
+                'transaction_status' => $status->transaction_status ?? 'unknown',
+                'fraud_status' => $status->fraud_status ?? 'unknown'
+            ]);
+            
+            $transactionStatus = $status->transaction_status ?? null;
+            $fraudStatus = $status->fraud_status ?? 'accept';
+            
+            // Update status berdasarkan response Midtrans
+            if (in_array($transactionStatus, ['capture', 'settlement'])) {
+                if ($transactionStatus == 'capture' && $fraudStatus == 'challenge') {
+                    $message = 'Pembayaran pelunasan sedang diverifikasi. Mohon tunggu konfirmasi.';
+                } else {
+                    // Pembayaran pelunasan berhasil
+                    $customOrder->update([
+                        'fully_paid_at' => now(),
+                        'status' => 'ready_to_ship' // Status baru: siap kirim
+                    ]);
+                    
+                    Log::info('Final payment successful', [
+                        'custom_order' => $nomorCustomOrder,
+                        'fully_paid_at' => now()
+                    ]);
+                    
+                    $message = 'Pembayaran pelunasan berhasil! Pesanan Anda akan segera dikirim.';
+                }
+            } elseif ($transactionStatus == 'pending') {
+                $message = 'Pembayaran pelunasan sedang diproses. Silakan selesaikan pembayaran.';
+            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                $message = 'Pembayaran pelunasan gagal atau dibatalkan. Silakan coba lagi.';
+            } else {
+                $message = 'Status pembayaran sedang diverifikasi. Mohon tunggu konfirmasi.';
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Error checking final payment status: ' . $e->getMessage());
+            $message = 'Pembayaran sedang diverifikasi. Mohon tunggu konfirmasi atau cek kembali nanti.';
+        }
         
         return redirect()->route('custom-orders.show', $nomorCustomOrder)
-            ->with('success', $message);
+            ->with($customOrder->isFullyPaid() ? 'success' : 'info', $message);
     }
 }

@@ -53,57 +53,57 @@
         </div>
 
         <!-- Summary Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <!-- Regular Orders Stats -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
                 <div class="flex items-center">
-                    <div class="p-3 bg-blue-100 rounded-xl">
-                        <i class="bi bi-bag text-blue-600 text-2xl"></i>
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <i class="bi bi-bag text-blue-600 text-xl"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Pesanan Regular</p>
-                        <p class="text-3xl font-bold text-gray-900">{{ $stats['regular_orders']['count'] }}</p>
-                        <p class="text-sm text-gray-500">Rp {{ number_format($stats['regular_orders']['total_revenue'], 0, ',', '.') }}</p>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <p class="text-xs font-medium text-gray-600 mb-1">Pesanan Regular</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $stats['regular_orders']['count'] }}</p>
+                        <p class="text-xs text-gray-500 truncate">Rp {{ number_format($stats['regular_orders']['total_revenue'], 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
             
             <!-- Custom Orders Stats -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
                 <div class="flex items-center">
-                    <div class="p-3 bg-purple-100 rounded-xl">
-                        <i class="bi bi-palette text-purple-600 text-2xl"></i>
+                    <div class="p-2 bg-purple-100 rounded-lg">
+                        <i class="bi bi-palette text-purple-600 text-xl"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Custom Orders</p>
-                        <p class="text-3xl font-bold text-gray-900">{{ $stats['custom_orders']['count'] }}</p>
-                        <p class="text-sm text-gray-500">Rp {{ number_format($stats['custom_orders']['total_revenue'], 0, ',', '.') }}</p>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <p class="text-xs font-medium text-gray-600 mb-1">Custom Orders</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $stats['custom_orders']['count'] }}</p>
+                        <p class="text-xs text-gray-500 truncate">Rp {{ number_format($stats['custom_orders']['total_revenue'], 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
             
             <!-- Total Revenue -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
                 <div class="flex items-center">
-                    <div class="p-3 bg-green-100 rounded-xl">
-                        <i class="bi bi-currency-dollar text-green-600 text-2xl"></i>
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <i class="bi bi-currency-dollar text-green-600 text-xl"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-                        <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($stats['regular_orders']['total_revenue'] + $stats['custom_orders']['total_revenue'], 0, ',', '.') }}</p>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <p class="text-xs font-medium text-gray-600 mb-1">Total Revenue</p>
+                        <p class="text-xl font-bold text-gray-900 truncate">Rp {{ number_format($stats['regular_orders']['total_revenue'] + $stats['custom_orders']['total_revenue'], 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
             
             <!-- Average Order Value -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
                 <div class="flex items-center">
-                    <div class="p-3 bg-yellow-100 rounded-xl">
-                        <i class="bi bi-graph-up text-yellow-600 text-2xl"></i>
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <i class="bi bi-graph-up text-yellow-600 text-xl"></i>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Rata-rata Order</p>
-                        <p class="text-3xl font-bold text-gray-900">
+                    <div class="ml-3 flex-1 min-w-0">
+                        <p class="text-xs font-medium text-gray-600 mb-1">Rata-rata Order</p>
+                        <p class="text-xl font-bold text-gray-900 truncate">
                             Rp {{ number_format(($stats['regular_orders']['avg_order_value'] + $stats['custom_orders']['avg_order_value']) / 2, 0, ',', '.') }}
                         </p>
                     </div>
@@ -114,23 +114,58 @@
         <!-- Monthly Trend Chart -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
             <h3 class="text-xl font-semibold text-gray-900 mb-6">Tren Penjualan Bulanan</h3>
-            <div class="h-64 flex items-end justify-between gap-2">
-                @foreach($monthlyTrend as $month)
-                    <div class="flex-1 flex flex-col items-center">
-                        <div class="w-full bg-gray-200 rounded-t relative" style="height: 200px;">
-                            @php
-                                $maxRevenue = collect($monthlyTrend)->max('total_revenue');
-                                $height = $maxRevenue > 0 ? ($month['total_revenue'] / $maxRevenue) * 180 : 0;
-                            @endphp
-                            <div class="absolute bottom-0 w-full bg-red-500 rounded-t" style="height: {{ $height }}px;"></div>
-                        </div>
-                        <div class="text-xs text-gray-600 mt-2 text-center">
-                            <div class="font-medium">{{ $month['month'] }}</div>
-                            <div>Rp {{ number_format($month['total_revenue'] / 1000000, 1) }}M</div>
-                        </div>
+            
+            @if(count($monthlyTrend) > 0)
+                <div class="h-80">
+                    <div class="flex items-end justify-between gap-3 h-full pb-12">
+                        @foreach($monthlyTrend as $month)
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                @php
+                                    $maxRevenue = collect($monthlyTrend)->max('total_revenue');
+                                    $heightPercent = $maxRevenue > 0 ? ($month['total_revenue'] / $maxRevenue) * 100 : 0;
+                                @endphp
+                                
+                                <!-- Bar -->
+                                <div class="w-full relative group cursor-pointer" style="height: {{ $heightPercent }}%; min-height: 20px;">
+                                    <div class="w-full h-full bg-gradient-to-t from-red-600 to-red-400 rounded-t-lg hover:from-red-700 hover:to-red-500 transition-all duration-200 shadow-md"></div>
+                                    
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                                        <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap shadow-xl">
+                                            <div class="font-semibold">{{ $month['month'] }}</div>
+                                            <div class="text-gray-300">Rp {{ number_format($month['total_revenue'], 0, ',', '.') }}</div>
+                                        </div>
+                                        <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                                            <div class="border-4 border-transparent border-t-gray-900"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Label -->
+                                <div class="text-xs text-gray-600 mt-3 text-center w-full">
+                                    <div class="font-semibold truncate">{{ $month['month'] }}</div>
+                                    <div class="text-gray-500 mt-1">
+                                        @if($month['total_revenue'] >= 1000000)
+                                            Rp {{ number_format($month['total_revenue'] / 1000000, 1) }}M
+                                        @elseif($month['total_revenue'] >= 1000)
+                                            Rp {{ number_format($month['total_revenue'] / 1000, 0) }}K
+                                        @else
+                                            Rp {{ number_format($month['total_revenue'], 0) }}
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @else
+                <div class="h-64 flex items-center justify-center text-gray-500">
+                    <div class="text-center">
+                        <i class="bi bi-graph-up text-4xl mb-2"></i>
+                        <p>Tidak ada data penjualan untuk periode ini</p>
+                    </div>
+                </div>
+            @endif
         </div>
 
         <!-- Top Products -->

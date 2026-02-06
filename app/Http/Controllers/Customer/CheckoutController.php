@@ -100,7 +100,12 @@ class CheckoutController extends Controller
             });
             
             $ongkir = $validated['shipping_cost'];
-            $totalBayar = $subtotal + $ongkir;
+            
+            // Add discount and admin fee (same as frontend calculation)
+            $discount = 50000; // Diskon tetap
+            $adminFee = 2500;  // Biaya admin
+            
+            $totalBayar = $subtotal + $ongkir - $discount + $adminFee;
             
             $nomorInvoice = 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
             

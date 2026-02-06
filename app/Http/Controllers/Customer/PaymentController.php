@@ -112,24 +112,78 @@ class PaymentController extends Controller
             'nomor_invoice' => $order->nomor_invoice
         ]);
         
-        // Update payment status to paid (simplified)
-        if ($payment->status_bayar !== 'paid') {
-            $payment->update([
-                'status_bayar' => 'paid',
-                'tanggal_bayar' => now(),
+        // PERBAIKAN: Cek status pembayaran dari Midtrans sebelum update
+        try {
+            $status = $this->midtransService->getTransactionStatus($orderId);
+            
+            Log::info('Status dari Midtrans:', [
+                'transaction_status' => $status->transaction_status ?? 'unknown',
+                'fraud_status' => $status->fraud_status ?? 'unknown'
             ]);
-            $order->update(['status_pesanan' => 'diproses']);
+            
+            $transactionStatus = $status->transaction_status ?? null;
+            $fraudStatus = $status->fraud_status ?? 'accept';
+            
+            // Update status berdasarkan response Midtrans
+            if (in_array($transactionStatus, ['capture', 'settlement'])) {
+                if ($transactionStatus == 'capture' && $fraudStatus == 'challenge') {
+                    // Jika capture tapi fraud challenge, set pending
+                    $payment->update([
+                        'status_bayar' => 'pending',
+                        'status_pembayaran' => 'pending',
+                    ]);
+                    $message = 'Pembayaran Anda sedang diverifikasi. Mohon tunggu konfirmasi.';
+                } else {
+                    // Pembayaran berhasil
+                    $payment->update([
+                        'status_bayar' => 'paid',
+                        'status_pembayaran' => 'paid',
+                        'tanggal_bayar' => now(),
+                    ]);
+                    $order->update(['status_pesanan' => 'diproses']);
+                    $message = 'Pembayaran berhasil! Pesanan Anda sedang diproses.';
+                }
+            } elseif ($transactionStatus == 'pending') {
+                $payment->update([
+                    'status_bayar' => 'pending',
+                    'status_pembayaran' => 'pending',
+                ]);
+                $message = 'Pembayaran Anda sedang diproses. Silakan selesaikan pembayaran.';
+            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                $payment->update([
+                    'status_bayar' => 'failed',
+                    'status_pembayaran' => 'cancel',
+                ]);
+                $message = 'Pembayaran gagal atau dibatalkan. Silakan coba lagi.';
+            } else {
+                // Status tidak dikenali, set pending untuk safety
+                $payment->update([
+                    'status_bayar' => 'pending',
+                    'status_pembayaran' => 'pending',
+                ]);
+                $message = 'Status pembayaran sedang diverifikasi. Mohon tunggu konfirmasi.';
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Error checking payment status: ' . $e->getMessage());
+            
+            // Jika error saat cek Midtrans, jangan langsung set paid
+            // Biarkan status tetap pending untuk safety
+            if ($payment->status_bayar !== 'paid') {
+                $payment->update([
+                    'status_bayar' => 'pending',
+                    'status_pembayaran' => 'pending',
+                ]);
+            }
+            
+            $message = 'Pembayaran Anda sedang diverifikasi. Mohon tunggu konfirmasi atau cek kembali nanti.';
         }
-        
-        $message = $payment->status_bayar == 'paid' 
-            ? 'Pembayaran berhasil! Pesanan Anda sedang diproses.' 
-            : 'Terima kasih! Pembayaran Anda sedang diverifikasi.';
         
         Log::info('Redirecting ke orders.show dengan message: ' . $message);
         
         // Redirect ke halaman detail pesanan
         return redirect()->route('orders.show', $order->nomor_invoice)
-            ->with('success', $message);
+            ->with($payment->status_bayar == 'paid' ? 'success' : 'info', $message);
     }
 
     public function callback(Request $request)

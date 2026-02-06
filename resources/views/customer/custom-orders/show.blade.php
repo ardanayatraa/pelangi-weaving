@@ -83,6 +83,13 @@
                     </a>
                 @endif
                 
+                @if($customOrder->status === 'completed' && $customOrder->isDpPaid() && !$customOrder->isFullyPaid())
+                    <a href="{{ route('custom-orders.final-payment', $customOrder->nomor_custom_order) }}" 
+                       class="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition shadow-lg animate-pulse">
+                        <i class="bi bi-cash-coin mr-2"></i>Bayar Pelunasan
+                    </a>
+                @endif
+                
                 @if(in_array($customOrder->status, ['draft', 'pending_approval', 'approved']))
                     <form action="{{ route('custom-orders.cancel', $customOrder->nomor_custom_order) }}" 
                           method="POST" 

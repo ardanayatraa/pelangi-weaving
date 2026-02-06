@@ -17,11 +17,6 @@ return new class extends Migration
         // Add fields to pelanggan table sesuai class diagram  
         Schema::table('pelanggan', function (Blueprint $table) {
             $table->string('whatsapp', 20)->nullable()->after('telepon');
-            $table->date('tanggal_lahir')->nullable()->after('whatsapp');
-            $table->enum('jenis_kelamin', ['L', 'P'])->nullable()->after('tanggal_lahir');
-            $table->boolean('email_verified')->default(false)->after('jenis_kelamin');
-            $table->timestamp('email_verified_at')->nullable()->after('email_verified');
-            $table->integer('points')->default(0)->after('email_verified_at');
         });
 
         // Add custom order relation to pesanan table
@@ -54,7 +49,7 @@ return new class extends Migration
         });
 
         Schema::table('pelanggan', function (Blueprint $table) {
-            $table->dropColumn(['whatsapp', 'tanggal_lahir', 'jenis_kelamin', 'email_verified', 'email_verified_at', 'points']);
+            $table->dropColumn(['whatsapp']);
         });
 
         Schema::table('pesanan', function (Blueprint $table) {

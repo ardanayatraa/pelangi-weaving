@@ -12,6 +12,7 @@ class Pembayaran extends Model
 
     protected $fillable = [
         'id_pesanan',
+        'id_custom_order',
         'jumlah_bayar',
         'transfer_receipt',
         'nomor_rekening',
@@ -28,6 +29,11 @@ class Pembayaran extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
+    }
+
+    public function customOrder(): BelongsTo
+    {
+        return $this->belongsTo(CustomOrder::class, 'id_custom_order', 'id_custom_order');
     }
 
     // Methods sesuai class diagram

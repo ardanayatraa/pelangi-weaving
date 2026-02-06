@@ -57,6 +57,11 @@ class CustomOrder extends Model
         return $this->belongsTo(Admin::class, 'updated_by', 'id_admin');
     }
 
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Pembayaran::class, 'id_custom_order', 'id_custom_order');
+    }
+
     // Methods sesuai class diagram
     public function updateStatus(): void
     {
