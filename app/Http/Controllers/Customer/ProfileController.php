@@ -12,18 +12,19 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $pelanggan = Auth::guard('pelanggan')->user();
-        return view('customer.profile.index', compact('pelanggan'));
+        $pelanggan = Auth::user();
+        $alamatList = Auth::user()->addresses()->orderBy('is_default', 'desc')->get();
+        return view('customer.profile.index', compact('pelanggan', 'alamatList'));
     }
 
     public function update(Request $request)
     {
-        $pelanggan = Auth::guard('pelanggan')->user();
+        $pelanggan = Auth::user();
 
         $validated = $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'required|email|unique:pelanggan,email,' . $pelanggan->id_pelanggan . ',id_pelanggan',
-            'telepon' => 'required|string|max:15',
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email,' . $pelanggan->id,
+            'phone' => 'required|string|max:15',
             'alamat' => 'required|string',
             'kode_pos' => 'nullable|string|max:10',
         ]);
@@ -35,7 +36,7 @@ class ProfileController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $pelanggan = Auth::guard('pelanggan')->user();
+        $pelanggan = Auth::user();
 
         $validated = $request->validate([
             'current_password' => 'required',

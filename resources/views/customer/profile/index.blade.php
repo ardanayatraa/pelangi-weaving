@@ -22,7 +22,7 @@
                         </div>
                         
                         <!-- Profile Info -->
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $pelanggan->nama }}</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $pelanggan->name }}</h3>
                         <p class="text-sm text-gray-600 mb-2">{{ $pelanggan->email }}</p>
                         <p class="text-xs text-gray-500 mb-4">Member sejak {{ $pelanggan->created_at->format('M Y') }}</p>
                         
@@ -81,9 +81,9 @@
                                 <!-- Nama Lengkap -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                                    <input type="text" name="nama" value="{{ $pelanggan->nama }}" readonly
-                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('nama') border-red-500 @enderror">
-                                    @error('nama')
+                                    <input type="text" name="name" value="{{ $pelanggan->name }}" readonly
+                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror">
+                                    @error('name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -101,9 +101,9 @@
                                 <!-- Nomor Telepon -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
-                                    <input type="tel" name="telepon" value="{{ $pelanggan->telepon }}" readonly
-                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('telepon') border-red-500 @enderror">
-                                    @error('telepon')
+                                    <input type="tel" name="phone" value="{{ $pelanggan->phone }}" readonly
+                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-500 @enderror">
+                                    @error('phone')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -150,52 +150,75 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-xl font-bold text-gray-900">Alamat Pengiriman</h2>
-                            <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                                <i class="bi bi-plus mr-2"></i>
-                                Kelola Alamat
-                            </button>
-                        </div>
-
-                        <!-- Default Address -->
-                        <div class="border-2 border-primary-200 bg-primary-50 rounded-xl p-6 mb-4">
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1">
-                                    <div class="flex items-center mb-3">
-                                        <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-xs font-semibold mr-3">
-                                            <i class="bi bi-house-door mr-1"></i>
-                                            Alamat Utama
-                                        </span>
-                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
-                                            Default
-                                        </span>
-                                    </div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">{{ $pelanggan->nama }}</h4>
-                                    <p class="text-gray-700 mb-1">{{ $pelanggan->telepon }}</p>
-                                    <p class="text-gray-600 text-sm">
-                                        {{ $pelanggan->alamat ?? 'Jl. Merdeka No. 123, Jakarta Selatan, DKI Jakarta 12345' }}
-                                    </p>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <button class="p-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Add New Address Form -->
-                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
-                            <i class="bi bi-plus-circle text-4xl text-gray-400 mb-3"></i>
-                            <h4 class="font-semibold text-gray-900 mb-2">Tambah Alamat Baru</h4>
-                            <p class="text-gray-600 text-sm mb-4">Tambahkan alamat pengiriman untuk kemudahan berbelanja</p>
-                            <button class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                            <button onclick="openModalAlamat()" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
                                 <i class="bi bi-plus mr-2"></i>
                                 Tambah Alamat
                             </button>
                         </div>
+
+                        @if($alamatList && $alamatList->count() > 0)
+                            <!-- Daftar Alamat -->
+                            <div class="space-y-4">
+                                @foreach($alamatList as $alamat)
+                                <div class="border-2 {{ $alamat->is_default ? 'border-primary-200 bg-primary-50' : 'border-gray-200' }} rounded-xl p-6">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center mb-3">
+                                                <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold mr-3">
+                                                    <i class="bi bi-{{ $alamat->label == 'Rumah' ? 'house-door' : ($alamat->label == 'Kantor' ? 'building' : 'geo-alt') }} mr-1"></i>
+                                                    {{ $alamat->label }}
+                                                </span>
+                                                @if($alamat->is_default)
+                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
+                                                    Default
+                                                </span>
+                                                @endif
+                                            </div>
+                                            <h4 class="font-semibold text-gray-900 mb-2">{{ $alamat->nama_penerima }}</h4>
+                                            <p class="text-gray-700 mb-1">{{ $alamat->telepon }}</p>
+                                            <p class="text-gray-600 text-sm">
+                                                {{ $alamat->alamat_lengkap }}, {{ $alamat->kota }}, {{ $alamat->provinsi }} {{ $alamat->kode_pos }}
+                                            </p>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            @if(!$alamat->is_default)
+                                            <form action="{{ route('alamat.setDefault', $alamat->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Set sebagai default">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                            </form>
+                                            @endif
+                                            <button onclick="editAlamat({{ $alamat->id }}, '{{ $alamat->label }}', '{{ $alamat->nama_penerima }}', '{{ $alamat->telepon }}', '{{ $alamat->alamat_lengkap }}', '{{ $alamat->kota }}', '{{ $alamat->provinsi }}', '{{ $alamat->kode_pos }}')" 
+                                                    class="p-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            @if(!$alamat->is_default)
+                                            <form action="{{ route('alamat.destroy', $alamat->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus alamat ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <!-- Empty State -->
+                            <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                                <i class="bi bi-geo-alt text-5xl text-gray-400 mb-4"></i>
+                                <h4 class="font-semibold text-gray-900 mb-2">Belum Ada Alamat</h4>
+                                <p class="text-gray-600 text-sm mb-4">Tambahkan alamat pengiriman untuk kemudahan berbelanja</p>
+                                <button onclick="openModalAlamat()" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                                    <i class="bi bi-plus mr-2"></i>
+                                    Tambah Alamat
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -305,6 +328,123 @@
     </div>
 </div>
 
+<!-- Modal Tambah/Edit Alamat -->
+<div id="modalAlamat" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 id="modalTitle" class="text-xl font-bold text-gray-900">Tambah Alamat Baru</h3>
+                <button onclick="closeModalAlamat()" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <form id="formAlamat" method="POST" class="p-6">
+            @csrf
+            <input type="hidden" id="methodField" name="_method" value="POST">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Label Alamat -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Label Alamat</label>
+                    <div class="flex space-x-3">
+                        <label class="flex-1">
+                            <input type="radio" name="label" value="Rumah" class="peer sr-only" checked>
+                            <div class="border-2 border-gray-300 rounded-lg p-3 text-center cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50 hover:border-primary-400 transition-colors">
+                                <i class="bi bi-house-door text-xl"></i>
+                                <p class="text-sm font-medium mt-1">Rumah</p>
+                            </div>
+                        </label>
+                        <label class="flex-1">
+                            <input type="radio" name="label" value="Kantor" class="peer sr-only">
+                            <div class="border-2 border-gray-300 rounded-lg p-3 text-center cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50 hover:border-primary-400 transition-colors">
+                                <i class="bi bi-building text-xl"></i>
+                                <p class="text-sm font-medium mt-1">Kantor</p>
+                            </div>
+                        </label>
+                        <label class="flex-1">
+                            <input type="radio" name="label" value="Lainnya" class="peer sr-only">
+                            <div class="border-2 border-gray-300 rounded-lg p-3 text-center cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50 hover:border-primary-400 transition-colors">
+                                <i class="bi bi-geo-alt text-xl"></i>
+                                <p class="text-sm font-medium mt-1">Lainnya</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Nama Penerima -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Penerima</label>
+                    <input type="text" name="nama_penerima" id="nama_penerima" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                           placeholder="Nama lengkap penerima">
+                </div>
+
+                <!-- Nomor Telepon -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+                    <input type="tel" name="telepon" id="telepon" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                           placeholder="08xxxxxxxxxx">
+                </div>
+
+                <!-- Alamat Lengkap -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
+                    <textarea name="alamat_lengkap" id="alamat_lengkap" rows="3" required
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                              placeholder="Jalan, nomor rumah, RT/RW, kelurahan, kecamatan"></textarea>
+                </div>
+
+                <!-- Kota -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kota/Kabupaten</label>
+                    <input type="text" name="kota" id="kota" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                           placeholder="Contoh: Denpasar">
+                </div>
+
+                <!-- Provinsi -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Provinsi</label>
+                    <input type="text" name="provinsi" id="provinsi" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                           placeholder="Contoh: Bali">
+                </div>
+
+                <!-- Kode Pos -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kode Pos</label>
+                    <input type="text" name="kode_pos" id="kode_pos" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                           placeholder="Contoh: 80361">
+                </div>
+
+                <!-- Set Default -->
+                <div class="md:col-span-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="is_default" id="is_default" value="1" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                        <span class="ml-2 text-sm text-gray-700">Jadikan alamat utama</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" onclick="closeModalAlamat()" 
+                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                    Batal
+                </button>
+                <button type="submit" 
+                        class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                    <i class="bi bi-check-circle mr-2"></i>
+                    Simpan Alamat
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 // Tab Management
 function showTab(tabName) {
@@ -401,6 +541,43 @@ function togglePassword(fieldId) {
         icon.classList.add('bi-eye');
     }
 }
+
+// Modal Alamat Management
+function openModalAlamat() {
+    document.getElementById('modalAlamat').classList.remove('hidden');
+    document.getElementById('modalTitle').textContent = 'Tambah Alamat Baru';
+    document.getElementById('formAlamat').action = '{{ route("alamat.store") }}';
+    document.getElementById('methodField').value = 'POST';
+    document.getElementById('formAlamat').reset();
+}
+
+function closeModalAlamat() {
+    document.getElementById('modalAlamat').classList.add('hidden');
+    document.getElementById('formAlamat').reset();
+}
+
+function editAlamat(id, label, nama, telepon, alamat, kota, provinsi, kodePos) {
+    document.getElementById('modalAlamat').classList.remove('hidden');
+    document.getElementById('modalTitle').textContent = 'Edit Alamat';
+    document.getElementById('formAlamat').action = '/alamat/' + id;
+    document.getElementById('methodField').value = 'PUT';
+    
+    // Set form values
+    document.querySelector(`input[name="label"][value="${label}"]`).checked = true;
+    document.getElementById('nama_penerima').value = nama;
+    document.getElementById('telepon').value = telepon;
+    document.getElementById('alamat_lengkap').value = alamat;
+    document.getElementById('kota').value = kota;
+    document.getElementById('provinsi').value = provinsi;
+    document.getElementById('kode_pos').value = kodePos;
+}
+
+// Close modal when clicking outside
+document.getElementById('modalAlamat')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModalAlamat();
+    }
+});
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {

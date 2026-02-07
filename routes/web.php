@@ -97,6 +97,12 @@ Route::middleware(['pelanggan'])->group(function () {
     Route::get('/profile', [App\Http\Controllers\Customer\ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [App\Http\Controllers\Customer\ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [App\Http\Controllers\Customer\ProfileController::class, 'updatePassword'])->name('profile.password');
+    
+    // Alamat
+    Route::post('/alamat', [App\Http\Controllers\Customer\AlamatController::class, 'store'])->name('alamat.store');
+    Route::put('/alamat/{alamat}', [App\Http\Controllers\Customer\AlamatController::class, 'update'])->name('alamat.update');
+    Route::delete('/alamat/{alamat}', [App\Http\Controllers\Customer\AlamatController::class, 'destroy'])->name('alamat.destroy');
+    Route::post('/alamat/{alamat}/set-default', [App\Http\Controllers\Customer\AlamatController::class, 'setDefault'])->name('alamat.setDefault');
 });
 
 // Payment Callback (Public - untuk Midtrans webhook)
