@@ -13,7 +13,12 @@ class ProfileController extends Controller
     public function index()
     {
         $pelanggan = Auth::user();
-        $alamatList = $pelanggan->addresses()->orderBy('is_default', 'desc')->get();
+        
+        // Load alamat dengan eager loading
+        $alamatList = \App\Models\Alamat::where('user_id', $pelanggan->id)
+            ->orderBy('is_default', 'desc')
+            ->get();
+            
         return view('customer.profile.index', compact('pelanggan', 'alamatList'));
     }
 
