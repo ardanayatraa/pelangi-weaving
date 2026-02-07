@@ -3,73 +3,80 @@
 @section('title', 'Custom Order Saya - Pelangi Weaving')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen">
+<div class="bg-white min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-6">
-        <!-- Header -->
+        <!-- Breadcrumb (sama seperti Produk) -->
+        <nav class="mb-6">
+            <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                <li><a href="{{ route('home') }}" class="hover:text-primary-600">Home</a></li>
+                <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg></li>
+                <li class="text-gray-900 font-medium">Custom Order Saya</li>
+            </ol>
+        </nav>
+
+        <!-- Header (sama pendekatan dengan Produk) -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Custom Order Saya</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Custom Order Saya</h1>
+                <p class="text-gray-600">Menampilkan {{ $customOrders->firstItem() ?? 0 }}-{{ $customOrders->lastItem() ?? 0 }} dari {{ $customOrders->total() }} custom order</p>
             </div>
             <div class="mt-4 md:mt-0">
                 <a href="{{ route('custom-orders.create') }}" 
-                   class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-semibold">
+                   class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-semibold">
                     <i class="bi bi-plus mr-2"></i>
                     Buat Custom Order Baru
                 </a>
             </div>
         </div>
 
-        <!-- Filter Tabs -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                <!-- Status Filter Tabs -->
-                <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('custom-orders.index') }}" 
-                       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ !request('status') ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        <i class="bi bi-list-ul mr-1"></i>
-                        Semua
-                    </a>
-                    <a href="{{ route('custom-orders.index', ['status' => 'pending_approval']) }}" 
-                       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ request('status') == 'pending_approval' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        Menunggu Persetujuan
-                    </a>
-                    <a href="{{ route('custom-orders.index', ['status' => 'in_production']) }}" 
-                       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ request('status') == 'in_production' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        Dalam Produksi
-                    </a>
-                    <a href="{{ route('custom-orders.index', ['status' => 'approved']) }}" 
-                       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ request('status') == 'approved' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        Siap Bayar
-                    </a>
-                    <a href="{{ route('custom-orders.index', ['status' => 'completed']) }}" 
-                       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ request('status') == 'completed' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        Selesai
-                    </a>
-                    <a href="{{ route('custom-orders.index', ['status' => 'cancelled']) }}" 
-                       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ request('status') == 'cancelled' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                        Dibatalkan
-                    </a>
-                </div>
-
-                <!-- Search and Filter -->
-                <div class="flex items-center space-x-3">
-                    <div class="relative">
-                        <input type="text" 
-                               placeholder="Cari custom order berdasarkan nomor atau nama produk..."
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <!-- Filter & Tab Status (layout seperti Produk: bg-gray-50 rounded-2xl) -->
+        <div class="bg-gray-50 rounded-2xl p-6 mb-8">
+            <form method="GET" action="{{ route('custom-orders.index') }}" class="space-y-4">
+                <input type="hidden" name="status" value="{{ request('status') }}">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
+                        <div class="relative">
+                            <input type="text" name="search" value="{{ request('search') }}" 
+                                   placeholder="Nomor order, nama custom..."
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            <i class="bi bi-search absolute left-3 top-3.5 text-gray-400"></i>
+                        </div>
                     </div>
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        <option>6 Bulan Terakhir</option>
-                        <option>3 Bulan Terakhir</option>
-                        <option>1 Bulan Terakhir</option>
-                        <option>Semua Waktu</option>
-                    </select>
-                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                        <i class="bi bi-funnel"></i>
-                        Cari
-                    </button>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full md:w-auto bg-primary-600 text-white px-6 py-3 rounded-xl hover:bg-primary-700 transition font-medium">
+                            <i class="bi bi-funnel mr-1"></i> Filter
+                        </button>
+                    </div>
                 </div>
+            </form>
+
+            <!-- Status Tabs (mirip kategori di Produk) -->
+            <div class="flex flex-wrap gap-2 mt-6 pt-4 border-t border-gray-200">
+                <a href="{{ route('custom-orders.index', request()->only('search')) }}" 
+                   class="px-6 py-3 rounded-full font-medium transition {{ !request('status') ? 'bg-primary-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                    Semua
+                </a>
+                <a href="{{ route('custom-orders.index', array_merge(request()->only('search'), ['status' => 'pending_approval'])) }}" 
+                   class="px-6 py-3 rounded-full font-medium transition {{ request('status') == 'pending_approval' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                    Menunggu Persetujuan
+                </a>
+                <a href="{{ route('custom-orders.index', array_merge(request()->only('search'), ['status' => 'approved'])) }}" 
+                   class="px-6 py-3 rounded-full font-medium transition {{ request('status') == 'approved' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                    Siap Bayar
+                </a>
+                <a href="{{ route('custom-orders.index', array_merge(request()->only('search'), ['status' => 'in_production'])) }}" 
+                   class="px-6 py-3 rounded-full font-medium transition {{ request('status') == 'in_production' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                    Dalam Produksi
+                </a>
+                <a href="{{ route('custom-orders.index', array_merge(request()->only('search'), ['status' => 'completed'])) }}" 
+                   class="px-6 py-3 rounded-full font-medium transition {{ request('status') == 'completed' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                    Selesai
+                </a>
+                <a href="{{ route('custom-orders.index', array_merge(request()->only('search'), ['status' => 'cancelled'])) }}" 
+                   class="px-6 py-3 rounded-full font-medium transition {{ request('status') == 'cancelled' ? 'bg-primary-600 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                    Dibatalkan
+                </a>
             </div>
         </div>
 

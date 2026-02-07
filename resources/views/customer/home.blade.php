@@ -78,8 +78,8 @@
                     <div class="absolute top-4 right-4 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
                     <div class="absolute bottom-4 left-4 w-16 h-16 bg-white/30 rounded-full blur-lg"></div>
                     
-                    @if($featuredProducts->first() && $featuredProducts->first()->images->first())
-                    <img src="{{ asset('storage/' . $featuredProducts->first()->images->first()->path) }}" 
+                    @if($featuredProducts->first() && $featuredProducts->first()->primary_image_path)
+                    <img src="{{ asset('storage/' . $featuredProducts->first()->primary_image_path) }}" 
                          alt="Produk Unggulan"
                          class="w-full h-80 object-cover rounded-2xl shadow-lg">
                     @else
@@ -171,8 +171,8 @@
             <div class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                 <div class="relative overflow-hidden">
                     <a href="{{ route('products.show', $product->slug) }}">
-                        @if($product->images->first())
-                        <img src="{{ asset('storage/' . $product->images->first()->path) }}" 
+                        @if($product->primary_image_path)
+                        <img src="{{ asset('storage/' . $product->primary_image_path) }}" 
                              alt="{{ $product->nama_produk }}"
                              class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
                         @else

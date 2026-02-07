@@ -79,14 +79,6 @@
                         Custom Order
                         <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
                     </a>
-                    <a href="#" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
-                        Tentang
-                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
-                    </a>
-                    <a href="#" class="relative px-3 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-lg hover:bg-primary-50 group text-sm">
-                        Kontak
-                        <span class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary-600 transition-all duration-200 group-hover:w-6 transform -translate-x-1/2"></span>
-                    </a>
                 </div>
                 
                 <!-- Right Side -->
@@ -202,8 +194,6 @@
                     <a href="{{ route('home') }}" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Home</a>
                     <a href="{{ route('products.index') }}" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Produk</a>
                     <a href="{{ route('custom-orders.index') }}" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Custom Order</a>
-                    <a href="#" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Tentang</a>
-                    <a href="#" class="block px-4 py-2 text-gray-700 font-medium hover:bg-gray-100">Kontak</a>
                     
                     @auth('pelanggan')
                     <div class="border-t border-gray-200 pt-2 mt-2">
@@ -276,18 +266,6 @@
                         <div><i class="bi bi-award-fill text-primary-600 mr-1"></i> 40+ ATBM</div>
                     </div>
                     
-                    <!-- Social Media -->
-                    <div class="flex items-center gap-3">
-                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-600 rounded-full flex items-center justify-center transition">
-                            <i class="bi bi-whatsapp"></i>
-                        </a>
-                    </div>
                 </div>
 
                 <!-- Menu Cepat -->

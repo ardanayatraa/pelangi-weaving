@@ -61,8 +61,10 @@ class CustomOrderController extends Controller
             'cancelled' => 'Dibatalkan',
             'rejected' => 'Ditolak'
         ];
+
+        $pendingApprovalCount = CustomOrder::where('status', 'pending_approval')->count();
         
-        return view('admin.custom-orders.index', compact('customOrders', 'jenisOptions', 'statusOptions'));
+        return view('admin.custom-orders.index', compact('customOrders', 'jenisOptions', 'statusOptions', 'pendingApprovalCount'));
     }
 
     public function show($nomorCustomOrder)

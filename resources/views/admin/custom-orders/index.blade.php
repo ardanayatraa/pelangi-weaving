@@ -1,19 +1,54 @@
 @extends('layouts.admin')
 
 @section('title', 'Custom Orders')
+@section('page-title', 'Custom Orders')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen py-8">
-    <div class="max-w-7xl mx-auto px-4">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Custom Orders</h1>
-            <p class="text-gray-600">Kelola pesanan custom dari pelanggan</p>
-        </div>
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Custom Orders</h1>
+    <p class="text-sm text-gray-600 mt-1">Kelola pesanan custom dari pelanggan</p>
+</div>
 
-        <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
+<!-- Tab Khusus: Approval & Status (pendekatan mirip navigasi produk) -->
+<div class="bg-white rounded-lg shadow border border-gray-200 p-4 mb-6">
+    <div class="flex flex-wrap gap-2">
+        <a href="{{ route('admin.custom-orders.index', request()->only('search', 'jenis')) }}" 
+           class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ !request('status') ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Semua
+        </a>
+        <a href="{{ route('admin.custom-orders.index', array_merge(request()->only('search', 'jenis'), ['status' => 'pending_approval'])) }}" 
+           class="px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 {{ request('status') == 'pending_approval' ? 'bg-amber-500 text-white' : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200' }}">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Approval</span>
+            @if($pendingApprovalCount > 0)
+            <span class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-bold rounded-full bg-white/90 text-amber-600">{{ $pendingApprovalCount }}</span>
+            @endif
+        </a>
+        <a href="{{ route('admin.custom-orders.index', array_merge(request()->only('search', 'jenis'), ['status' => 'in_production'])) }}" 
+           class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ request('status') == 'in_production' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Dalam Produksi
+        </a>
+        <a href="{{ route('admin.custom-orders.index', array_merge(request()->only('search', 'jenis'), ['status' => 'completed'])) }}" 
+           class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ request('status') == 'completed' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Selesai
+        </a>
+        <a href="{{ route('admin.custom-orders.index', array_merge(request()->only('search', 'jenis'), ['status' => 'draft'])) }}" 
+           class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ request('status') == 'draft' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Draft
+        </a>
+        <a href="{{ route('admin.custom-orders.index', array_merge(request()->only('search', 'jenis'), ['status' => 'rejected'])) }}" 
+           class="px-5 py-2.5 rounded-lg text-sm font-medium transition {{ request('status') == 'rejected' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+            Ditolak
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="bg-white rounded-lg shadow border border-gray-200 p-6 mb-6">
             <form method="GET" class="flex flex-wrap gap-4">
+                @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
                 <div class="flex-1 min-w-64">
                     <input type="text" 
                            name="search" 
@@ -48,7 +83,7 @@
                     <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
                         <i class="bi bi-search mr-1"></i> Filter
                     </button>
-                    <a href="{{ route('admin.custom-orders.index') }}" class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-medium">
+                    <a href="{{ route('admin.custom-orders.index', request()->only('status')) }}" class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-medium">
                         <i class="bi bi-arrow-clockwise mr-1"></i> Reset
                     </a>
                 </div>
@@ -232,8 +267,6 @@
                 </div>
             @endif
         </div>
-    </div>
-</div>
 
 <!-- Approve Modal -->
 <div id="approveModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">

@@ -12,7 +12,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pesanan::with(['items.produk.images', 'items.varian', 'payment', 'pengiriman'])
+        $query = Pesanan::with(['items.produk.variants', 'items.varian', 'payment', 'pengiriman'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id());
         
         if ($request->has('status') && $request->status != '') {
@@ -31,7 +31,7 @@ class OrderController extends Controller
             'payment_param' => $request->get('payment')
         ]);
         
-        $order = Pesanan::with(['items.produk.images', 'items.varian', 'payment', 'pengiriman'])
+        $order = Pesanan::with(['items.produk.variants', 'items.varian', 'payment', 'pengiriman'])
             ->where('nomor_invoice', $nomorInvoice)
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->firstOrFail();

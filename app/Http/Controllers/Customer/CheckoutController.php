@@ -34,7 +34,7 @@ class CheckoutController extends Controller
         
         $selectedIds = explode(',', $selectedIds);
         
-        $cartItems = Keranjang::with(['product', 'productVariant'])
+        $cartItems = Keranjang::with(['product.variants', 'productVariant'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->whereIn('id_keranjang', $selectedIds)
             ->get();
@@ -81,7 +81,7 @@ class CheckoutController extends Controller
         // Get only selected items
         $selectedIds = explode(',', $validated['selected_items']);
         
-        $cartItems = Keranjang::with(['productVariant', 'product'])
+        $cartItems = Keranjang::with(['productVariant', 'product.variants'])
             ->where('id_pelanggan', $pelangganId)
             ->whereIn('id_keranjang', $selectedIds)
             ->get();

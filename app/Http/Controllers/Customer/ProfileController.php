@@ -15,7 +15,7 @@ class ProfileController extends Controller
         $pelanggan = Auth::user();
         
         // Load alamat dengan eager loading
-        $alamatList = \App\Models\Alamat::where('user_id', $pelanggan->id)
+        $alamatList = \App\Models\Alamat::where('id_pelanggan', $pelanggan->id_pelanggan)
             ->orderBy('is_default', 'desc')
             ->get();
             
@@ -27,9 +27,9 @@ class ProfileController extends Controller
         $pelanggan = Auth::user();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $pelanggan->id,
-            'phone' => 'required|string|max:15',
+            'nama' => 'required|string|max:100',
+            'email' => 'required|email|unique:pelanggan,email,' . $pelanggan->id_pelanggan . ',id_pelanggan',
+            'telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'kode_pos' => 'nullable|string|max:10',
         ]);

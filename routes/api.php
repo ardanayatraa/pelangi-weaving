@@ -4,12 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Services\RajaOngkirService;
 use App\Services\MidtransService;
-use App\Models\Order;
-use App\Models\Payment;
+use App\Models\Pesanan;
+use App\Models\Pembayaran;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes (prefix /api otomatis oleh Laravel)
 |--------------------------------------------------------------------------
 */
 
@@ -105,68 +105,54 @@ Route::prefix('rajaongkir')->middleware('web')->group(function () {
     });
 });
 
-// Midtrans Notification Webhook
+// Midtrans Notification Webhook (pakai model Pesanan & Pembayaran)
 Route::post('/midtrans/notification', function (Request $request) {
     $midtrans = app(MidtransService::class);
-    
+
     try {
-        // Get notification data
         $notification = $midtrans->handleNotification($request->all());
-        
         $orderId = $notification->order_id;
         $transactionStatus = $notification->transaction_status;
         $fraudStatus = $notification->fraud_status ?? 'accept';
-        
-        \Log::info('Midtrans Notification', [
+
+        \Log::info('Midtrans Notification (API)', [
             'order_id' => $orderId,
             'transaction_status' => $transactionStatus,
-            'fraud_status' => $fraudStatus
+            'fraud_status' => $fraudStatus,
         ]);
-        
-        // Find order
-        $order = Order::where('order_number', $orderId)->first();
-        
+
+        $order = Pesanan::where('nomor_invoice', $orderId)->first();
         if (!$order) {
             \Log::error('Order not found: ' . $orderId);
             return response()->json(['message' => 'Order not found'], 404);
         }
-        
-        // Find payment
-        $payment = Payment::where('order_id', $order->id)->first();
-        
+
+        $payment = $order->payment;
         if (!$payment) {
             \Log::error('Payment not found for order: ' . $orderId);
             return response()->json(['message' => 'Payment not found'], 404);
         }
-        
-        // Update payment status based on transaction status
-        if ($transactionStatus == 'capture') {
-            if ($fraudStatus == 'accept') {
-                $payment->status = 'paid';
-                $order->status = 'processing';
-            }
+
+        if ($transactionStatus == 'capture' && $fraudStatus == 'accept') {
+            $payment->update(['status_bayar' => 'paid', 'tanggal_bayar' => now()]);
+            $order->update(['status_pesanan' => 'diproses']);
         } elseif ($transactionStatus == 'settlement') {
-            $payment->status = 'paid';
-            $order->status = 'processing';
+            $payment->update(['status_bayar' => 'paid', 'tanggal_bayar' => now()]);
+            $order->update(['status_pesanan' => 'diproses']);
         } elseif ($transactionStatus == 'pending') {
-            $payment->status = 'pending';
-            $order->status = 'pending';
+            $payment->update(['status_bayar' => 'pending']);
         } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
-            $payment->status = 'failed';
-            $order->status = 'cancelled';
+            $payment->update(['status_bayar' => 'failed']);
+            $order->update(['status_pesanan' => 'batal']);
         }
-        
-        $payment->save();
-        $order->save();
-        
-        \Log::info('Order & Payment updated', [
+
+        \Log::info('Order & Payment updated (API)', [
             'order_id' => $orderId,
-            'order_status' => $order->status,
-            'payment_status' => $payment->status
+            'status_pesanan' => $order->status_pesanan,
+            'status_bayar' => $payment->status_bayar,
         ]);
-        
+
         return response()->json(['message' => 'Notification processed']);
-        
     } catch (\Exception $e) {
         \Log::error('Midtrans notification error: ' . $e->getMessage());
         return response()->json(['message' => 'Error processing notification'], 500);

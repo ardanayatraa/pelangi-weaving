@@ -202,8 +202,8 @@
                         <div class="space-y-3 max-h-48 overflow-y-auto">
                             @foreach($order->items as $item)
                             <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                                @if($item->product->images->first())
-                                <img src="{{ asset('storage/' . $item->product->images->first()->path) }}" 
+                                @if($item->product->primary_image_path)
+                                <img src="{{ asset('storage/' . $item->product->primary_image_path) }}" 
                                      alt="{{ $item->product->nama_produk }}"
                                      class="w-12 h-12 object-cover rounded-lg">
                                 @else
@@ -279,26 +279,6 @@
             </div>
         </div>
 
-        <!-- Help Section -->
-        <div class="mt-8 text-center">
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Butuh Bantuan?</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <a href="#" class="flex items-center justify-center space-x-2 text-primary-600 hover:text-primary-700 font-medium">
-                        <i class="bi bi-telephone"></i>
-                        <span>Hubungi CS</span>
-                    </a>
-                    <a href="#" class="flex items-center justify-center space-x-2 text-primary-600 hover:text-primary-700 font-medium">
-                        <i class="bi bi-whatsapp"></i>
-                        <span>WhatsApp</span>
-                    </a>
-                    <a href="#" class="flex items-center justify-center space-x-2 text-primary-600 hover:text-primary-700 font-medium">
-                        <i class="bi bi-question-circle"></i>
-                        <span>FAQ</span>
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

@@ -130,8 +130,8 @@
                         $imageUrl = null;
                         if ($varian && $varian->gambar_varian) {
                             $imageUrl = $varian->gambar_varian;
-                        } elseif ($produk && $produk->images->first()) {
-                            $imageUrl = $produk->images->first()->path;
+                        } elseif ($produk && $produk->primary_image_path) {
+                            $imageUrl = $produk->primary_image_path;
                         }
                     @endphp
                     <div class="flex gap-4 pb-4 {{ !$loop->last ? 'border-b border-gray-200' : '' }}">

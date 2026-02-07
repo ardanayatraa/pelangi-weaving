@@ -39,8 +39,8 @@
                         <!-- Product Image -->
                         <div class="flex-shrink-0">
                             <a href="{{ route('products.show', $item->product->slug) }}">
-                                @if($item->product->images->first())
-                                <img src="{{ asset('storage/' . $item->product->images->first()->path) }}" 
+                                @if($item->product->primary_image_path)
+                                <img src="{{ asset('storage/' . $item->product->primary_image_path) }}" 
                                      alt="{{ $item->product->nama_produk }}"
                                      class="w-16 h-16 md:w-24 md:h-24 object-cover rounded-lg">
                                 @else

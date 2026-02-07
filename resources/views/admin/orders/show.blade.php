@@ -57,8 +57,8 @@
                             <img src="{{ asset('storage/' . $item->varian->gambar_varian) }}" 
                                  alt="{{ $item->varian->nama_varian }}"
                                  class="w-16 h-16 object-cover rounded-lg border border-gray-200 flex-shrink-0">
-                        @elseif($item->produk && $item->produk->images->first())
-                            <img src="{{ asset('storage/' . $item->produk->images->first()->path) }}" 
+                        @elseif($item->produk && $item->produk->primary_image_path)
+                            <img src="{{ asset('storage/' . $item->produk->primary_image_path) }}" 
                                  alt="{{ $item->produk->nama_produk }}"
                                  class="w-16 h-16 object-cover rounded-lg border border-gray-200 flex-shrink-0">
                         @else

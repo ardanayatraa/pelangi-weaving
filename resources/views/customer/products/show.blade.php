@@ -77,13 +77,7 @@
                         <span class="text-4xl font-bold text-primary-600" x-text="formattedPrice">
                             {!! $product->getFormattedPrice() !!}
                         </span>
-                        @if($product->activeVariants->count() > 0 && $product->activeVariants->min('harga') < $product->activeVariants->max('harga'))
-                        <span class="text-xl text-gray-400 line-through">
-                            Rp {{ number_format($product->activeVariants->max('harga')) }}
-                        </span>
-                        @endif
                     </div>
-                    <p class="text-green-600 text-sm mt-1">Hemat Rp 50.000 (10% OFF)</p>
                 </div>
 
                 <!-- Variants -->
@@ -270,8 +264,8 @@
                 @foreach($relatedProducts as $related)
                 <a href="{{ route('products.show', $related->slug) }}" class="group">
                     <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-300">
-                        @if($related->images->first())
-                        <img src="{{ asset('storage/' . $related->images->first()->path) }}" 
+                        @if($related->primary_image_path)
+                        <img src="{{ asset('storage/' . $related->primary_image_path) }}" 
                              alt="{{ $related->nama_produk }}"
                              class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
                         @else
@@ -306,13 +300,13 @@ function productData() {
             stok: {{ $product->stok }}
         },
         
-        // Images
+        // Images (dari varian, satu gambar per varian)
         productImages: [
             @foreach($product->images as $image)
             '{{ asset('storage/' . $image->path) }}'{{ !$loop->last ? ',' : '' }}
             @endforeach
         ],
-        currentImage: '{{ asset('storage/' . ($product->images->first()->path ?? 'placeholder.png')) }}',
+        currentImage: '{{ $product->primary_image_path ? asset('storage/' . $product->primary_image_path) : asset('images/placeholder.png') }}',
         
         // Variants
         variants: [

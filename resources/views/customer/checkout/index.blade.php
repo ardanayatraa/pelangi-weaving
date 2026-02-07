@@ -185,7 +185,7 @@
                                 $product = $item->product;
                                 $variant = $item->productVariant;
                                 $harga = $variant ? $variant->harga : $product->harga;
-                                $imageUrl = $product->images->first()->path ?? 'placeholder.png';
+                                $imageUrl = $product->primary_image_path ?? 'placeholder.png';
                             @endphp
                             <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                                 <img src="{{ asset('storage/' . $imageUrl) }}" 

@@ -19,22 +19,25 @@ class AlamatController extends Controller
             'kota' => 'required|string|max:100',
             'provinsi' => 'required|string|max:100',
             'kode_pos' => 'required|string|max:10',
-            'is_default' => 'boolean',
+            'is_default' => 'nullable',
         ]);
 
-        $user = Auth::user();
+        $pelanggan = Auth::guard('pelanggan')->user();
+        $idPelanggan = $pelanggan->id_pelanggan;
 
         // Jika ini alamat default, set alamat lain jadi non-default
-        if ($request->is_default) {
-            Alamat::where('user_id', $user->id)->update(['is_default' => false]);
+        if ($request->boolean('is_default')) {
+            Alamat::where('id_pelanggan', $idPelanggan)->update(['is_default' => false]);
         }
 
         // Jika ini alamat pertama, otomatis jadi default
-        if (Alamat::where('user_id', $user->id)->count() === 0) {
+        if (Alamat::where('id_pelanggan', $idPelanggan)->count() === 0) {
             $validated['is_default'] = true;
+        } else {
+            $validated['is_default'] = $request->boolean('is_default');
         }
 
-        $validated['user_id'] = $user->id;
+        $validated['id_pelanggan'] = $idPelanggan;
         Alamat::create($validated);
 
         return back()->with('success', 'Alamat berhasil ditambahkan!');
@@ -42,8 +45,8 @@ class AlamatController extends Controller
 
     public function update(Request $request, Alamat $alamat)
     {
-        // Pastikan alamat milik user yang login
-        if ($alamat->user_id !== Auth::id()) {
+        $idPelanggan = Auth::guard('pelanggan')->id();
+        if ($alamat->id_pelanggan != $idPelanggan) {
             abort(403);
         }
 
@@ -55,12 +58,11 @@ class AlamatController extends Controller
             'kota' => 'required|string|max:100',
             'provinsi' => 'required|string|max:100',
             'kode_pos' => 'required|string|max:10',
-            'is_default' => 'boolean',
+            'is_default' => 'nullable',
         ]);
 
-        // Jika ini alamat default, set alamat lain jadi non-default
-        if ($request->is_default) {
-            Alamat::where('user_id', Auth::id())
+        if ($request->boolean('is_default')) {
+            Alamat::where('id_pelanggan', $idPelanggan)
                 ->where('id', '!=', $alamat->id)
                 ->update(['is_default' => false]);
         }
@@ -72,17 +74,15 @@ class AlamatController extends Controller
 
     public function destroy(Alamat $alamat)
     {
-        // Pastikan alamat milik user yang login
-        if ($alamat->user_id !== Auth::id()) {
+        $idPelanggan = Auth::guard('pelanggan')->id();
+        if ($alamat->id_pelanggan != $idPelanggan) {
             abort(403);
         }
 
-        // Jika alamat yang dihapus adalah default, set alamat pertama jadi default
         if ($alamat->is_default) {
-            $firstAlamat = Alamat::where('user_id', Auth::id())
+            $firstAlamat = Alamat::where('id_pelanggan', $idPelanggan)
                 ->where('id', '!=', $alamat->id)
                 ->first();
-            
             if ($firstAlamat) {
                 $firstAlamat->update(['is_default' => true]);
             }
@@ -95,15 +95,12 @@ class AlamatController extends Controller
 
     public function setDefault(Alamat $alamat)
     {
-        // Pastikan alamat milik user yang login
-        if ($alamat->user_id !== Auth::id()) {
+        $idPelanggan = Auth::guard('pelanggan')->id();
+        if ($alamat->id_pelanggan != $idPelanggan) {
             abort(403);
         }
 
-        // Set semua alamat jadi non-default
-        Alamat::where('user_id', Auth::id())->update(['is_default' => false]);
-
-        // Set alamat ini jadi default
+        Alamat::where('id_pelanggan', $idPelanggan)->update(['is_default' => false]);
         $alamat->update(['is_default' => true]);
 
         return back()->with('success', 'Alamat default berhasil diubah!');

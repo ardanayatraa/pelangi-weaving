@@ -54,7 +54,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Pesanan::with(['pelanggan', 'items.produk.images', 'items.varian', 'payment', 'pengiriman'])
+        $order = Pesanan::with(['pelanggan', 'items.produk.variants', 'items.varian', 'payment', 'pengiriman'])
             ->findOrFail($id);
         
         return view('admin.orders.show', compact('order'));

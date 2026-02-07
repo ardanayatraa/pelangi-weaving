@@ -11,14 +11,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Produk::with(['category', 'activeVariants', 'images'])
+        $featuredProducts = Produk::with(['category', 'activeVariants', 'variants'])
             ->where('status', 'aktif')
             ->latest()
             ->take(8)
             ->get();
         
         $categories = Kategori::with(['products' => function($query) {
-            $query->with('images')
+            $query->with('variants')
                   ->where('status', 'aktif')
                   ->take(4); // Ambil 4 produk per kategori untuk slideshow
         }])
@@ -39,7 +39,7 @@ class HomeController extends Controller
             ->take(6)
             ->pluck('id_produk');
             
-        $bestSellers = Produk::with(['category', 'activeVariants', 'images'])
+        $bestSellers = Produk::with(['category', 'activeVariants', 'variants'])
             ->whereIn('id_produk', $bestSellerIds)
             ->where('status', 'aktif')
             ->get();

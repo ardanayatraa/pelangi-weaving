@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 class Produk extends Model
 {
@@ -54,16 +55,26 @@ class Produk extends Model
             ->where('status', 'tersedia');
     }
 
-    public function images(): HasMany
+    /**
+     * Gambar produk diambil dari gambar varian (gambar_produk sudah digabung ke varian_produk.gambar_varian).
+     * Mengembalikan koleksi objek dengan property path untuk kompatibilitas dengan view yang pakai product->images.
+     */
+    public function getImagesAttribute(): Collection
     {
-        return $this->hasMany(GambarProduk::class, 'id_produk', 'id_produk')
-            ->orderBy('is_primary', 'desc');
+        $variants = $this->relationLoaded('variants') ? $this->variants : $this->variants()->get();
+        return $variants
+            ->filter(fn ($v) => !empty($v->gambar_varian))
+            ->map(fn ($v) => (object) ['path' => $v->gambar_varian]);
     }
 
-    public function primaryImage()
+    /**
+     * Path gambar utama (dari varian pertama yang punya gambar).
+     */
+    public function getPrimaryImagePathAttribute(): ?string
     {
-        return $this->hasOne(GambarProduk::class, 'id_produk', 'id_produk')
-            ->where('is_primary', true);
+        $variants = $this->relationLoaded('variants') ? $this->variants : $this->variants()->get();
+        $first = $variants->first(fn ($v) => !empty($v->gambar_varian));
+        return $first ? $first->gambar_varian : null;
     }
 
     // Methods sesuai class diagram

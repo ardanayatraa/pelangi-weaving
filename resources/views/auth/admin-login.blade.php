@@ -56,18 +56,8 @@
                     <a href="{{ route('home') }}" class="text-gray-700 hover:text-primary-600 font-medium transition">Home</a>
                     <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-primary-600 font-medium transition">Produk</a>
                     <a href="{{ route('custom-orders.index') }}" class="text-gray-700 hover:text-primary-600 font-medium transition">Custom Order</a>
-                    <a href="#" class="text-gray-700 hover:text-primary-600 font-medium transition">Tentang</a>
-                    <a href="#" class="text-gray-700 hover:text-primary-600 font-medium transition">Kontak</a>
                 </div>
                 
-                <!-- Right Side -->
-                <div class="flex items-center space-x-4">
-                    <i class="bi bi-bell text-gray-600 text-lg"></i>
-                    <div class="flex items-center space-x-2">
-                        <i class="bi bi-person-circle text-primary-600 text-2xl"></i>
-                        <span class="text-gray-700 font-medium">Admin</span>
-                    </div>
-                </div>
             </div>
         </div>
     </nav>
@@ -130,15 +120,12 @@
                         @enderror
                     </div>
 
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
+                    <!-- Remember Me -->
+                    <div>
                         <label class="flex items-center">
                             <input type="checkbox" name="remember" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
                             <span class="ml-2 text-sm text-gray-700">Ingat saya</span>
                         </label>
-                        <a href="#" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
-                            Lupa password?
-                        </a>
                     </div>
 
                     <!-- Submit Button -->

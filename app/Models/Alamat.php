@@ -9,7 +9,7 @@ class Alamat extends Model
     protected $table = 'alamat';
 
     protected $fillable = [
-        'user_id',
+        'id_pelanggan',
         'label',
         'nama_penerima',
         'telepon',
@@ -24,8 +24,8 @@ class Alamat extends Model
         'is_default' => 'boolean',
     ];
 
-    public function user()
+    public function pelanggan()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
 }

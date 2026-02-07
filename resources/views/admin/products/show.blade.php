@@ -200,8 +200,8 @@
                                          class="w-12 h-12 object-cover rounded cursor-pointer"
                                          onclick="showImageModal('{{ asset('storage/' . $variant->gambar_varian) }}')"
                                          onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-12 h-12 bg-gray-100 rounded flex items-center justify-center\'><i class=\'bi bi-image text-gray-400\'></i></div>';">
-                                @elseif($product->images->first())
-                                    <img src="{{ asset('storage/' . $product->images->first()->path) }}" 
+                                @elseif($product->primary_image_path)
+                                    <img src="{{ asset('storage/' . $product->primary_image_path) }}" 
                                          alt="{{ $product->nama_produk }}"
                                          class="w-12 h-12 object-cover rounded opacity-50"
                                          onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-12 h-12 bg-gray-100 rounded flex items-center justify-center\'><i class=\'bi bi-image text-gray-400\'></i></div>';">

@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Produk::with(['category', 'activeVariants', 'images'])
+        $query = Produk::with(['category', 'activeVariants', 'variants'])
             ->where('status', 'aktif');
         
         // Category filter
@@ -117,7 +117,7 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-        $product = Produk::with(['category', 'activeVariants', 'images'])
+        $product = Produk::with(['category', 'activeVariants', 'variants'])
             ->where('slug', $slug)
             ->where('status', 'aktif')
             ->firstOrFail();
@@ -125,7 +125,7 @@ class ProductController extends Controller
         // Increment views
         $product->increment('views');
         
-        $relatedProducts = Produk::with(['category', 'activeVariants', 'images'])
+        $relatedProducts = Produk::with(['category', 'activeVariants', 'variants'])
             ->where('id_kategori', $product->id_kategori)
             ->where('id_produk', '!=', $product->id_produk)
             ->where('status', 'aktif')

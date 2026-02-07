@@ -22,7 +22,7 @@
                         </div>
                         
                         <!-- Profile Info -->
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $pelanggan->name ?? 'User' }}</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $pelanggan->nama ?? 'User' }}</h3>
                         <p class="text-sm text-gray-600 mb-2">{{ $pelanggan->email }}</p>
                         <p class="text-xs text-gray-500 mb-4">Member sejak {{ $pelanggan->created_at->format('M Y') }}</p>
                         
@@ -81,9 +81,9 @@
                                 <!-- Nama Lengkap -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                                    <input type="text" name="name" value="{{ $pelanggan->name ?? '' }}" readonly
-                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror">
-                                    @error('name')
+                                    <input type="text" name="nama" value="{{ $pelanggan->nama ?? '' }}" readonly
+                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('nama') border-red-500 @enderror">
+                                    @error('nama')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -101,9 +101,9 @@
                                 <!-- Nomor Telepon -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
-                                    <input type="tel" name="phone" value="{{ $pelanggan->phone ?? '' }}" readonly
-                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-500 @enderror">
-                                    @error('phone')
+                                    <input type="tel" name="telepon" value="{{ $pelanggan->telepon ?? '' }}" readonly
+                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('telepon') border-red-500 @enderror">
+                                    @error('telepon')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -349,23 +349,23 @@
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Label Alamat</label>
                     <div class="flex space-x-3">
-                        <label class="flex-1">
-                            <input type="radio" name="label" value="Rumah" class="peer sr-only" checked>
-                            <div class="border-2 border-gray-300 rounded-lg p-3 text-center cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50 hover:border-primary-400 transition-colors">
+                        <label class="flex-1 group cursor-pointer">
+                            <input type="radio" name="label" value="Rumah" class="sr-only" checked>
+                            <div class="label-alamat-option border-2 border-gray-300 rounded-lg p-3 text-center transition-colors hover:border-primary-400 group-has-[:checked]:border-primary-600 group-has-[:checked]:bg-primary-50">
                                 <i class="bi bi-house-door text-xl"></i>
                                 <p class="text-sm font-medium mt-1">Rumah</p>
                             </div>
                         </label>
-                        <label class="flex-1">
-                            <input type="radio" name="label" value="Kantor" class="peer sr-only">
-                            <div class="border-2 border-gray-300 rounded-lg p-3 text-center cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50 hover:border-primary-400 transition-colors">
+                        <label class="flex-1 group cursor-pointer">
+                            <input type="radio" name="label" value="Kantor" class="sr-only">
+                            <div class="label-alamat-option border-2 border-gray-300 rounded-lg p-3 text-center transition-colors hover:border-primary-400 group-has-[:checked]:border-primary-600 group-has-[:checked]:bg-primary-50">
                                 <i class="bi bi-building text-xl"></i>
                                 <p class="text-sm font-medium mt-1">Kantor</p>
                             </div>
                         </label>
-                        <label class="flex-1">
-                            <input type="radio" name="label" value="Lainnya" class="peer sr-only">
-                            <div class="border-2 border-gray-300 rounded-lg p-3 text-center cursor-pointer peer-checked:border-primary-600 peer-checked:bg-primary-50 hover:border-primary-400 transition-colors">
+                        <label class="flex-1 group cursor-pointer">
+                            <input type="radio" name="label" value="Lainnya" class="sr-only">
+                            <div class="label-alamat-option border-2 border-gray-300 rounded-lg p-3 text-center transition-colors hover:border-primary-400 group-has-[:checked]:border-primary-600 group-has-[:checked]:bg-primary-50">
                                 <i class="bi bi-geo-alt text-xl"></i>
                                 <p class="text-sm font-medium mt-1">Lainnya</p>
                             </div>
@@ -377,6 +377,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Penerima</label>
                     <input type="text" name="nama_penerima" id="nama_penerima" required
+                           value="{{ $pelanggan->nama ?? '' }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                            placeholder="Nama lengkap penerima">
                 </div>
@@ -385,6 +386,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
                     <input type="tel" name="telepon" id="telepon" required
+                           value="{{ $pelanggan->telepon ?? '' }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                            placeholder="08xxxxxxxxxx">
                 </div>
@@ -477,11 +479,13 @@ function showTab(tabName) {
 // Edit Mode Management
 function toggleEdit(section) {
     const form = document.getElementById('form-' + section);
-    const inputs = form.querySelectorAll('input, select, textarea');
+    const inputs = form.querySelectorAll('input:not([type="hidden"]), select, textarea');
     const editBtn = document.getElementById('edit-btn-' + section);
     const saveButtons = document.getElementById('save-buttons-' + section);
     
-    const isReadonly = inputs[0].hasAttribute('readonly') || inputs[0].hasAttribute('disabled');
+    // Cek readonly dari input pertama yang visible (bukan hidden)
+    const firstEditable = form.querySelector('input[type="text"], input[type="email"], input[type="tel"], textarea');
+    const isReadonly = !firstEditable || firstEditable.hasAttribute('readonly') || firstEditable.hasAttribute('disabled');
     
     if (isReadonly) {
         // Enable editing
@@ -542,6 +546,18 @@ function togglePassword(fieldId) {
     }
 }
 
+// Label Alamat: update tampilan active
+function updateLabelAlamatActive() {
+    document.querySelectorAll('#modalAlamat .label-alamat-option').forEach(function(div) {
+        div.classList.remove('label-alamat-active');
+    });
+    const checked = document.querySelector('#modalAlamat input[name="label"]:checked');
+    if (checked) {
+        const option = checked.closest('label').querySelector('.label-alamat-option');
+        if (option) option.classList.add('label-alamat-active');
+    }
+}
+
 // Modal Alamat Management
 function openModalAlamat() {
     document.getElementById('modalAlamat').classList.remove('hidden');
@@ -549,6 +565,7 @@ function openModalAlamat() {
     document.getElementById('formAlamat').action = '{{ route("alamat.store") }}';
     document.getElementById('methodField').value = 'POST';
     document.getElementById('formAlamat').reset();
+    setTimeout(updateLabelAlamatActive, 0);
 }
 
 function closeModalAlamat() {
@@ -570,6 +587,7 @@ function editAlamat(id, label, nama, telepon, alamat, kota, provinsi, kodePos) {
     document.getElementById('kota').value = kota;
     document.getElementById('provinsi').value = provinsi;
     document.getElementById('kode_pos').value = kodePos;
+    updateLabelAlamatActive();
 }
 
 // Close modal when clicking outside
@@ -602,8 +620,17 @@ document.addEventListener('DOMContentLoaded', function() {
             background-color: #f9fafb;
             cursor: not-allowed;
         }
+        .label-alamat-option.label-alamat-active {
+            border-color: #dc2626 !important;
+            background-color: #fef2f2 !important;
+        }
     `;
     document.head.appendChild(style);
+
+    // Label alamat: tampilkan state active saat radio berubah
+    document.querySelectorAll('#modalAlamat input[name="label"]').forEach(function(radio) {
+        radio.addEventListener('change', updateLabelAlamatActive);
+    });
 });
 </script>
 @endsection

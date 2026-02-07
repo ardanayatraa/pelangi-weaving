@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Produk;
 use App\Models\VarianProduk;
-use App\Models\GambarProduk;
 
 class ProductImageSeeder extends Seeder
 {
@@ -72,28 +71,7 @@ class ProductImageSeeder extends Seeder
             // Cari gambar berdasarkan slug produk
             $productImages = $productImageMapping[$product->slug] ?? ['products/songket-1.jpg']; // default fallback
             
-            // Gambar utama produk saja (tidak untuk varian)
-            foreach ($productImages as $index => $imagePath) {
-                $exists = GambarProduk::where('id_produk', $product->id_produk)
-                                    ->where('id_varian', null)
-                                    ->where('path', $imagePath)
-                                    ->exists();
-                
-                if (!$exists) {
-                    GambarProduk::create([
-                        'id_produk' => $product->id_produk,
-                        'id_varian' => null, // Gambar utama produk
-                        'path' => $imagePath,
-                        'is_primary' => $index === 0, // Gambar pertama sebagai primary
-                    ]);
-                    
-                    echo "Gambar produk {$product->nama_produk} berhasil ditambahkan!\n";
-                    $totalImages++;
-                } else {
-                    echo "Gambar produk {$product->nama_produk} sudah ada, dilewati.\n";
-                }
-            }
-
+            // Gambar disimpan di varian (gambar_produk sudah digabung ke varian_produk.gambar_varian)
             // Tambahkan gambar spesifik untuk setiap varian
             $variants = $product->variants;
             foreach ($variants as $variantIndex => $variant) {

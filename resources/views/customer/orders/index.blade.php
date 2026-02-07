@@ -220,8 +220,8 @@
                             $imageUrl = null;
                             if ($varian && $varian->gambar_varian) {
                                 $imageUrl = $varian->gambar_varian;
-                            } elseif ($produk && $produk->images->first()) {
-                                $imageUrl = $produk->images->first()->path;
+                            } elseif ($produk && $produk->primary_image_path) {
+                                $imageUrl = $produk->primary_image_path;
                             }
                         @endphp
                         <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">

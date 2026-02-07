@@ -12,7 +12,7 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cartItems = Keranjang::with(['product', 'productVariant.product'])
+        $cartItems = Keranjang::with(['product.variants', 'productVariant.product'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id())
             ->get();
         

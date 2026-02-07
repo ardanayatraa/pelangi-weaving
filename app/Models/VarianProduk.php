@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
 class VarianProduk extends Model
 {
     protected $table = 'varian_produk';
@@ -36,19 +34,16 @@ class VarianProduk extends Model
         return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 
-    public function images(): HasMany
+    /**
+     * Gambar varian disimpan di kolom gambar_varian (gambar produk sudah digabung ke varian).
+     */
+    public function getPrimaryImage(): string
     {
-        return $this->hasMany(GambarProduk::class, 'id_varian', 'id_varian');
+        return $this->gambar_varian ?? '';
     }
 
-    // Methods sesuai class diagram
     public function isInStock(): bool
     {
         return $this->stok > 0;
-    }
-
-    public function getPrimaryImage(): string
-    {
-        return $this->gambar_varian ?? $this->product->images()->where('is_primary', true)->first()?->path ?? '';
     }
 }

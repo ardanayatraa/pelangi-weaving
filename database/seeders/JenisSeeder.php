@@ -12,15 +12,6 @@ class JenisSeeder extends Seeder
     {
         $jenisData = [
             [
-                'nama_jenis' => 'Tas Custom',
-                'slug' => 'tas-custom',
-                'deskripsi' => 'Pembuatan tas dengan desain dan ukuran sesuai permintaan customer',
-                'icon' => 'bi bi-bag',
-                'status' => 'active',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'nama_jenis' => 'Rajutan Custom',
                 'slug' => 'rajutan-custom',
                 'deskripsi' => 'Pembuatan produk rajutan dengan pola dan warna custom',

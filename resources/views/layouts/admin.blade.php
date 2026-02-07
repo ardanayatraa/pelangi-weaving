@@ -278,12 +278,6 @@
                 
                 <!-- Top Bar Actions -->
                 <div class="ml-auto flex items-center gap-4">
-                    <!-- Notifications -->
-                    <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="bi bi-bell text-lg"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">3</span>
-                    </button>
-                    
                     <!-- User Menu -->
                     <div class="flex items-center gap-3 text-gray-700">
                         <div class="w-8 h-8 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center">
