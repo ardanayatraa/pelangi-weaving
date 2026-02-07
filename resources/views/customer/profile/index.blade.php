@@ -22,7 +22,7 @@
                         </div>
                         
                         <!-- Profile Info -->
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $pelanggan->name }}</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $pelanggan->name ?? 'User' }}</h3>
                         <p class="text-sm text-gray-600 mb-2">{{ $pelanggan->email }}</p>
                         <p class="text-xs text-gray-500 mb-4">Member sejak {{ $pelanggan->created_at->format('M Y') }}</p>
                         
@@ -81,7 +81,7 @@
                                 <!-- Nama Lengkap -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                                    <input type="text" name="name" value="{{ $pelanggan->name }}" readonly
+                                    <input type="text" name="name" value="{{ $pelanggan->name ?? '' }}" readonly
                                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror">
                                     @error('name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -91,7 +91,7 @@
                                 <!-- Email -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                    <input type="email" name="email" value="{{ $pelanggan->email }}" readonly
+                                    <input type="email" name="email" value="{{ $pelanggan->email ?? '' }}" readonly
                                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('email') border-red-500 @enderror">
                                     @error('email')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -101,7 +101,7 @@
                                 <!-- Nomor Telepon -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
-                                    <input type="tel" name="phone" value="{{ $pelanggan->phone }}" readonly
+                                    <input type="tel" name="phone" value="{{ $pelanggan->phone ?? '' }}" readonly
                                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-500 @enderror">
                                     @error('phone')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -111,7 +111,7 @@
                                 <!-- Kode Pos -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Kode Pos</label>
-                                    <input type="text" name="kode_pos" value="{{ $pelanggan->kode_pos }}" readonly
+                                    <input type="text" name="kode_pos" value="{{ $pelanggan->kode_pos ?? '' }}" readonly
                                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('kode_pos') border-red-500 @enderror">
                                     @error('kode_pos')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -123,7 +123,7 @@
                             <div class="mt-6">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
                                 <textarea name="alamat" rows="3" readonly
-                                          class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('alamat') border-red-500 @enderror">{{ $pelanggan->alamat }}</textarea>
+                                          class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('alamat') border-red-500 @enderror">{{ $pelanggan->alamat ?? '' }}</textarea>
                                 @error('alamat')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
