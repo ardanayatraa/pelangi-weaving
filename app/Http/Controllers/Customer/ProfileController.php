@@ -13,7 +13,7 @@ class ProfileController extends Controller
     public function index()
     {
         $pelanggan = Auth::user();
-        $alamatList = Auth::user()->addresses()->orderBy('is_default', 'desc')->get();
+        $alamatList = $pelanggan->addresses()->orderBy('is_default', 'desc')->get();
         return view('customer.profile.index', compact('pelanggan', 'alamatList'));
     }
 
