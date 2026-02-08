@@ -98,11 +98,11 @@ Route::middleware(['pelanggan'])->group(function () {
     Route::put('/profile', [App\Http\Controllers\Customer\ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [App\Http\Controllers\Customer\ProfileController::class, 'updatePassword'])->name('profile.password');
     
-    // Alamat
-    Route::post('/alamat', [App\Http\Controllers\Customer\AlamatController::class, 'store'])->name('alamat.store');
-    Route::put('/alamat/{alamat}', [App\Http\Controllers\Customer\AlamatController::class, 'update'])->name('alamat.update');
-    Route::delete('/alamat/{alamat}', [App\Http\Controllers\Customer\AlamatController::class, 'destroy'])->name('alamat.destroy');
-    Route::post('/alamat/{alamat}/set-default', [App\Http\Controllers\Customer\AlamatController::class, 'setDefault'])->name('alamat.setDefault');
+    // Alamat Management
+    Route::post('/alamat', [App\Http\Controllers\Customer\ProfileController::class, 'storeAlamat'])->name('alamat.store');
+    Route::put('/alamat/{index}', [App\Http\Controllers\Customer\ProfileController::class, 'updateAlamat'])->name('alamat.update');
+    Route::delete('/alamat/{index}', [App\Http\Controllers\Customer\ProfileController::class, 'deleteAlamat'])->name('alamat.delete');
+    Route::post('/alamat/{index}/set-default', [App\Http\Controllers\Customer\ProfileController::class, 'setDefaultAlamat'])->name('alamat.set-default');
 });
 
 // Payment Callback (Public - untuk Midtrans webhook)

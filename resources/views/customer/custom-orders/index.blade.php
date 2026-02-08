@@ -183,13 +183,9 @@
                                                 <span class="text-gray-600">DP (50%)</span>
                                                 <span class="font-semibold">Rp {{ number_format($order->dp_amount, 0, ',', '.') }}</span>
                                             </div>
-                                            <div class="flex justify-between">
-                                                <span class="text-gray-600">Biaya Admin</span>
-                                                <span class="font-semibold">Rp 2.500</span>
-                                            </div>
                                             <div class="border-t pt-2 flex justify-between">
                                                 <span class="font-semibold">Total DP</span>
-                                                <span class="font-bold text-primary-600">Rp {{ number_format($order->dp_amount + 2500, 0, ',', '.') }}</span>
+                                                <span class="font-bold text-primary-600">Rp {{ number_format($order->dp_amount, 0, ',', '.') }}</span>
                                             </div>
                                         </div>
                                         @endif

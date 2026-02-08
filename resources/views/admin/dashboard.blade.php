@@ -5,18 +5,6 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Action Buttons -->
-    <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
-        <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-            <i class="bi bi-download mr-2"></i>
-            Export Data
-        </button>
-        <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">
-            <i class="bi bi-arrow-clockwise mr-2"></i>
-            Refresh
-        </button>
-    </div>
-
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Products -->

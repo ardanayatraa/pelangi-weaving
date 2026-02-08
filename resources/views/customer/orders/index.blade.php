@@ -11,27 +11,16 @@
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Pesanan Saya</h1>
                 <p class="text-gray-600">Kelola dan lacak semua pesanan Anda</p>
             </div>
-            <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                <button class="px-4 py-2 border border-primary-300 text-primary-600 rounded-lg hover:bg-primary-50 transition-colors">
-                    <i class="bi bi-download mr-2"></i>
-                    Download Invoice
-                </button>
-                <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                    <i class="bi bi-plus mr-2"></i>
-                    Belanja Lagi
-                </button>
-            </div>
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             @php
             $stats = [
                 'total' => $orders->total(),
                 'baru' => \App\Models\Pesanan::where('id_pelanggan', Auth::guard('pelanggan')->id())->where('status_pesanan', 'baru')->count(),
                 'diproses' => \App\Models\Pesanan::where('id_pelanggan', Auth::guard('pelanggan')->id())->where('status_pesanan', 'diproses')->count(),
                 'selesai' => \App\Models\Pesanan::where('id_pelanggan', Auth::guard('pelanggan')->id())->where('status_pesanan', 'selesai')->count(),
-                'total_spent' => \App\Models\Pesanan::where('id_pelanggan', Auth::guard('pelanggan')->id())->where('status_pesanan', 'selesai')->sum('total_bayar')
             ];
             @endphp
 
@@ -73,20 +62,36 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Total Belanja -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                        <i class="bi bi-currency-dollar text-blue-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-xl font-bold text-primary-600">Rp {{ number_format($stats['total_spent']/1000000, 1) }}jt</p>
-                        <p class="text-sm text-gray-600">Total Belanja</p>
-                    </div>
+        <!-- Active Filters Indicator -->
+        @if(request('search') || request('period'))
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2 text-sm">
+                    <i class="bi bi-funnel-fill text-blue-600"></i>
+                    <span class="text-blue-900 font-medium">Filter Aktif:</span>
+                    @if(request('search'))
+                    <span class="px-3 py-1 bg-white rounded-lg text-blue-900 border border-blue-200">
+                        <i class="bi bi-search mr-1"></i>
+                        "{{ request('search') }}"
+                    </span>
+                    @endif
+                    @if(request('period'))
+                    <span class="px-3 py-1 bg-white rounded-lg text-blue-900 border border-blue-200">
+                        <i class="bi bi-calendar mr-1"></i>
+                        {{ request('period') }} hari terakhir
+                    </span>
+                    @endif
                 </div>
+                <a href="{{ route('orders.index', request('status') ? ['status' => request('status')] : []) }}" 
+                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <i class="bi bi-x-circle mr-1"></i>
+                    Hapus Filter
+                </a>
             </div>
         </div>
+        @endif
 
         <!-- Filter and Search -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
@@ -117,24 +122,38 @@
                 </div>
 
                 <!-- Search and Filter -->
-                <div class="flex items-center space-x-3">
+                <form method="GET" action="{{ route('orders.index') }}" class="flex items-center space-x-3">
+                    <!-- Preserve status filter -->
+                    @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                    @endif
+                    
                     <div class="relative">
                         <input type="text" 
-                               placeholder="Cari berdasarkan nomor invoice, nama produk..."
+                               name="search"
+                               value="{{ request('search') }}"
+                               placeholder="Cari berdasarkan nomor invoice..."
                                class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                         <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        <option>Semua Waktu</option>
-                        <option>7 Hari Terakhir</option>
-                        <option>30 Hari Terakhir</option>
-                        <option>3 Bulan Terakhir</option>
+                    <select name="period" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        <option value="">Semua Waktu</option>
+                        <option value="7" {{ request('period') == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
+                        <option value="30" {{ request('period') == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
+                        <option value="90" {{ request('period') == '90' ? 'selected' : '' }}>3 Bulan Terakhir</option>
                     </select>
-                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                    <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
                         <i class="bi bi-funnel"></i>
                         Cari
                     </button>
-                </div>
+                    @if(request('search') || request('period'))
+                    <a href="{{ route('orders.index', request('status') ? ['status' => request('status')] : []) }}" 
+                       class="px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="bi bi-x-circle"></i>
+                        Reset
+                    </a>
+                    @endif
+                </form>
             </div>
         </div>
 

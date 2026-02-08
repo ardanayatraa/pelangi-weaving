@@ -108,7 +108,7 @@ class PaymentController extends Controller
         
         Log::info('Payment ditemukan:', [
             'id' => $payment->id_pembayaran,
-            'status_bayar' => $payment->status_bayar,
+            'status_pembayaran' => $payment->status_pembayaran,
             'nomor_invoice' => $order->nomor_invoice
         ]);
         
@@ -129,37 +129,37 @@ class PaymentController extends Controller
                 if ($transactionStatus == 'capture' && $fraudStatus == 'challenge') {
                     // Jika capture tapi fraud challenge, set pending
                     $payment->update([
-                        'status_bayar' => 'pending',
                         'status_pembayaran' => 'pending',
+                        'status_bayar' => 'pending',
                     ]);
                     $message = 'Pembayaran Anda sedang diverifikasi. Mohon tunggu konfirmasi.';
                 } else {
                     // Pembayaran berhasil
                     $payment->update([
-                        'status_bayar' => 'paid',
                         'status_pembayaran' => 'paid',
-                        'tanggal_bayar' => now(),
+                        'status_bayar' => 'paid',
+                        'waktu_settlement' => now(),
                     ]);
                     $order->update(['status_pesanan' => 'diproses']);
                     $message = 'Pembayaran berhasil! Pesanan Anda sedang diproses.';
                 }
             } elseif ($transactionStatus == 'pending') {
                 $payment->update([
-                    'status_bayar' => 'pending',
                     'status_pembayaran' => 'pending',
+                    'status_bayar' => 'pending',
                 ]);
                 $message = 'Pembayaran Anda sedang diproses. Silakan selesaikan pembayaran.';
             } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
                 $payment->update([
-                    'status_bayar' => 'failed',
                     'status_pembayaran' => 'cancel',
+                    'status_bayar' => 'failed',
                 ]);
                 $message = 'Pembayaran gagal atau dibatalkan. Silakan coba lagi.';
             } else {
                 // Status tidak dikenali, set pending untuk safety
                 $payment->update([
-                    'status_bayar' => 'pending',
                     'status_pembayaran' => 'pending',
+                    'status_bayar' => 'pending',
                 ]);
                 $message = 'Status pembayaran sedang diverifikasi. Mohon tunggu konfirmasi.';
             }
@@ -169,10 +169,10 @@ class PaymentController extends Controller
             
             // Jika error saat cek Midtrans, jangan langsung set paid
             // Biarkan status tetap pending untuk safety
-            if ($payment->status_bayar !== 'paid') {
+            if ($payment->status_pembayaran !== 'paid') {
                 $payment->update([
-                    'status_bayar' => 'pending',
                     'status_pembayaran' => 'pending',
+                    'status_bayar' => 'pending',
                 ]);
             }
             
@@ -183,7 +183,7 @@ class PaymentController extends Controller
         
         // Redirect ke halaman detail pesanan
         return redirect()->route('orders.show', $order->nomor_invoice)
-            ->with($payment->status_bayar == 'paid' ? 'success' : 'info', $message);
+            ->with($payment->status_pembayaran == 'paid' ? 'success' : 'info', $message);
     }
 
     public function callback(Request $request)
@@ -215,16 +215,16 @@ class PaymentController extends Controller
         if (in_array($transactionStatus, ['capture', 'settlement'])) {
             Log::info('Payment successful - Updating to PAID');
             $payment->update([
-                'status_bayar' => 'paid',
-                'tanggal_bayar' => now(),
+                'status_pembayaran' => 'paid',
+                'waktu_settlement' => now(),
             ]);
             $order->update(['status_pesanan' => 'diproses']);
         } elseif ($transactionStatus == 'pending') {
             Log::info('Payment pending');
-            $payment->update(['status_bayar' => 'pending']);
+            $payment->update(['status_pembayaran' => 'pending']);
         } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
             Log::warning('Payment failed/cancelled');
-            $payment->update(['status_bayar' => 'failed']);
+            $payment->update(['status_pembayaran' => 'cancel']);
             $order->update(['status_pesanan' => 'batal']);
         }
         

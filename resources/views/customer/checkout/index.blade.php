@@ -77,35 +77,37 @@
                                 <div class="flex-1">
                                     <div class="flex items-center mb-2">
                                         <span class="bg-primary-600 text-white px-3 py-1 rounded-full text-xs font-semibold mr-3">
-                                            <i class="bi bi-house-door"></i> Rumah
+                                            <i class="bi bi-house-door"></i> 
+                                            {{ $defaultAlamat['label'] ?? 'Rumah' }}
                                         </span>
-                                        <span class="font-semibold text-gray-900">{{ $pelanggan->nama }}</span>
+                                        <span class="font-semibold text-gray-900">{{ $defaultAlamat['nama_penerima'] ?? $pelanggan->nama }}</span>
                                     </div>
                                     <p class="text-gray-700 mb-1 flex items-center">
                                         <i class="bi bi-telephone mr-2 text-primary-600"></i>
-                                        {{ $pelanggan->telepon }}
+                                        {{ $defaultAlamat['telepon'] ?? $pelanggan->telepon }}
                                     </p>
                                     <p class="text-gray-600 text-sm flex items-start">
                                         <i class="bi bi-geo-alt mr-2 text-primary-600 mt-0.5"></i>
-                                        {{ $pelanggan->alamat ?? 'Jl. Merdeka No. 123, Jakarta Selatan, DKI Jakarta 12345' }}
+                                        {{ $defaultAlamat['alamat_lengkap'] ?? 'Belum ada alamat' }}, 
+                                        {{ $defaultAlamat['kota'] ?? '' }} {{ $defaultAlamat['provinsi'] ?? '' }} {{ $defaultAlamat['kode_pos'] ?? '' }}
                                     </p>
                                 </div>
-                                <button type="button" class="text-primary-600 hover:text-primary-700 font-medium text-sm px-3 py-1 rounded-lg hover:bg-primary-50 transition-colors">
+                                <a href="{{ route('profile.index') }}" class="text-primary-600 hover:text-primary-700 font-medium text-sm px-3 py-1 rounded-lg hover:bg-primary-50 transition-colors">
                                     <i class="bi bi-pencil"></i> Ubah
-                                </button>
+                                </a>
                             </div>
                         </div>
                         
-                        <button type="button" class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center hover:bg-primary-50 px-3 py-2 rounded-lg transition-colors">
+                        <a href="{{ route('profile.index') }}" class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center hover:bg-primary-50 px-3 py-2 rounded-lg transition-colors">
                             <i class="bi bi-plus-circle mr-2"></i>
-                            Tambah Alamat Baru
-                        </button>
+                            Kelola Alamat
+                        </a>
 
                         <!-- Hidden fields for address -->
-                        <input type="hidden" name="shipping_address" value="{{ $pelanggan->alamat ?? 'Jl. Merdeka No. 123, Jakarta Selatan, DKI Jakarta 12345' }}">
-                        <input type="hidden" name="shipping_city" value="Jakarta Selatan">
-                        <input type="hidden" name="shipping_province" value="DKI Jakarta">
-                        <input type="hidden" name="shipping_postal_code" value="12345">
+                        <input type="hidden" name="shipping_address" value="{{ $defaultAlamat['alamat_lengkap'] ?? '' }}">
+                        <input type="hidden" name="shipping_city" value="{{ $defaultAlamat['kota'] ?? '' }}">
+                        <input type="hidden" name="shipping_province" value="{{ $defaultAlamat['provinsi'] ?? '' }}">
+                        <input type="hidden" name="shipping_postal_code" value="{{ $defaultAlamat['kode_pos'] ?? '' }}">
                     </div>
 
                     <!-- Metode Pengiriman -->
@@ -212,16 +214,8 @@
                                 <span class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">Diskon</span>
-                                <span class="font-semibold text-green-600">-Rp 50.000</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
                                 <span class="text-gray-600">Ongkos Kirim</span>
                                 <span class="font-semibold" id="display-shipping">Rp 25.000</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">Biaya Admin</span>
-                                <span class="font-semibold">Rp 2.500</span>
                             </div>
                         </div>
 
@@ -230,16 +224,8 @@
                             <div class="flex justify-between items-center mb-4">
                                 <span class="text-lg font-bold text-gray-900">Total Pembayaran</span>
                                 <span class="text-2xl font-bold text-primary-600" id="display-total">
-                                    Rp {{ number_format($subtotal + 25000 - 50000 + 2500, 0, ',', '.') }}
+                                    Rp {{ number_format($subtotal + 25000, 0, ',', '.') }}
                                 </span>
-                            </div>
-                        </div>
-
-                        <!-- Security Info -->
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-                            <div class="flex items-center text-green-700 text-sm">
-                                <i class="bi bi-shield-check mr-2"></i>
-                                <span>Transaksi aman dengan enkripsi SSL</span>
                             </div>
                         </div>
 
@@ -271,8 +257,6 @@
 // Variables
 const subtotal = {{ $subtotal }};
 let shippingCost = 25000; // Default JNE REG
-const discount = 50000;
-const adminFee = 2500;
 
 // Select Shipping
 function selectShipping(radio) {
@@ -305,7 +289,7 @@ function selectShipping(radio) {
 }
 
 function updateTotal() {
-    const total = subtotal + shippingCost - discount + adminFee;
+    const total = subtotal + shippingCost;
     document.getElementById('display-shipping').textContent = 'Rp ' + shippingCost.toLocaleString('id-ID');
     document.getElementById('display-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
 }

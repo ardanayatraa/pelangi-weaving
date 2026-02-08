@@ -19,42 +19,18 @@ class ProductController extends Controller
             $query->where('id_kategori', $request->category);
         }
         
-        // Price range filter (new format)
+        // Price range filter
         if ($request->has('price_range') && $request->price_range != '') {
             $priceRange = explode('-', $request->price_range);
             if (count($priceRange) == 2) {
                 $minPrice = (int)$priceRange[0];
                 $maxPrice = (int)$priceRange[1];
                 
-                // Filter by product price or variant price
-                $query->where(function($q) use ($minPrice, $maxPrice) {
-                    $q->whereBetween('harga', [$minPrice, $maxPrice])
-                      ->orWhereHas('activeVariants', function($vq) use ($minPrice, $maxPrice) {
-                          $vq->whereBetween('harga', [$minPrice, $maxPrice]);
-                      });
+                // Filter by variant price
+                $query->whereHas('activeVariants', function($vq) use ($minPrice, $maxPrice) {
+                    $vq->whereBetween('harga', [$minPrice, $maxPrice]);
                 });
             }
-        }
-        
-        // Legacy price filter support
-        if ($request->has('min_price') && $request->min_price != '') {
-            $minPrice = (int)$request->min_price;
-            $query->where(function($q) use ($minPrice) {
-                $q->where('harga', '>=', $minPrice)
-                  ->orWhereHas('activeVariants', function($vq) use ($minPrice) {
-                      $vq->where('harga', '>=', $minPrice);
-                  });
-            });
-        }
-        
-        if ($request->has('max_price') && $request->max_price != '') {
-            $maxPrice = (int)$request->max_price;
-            $query->where(function($q) use ($maxPrice) {
-                $q->where('harga', '<=', $maxPrice)
-                  ->orWhereHas('activeVariants', function($vq) use ($maxPrice) {
-                      $vq->where('harga', '<=', $maxPrice);
-                  });
-            });
         }
         
         // Search filter
@@ -69,43 +45,40 @@ class ProductController extends Controller
             });
         }
         
-        // Stock filter
-        if ($request->has('stock') && $request->stock != '') {
-            switch ($request->stock) {
-                case 'available':
-                    $query->where('stok', '>', 10);
-                    break;
-                case 'limited':
-                    $query->where('stok', '>', 0)->where('stok', '<=', 10);
-                    break;
-                case 'out_of_stock':
-                    $query->where('stok', 0);
-                    break;
-            }
-        }
-        
         // Sorting
         $sortBy = $request->get('sort', 'newest');
         switch ($sortBy) {
             case 'price_low':
-                $query->orderBy('harga', 'asc');
+                // Sort by minimum variant price
+                $query->join('varian_produk', 'produk.id_produk', '=', 'varian_produk.id_produk')
+                      ->where('varian_produk.status', 'tersedia')
+                      ->select('produk.*')
+                      ->selectRaw('MIN(varian_produk.harga) as min_price')
+                      ->groupBy('produk.id_produk')
+                      ->orderBy('min_price', 'asc');
                 break;
             case 'price_high':
-                $query->orderBy('harga', 'desc');
+                // Sort by maximum variant price
+                $query->join('varian_produk', 'produk.id_produk', '=', 'varian_produk.id_produk')
+                      ->where('varian_produk.status', 'tersedia')
+                      ->select('produk.*')
+                      ->selectRaw('MAX(varian_produk.harga) as max_price')
+                      ->groupBy('produk.id_produk')
+                      ->orderBy('max_price', 'desc');
                 break;
             case 'name':
                 $query->orderBy('nama_produk', 'asc');
                 break;
             case 'popular':
-                // Order by stock (assuming popular items have lower stock due to sales)
-                $query->orderBy('stok', 'asc');
+                // Order by views
+                $query->orderBy('views', 'desc');
                 break;
             case 'newest':
             default:
                 $query->latest();
         }
         
-        $products = $query->paginate(20);
+        $products = $query->paginate(20)->withQueryString();
         
         // Get categories with product counts
         $categories = Kategori::withCount(['products' => function($query) {

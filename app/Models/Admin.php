@@ -17,8 +17,6 @@ class Admin extends Authenticatable
         'email',
         'password',
         'role',
-        'is_owner',
-        'can_manage_products',
         'last_login',
     ];
 
@@ -30,21 +28,9 @@ class Admin extends Authenticatable
     protected $casts = [
         'last_login' => 'datetime',
         'password' => 'hashed',
-        'is_owner' => 'boolean',
-        'can_manage_products' => 'boolean',
     ];
 
-    // Methods sesuai class diagram
-    public function canManageProducts(): bool
-    {
-        return $this->can_manage_products || $this->is_owner;
-    }
-
-    public function isOwner(): bool
-    {
-        return $this->is_owner;
-    }
-
+    // Methods
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

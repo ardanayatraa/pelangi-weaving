@@ -64,88 +64,24 @@
                 </div>
             </div>
 
-            <!-- Payment Methods -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Pilih Metode Pembayaran</h3>
-                
-                <div class="space-y-3">
-                    <!-- Bank Transfer -->
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="payment_method" value="bank_transfer" class="sr-only peer" checked>
-                        <div class="p-4 border-2 border-gray-200 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 hover:border-gray-300 transition">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <i class="bi bi-bank text-blue-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-900">Transfer Bank</h4>
-                                    <p class="text-sm text-gray-600">Transfer ke rekening bank kami</p>
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-
-                    <!-- E-Wallet -->
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="payment_method" value="ewallet" class="sr-only peer">
-                        <div class="p-4 border-2 border-gray-200 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 hover:border-gray-300 transition">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    <i class="bi bi-wallet2 text-green-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-900">E-Wallet</h4>
-                                    <p class="text-sm text-gray-600">OVO, GoPay, DANA, LinkAja</p>
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-
-                    <!-- Credit Card -->
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="payment_method" value="credit_card" class="sr-only peer">
-                        <div class="p-4 border-2 border-gray-200 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 hover:border-gray-300 transition">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                    <i class="bi bi-credit-card text-purple-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-900">Kartu Kredit/Debit</h4>
-                                    <p class="text-sm text-gray-600">Visa, Mastercard, JCB</p>
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Bank Transfer Details (shown by default) -->
-            <div id="bankTransferDetails" class="bg-gray-50 rounded-lg p-4 mb-6">
-                <h4 class="font-medium text-gray-900 mb-3">Detail Transfer Bank</h4>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Bank:</span>
-                        <span class="font-medium">BCA</span>
+            <!-- Payment via Midtrans -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
+                        <i class="bi bi-credit-card text-blue-600 text-3xl"></i>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">No. Rekening:</span>
-                        <span class="font-medium">1234567890</span>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Pembayaran Aman dengan Midtrans</h3>
+                    <p class="text-sm text-gray-600 mb-4">Berbagai metode pembayaran tersedia: Transfer Bank, E-Wallet, Kartu Kredit/Debit</p>
+                    <div class="flex justify-center gap-3 flex-wrap">
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">BCA</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">Mandiri</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">BNI</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">GoPay</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">OVO</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">DANA</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">Visa</span>
+                        <span class="px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">Mastercard</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Atas Nama:</span>
-                        <span class="font-medium">Pelangi Traditional Weaving</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Jumlah Transfer:</span>
-                        <span class="font-medium text-red-600">Rp {{ number_format($customOrder->dp_amount, 0, ',', '.') }}</span>
-                    </div>
-                </div>
-                
-                <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                    <p class="text-sm text-yellow-800">
-                        <i class="bi bi-exclamation-triangle mr-1"></i>
-                        Pastikan jumlah transfer sesuai dengan nominal yang tertera untuk mempercepat konfirmasi.
-                    </p>
                 </div>
             </div>
 
@@ -199,12 +135,11 @@
             <div class="mt-6 p-4 bg-gray-50 rounded-lg">
                 <h4 class="font-medium text-gray-900 mb-2">Langkah Pembayaran:</h4>
                 <ol class="text-sm text-gray-600 space-y-1 list-decimal list-inside">
-                    <li>Pilih metode pembayaran yang diinginkan</li>
-                    <li>Klik "Bayar Sekarang" untuk melanjutkan</li>
+                    <li>Klik "Bayar Sekarang" untuk melanjutkan ke halaman pembayaran</li>
+                    <li>Pilih metode pembayaran yang diinginkan (Bank Transfer, E-Wallet, atau Kartu Kredit)</li>
                     <li>Ikuti instruksi pembayaran yang muncul</li>
                     <li>Selesaikan pembayaran sesuai nominal yang tertera</li>
-                    <li>Simpan bukti pembayaran untuk konfirmasi</li>
-                    <li>Produksi akan dimulai setelah pembayaran terkonfirmasi</li>
+                    <li>Produksi akan dimulai otomatis setelah pembayaran berhasil</li>
                 </ol>
             </div>
         </div>
@@ -216,49 +151,20 @@
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 
 <script>
-// Handle payment method selection
-document.addEventListener('DOMContentLoaded', function() {
-    const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
-    const bankTransferDetails = document.getElementById('bankTransferDetails');
-    
-    paymentMethods.forEach(method => {
-        method.addEventListener('change', function() {
-            if (this.value === 'bank_transfer') {
-                bankTransferDetails.style.display = 'block';
-            } else {
-                bankTransferDetails.style.display = 'none';
-            }
-        });
-    });
-});
-
 function processPayment() {
-    const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
     const payButton = document.getElementById('pay-button');
     
     // Disable button to prevent double click
     payButton.disabled = true;
     payButton.innerHTML = '<i class="bi bi-hourglass-split mr-2"></i>Memproses...';
     
-    if (selectedMethod === 'bank_transfer') {
-        // Show bank transfer instructions
-        alert('Silakan transfer ke rekening yang tertera. Setelah transfer, hubungi kami untuk konfirmasi pembayaran.');
-        
-        // Redirect to order detail page
-        window.location.href = "{{ route('custom-orders.show', $customOrder->nomor_custom_order) }}";
-        return;
-    }
-    
-    // For e-wallet and credit card, use Midtrans
+    // Use Midtrans Snap for payment
     fetch("{{ route('custom-orders.payment.process', $customOrder->nomor_custom_order) }}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            payment_method: selectedMethod
-        })
+        }
     })
     .then(response => response.json())
     .then(data => {

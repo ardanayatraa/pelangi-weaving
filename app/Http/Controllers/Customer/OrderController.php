@@ -15,11 +15,23 @@ class OrderController extends Controller
         $query = Pesanan::with(['items.produk.variants', 'items.varian', 'payment', 'pengiriman'])
             ->where('id_pelanggan', Auth::guard('pelanggan')->id());
         
+        // Filter by status
         if ($request->has('status') && $request->status != '') {
             $query->where('status_pesanan', $request->status);
         }
         
-        $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+        // Search by invoice number
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nomor_invoice', 'like', '%' . $request->search . '%');
+        }
+        
+        // Filter by period
+        if ($request->has('period') && $request->period != '') {
+            $days = (int) $request->period;
+            $query->where('tanggal_pesanan', '>=', now()->subDays($days));
+        }
+        
+        $orders = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         
         return view('customer.orders.index', compact('orders'));
     }

@@ -3,6 +3,29 @@
 @section('title', 'Kategori')
 @section('page-title', 'Manajemen Kategori')
 
+@push('styles')
+<style>
+    @keyframes modalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .animate-modal-slide-up {
+        animation: modalSlideUp 0.3s ease-out;
+    }
+    
+    #modalDelete:not(.hidden) {
+        display: flex;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="mb-6">
     <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition">
@@ -39,16 +62,12 @@
                            title="Edit">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form action="{{ route('admin.categories.destroy', $category->id_kategori) }}" method="POST" class="inline-block ml-2">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                    class="inline-flex items-center px-3 py-1 border border-red-600 text-red-600 hover:bg-red-50 rounded text-sm font-medium transition"
-                                    onclick="return confirm('Yakin hapus kategori ini?')" 
-                                    title="Hapus">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
+                        <button type="button" 
+                                onclick="confirmDelete('{{ route('admin.categories.destroy', $category->id_kategori) }}', '{{ $category->nama_kategori }}')"
+                                class="inline-flex items-center px-3 py-1 border border-red-600 text-red-600 hover:bg-red-50 rounded text-sm font-medium transition ml-2"
+                                title="Hapus">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </td>
                 </tr>
                 @empty
@@ -65,4 +84,68 @@
     </div>
     @endif
 </div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="modalDelete" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.4);">
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all animate-modal-slide-up">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-20 h-20 mx-auto bg-gradient-to-br from-red-100 to-red-50 rounded-full mb-4 shadow-lg">
+                <div class="relative">
+                    <i class="bi bi-exclamation-triangle text-4xl text-red-600"></i>
+                    <div class="absolute inset-0 bg-red-600 opacity-20 blur-xl rounded-full"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Hapus Kategori?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Apakah Anda yakin ingin menghapus kategori <br>
+                    <strong id="categoryName" class="text-gray-900"></strong>?
+                    <br>
+                    <span class="text-sm text-gray-500">Tindakan ini tidak dapat dibatalkan.</span>
+                </p>
+            </div>
+
+            <form id="formDelete" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeModal()" 
+                            class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <i class="bi bi-trash mr-2"></i>
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(url, name) {
+    const modal = document.getElementById('modalDelete');
+    const form = document.getElementById('formDelete');
+    const nameElement = document.getElementById('categoryName');
+    
+    form.action = url;
+    nameElement.textContent = name;
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('modalDelete').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('modalDelete')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
 @endsection

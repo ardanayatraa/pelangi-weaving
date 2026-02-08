@@ -13,6 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_produk');
             $table->string('nama_varian', 100);
             $table->string('kode_varian', 50)->unique();
+            $table->string('gambar_varian', 255)->nullable();
             $table->decimal('harga', 12, 2);
             $table->integer('stok')->default(0);
             $table->decimal('berat', 6, 2)->nullable(); // dalam kg
@@ -23,6 +24,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('id_produk')->references('id_produk')->on('produk')->onDelete('cascade');
+            
+            $table->index('kode_varian');
+            $table->index('id_produk');
+            $table->index('status');
         });
     }
 

@@ -2,6 +2,32 @@
 
 @section('title', 'Profil Saya - Pelangi Weaving')
 
+@push('styles')
+<style>
+    @keyframes modalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .animate-modal-slide-up {
+        animation: modalSlideUp 0.3s ease-out;
+    }
+    
+    #modalDeleteAlamat:not(.hidden),
+    #modalAlamat:not(.hidden) {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="bg-gray-50 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-6">
@@ -48,7 +74,7 @@
                         <a href="#" onclick="showTab('alamat')" id="tab-alamat"
                            class="profile-tab flex items-center w-full px-4 py-3 text-left text-sm font-medium rounded-lg transition-colors">
                             <i class="bi bi-geo-alt mr-3 text-gray-400"></i>
-                            Alamat Pengiriman
+                            Daftar Alamat
                         </a>
                         <a href="#" onclick="showTab('password')" id="tab-password"
                            class="profile-tab flex items-center w-full px-4 py-3 text-left text-sm font-medium rounded-lg transition-colors">
@@ -108,6 +134,16 @@
                                     @enderror
                                 </div>
 
+                                <!-- WhatsApp -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp</label>
+                                    <input type="tel" name="whatsapp" value="{{ $pelanggan->whatsapp ?? '' }}" readonly
+                                           class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('whatsapp') border-red-500 @enderror">
+                                    @error('whatsapp')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 <!-- Kode Pos -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Kode Pos</label>
@@ -119,14 +155,14 @@
                                 </div>
                             </div>
 
-                            <!-- Alamat -->
-                            <div class="mt-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap</label>
-                                <textarea name="alamat" rows="3" readonly
-                                          class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('alamat') border-red-500 @enderror">{{ $pelanggan->alamat ?? '' }}</textarea>
-                                @error('alamat')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <div class="flex items-start">
+                                    <i class="bi bi-info-circle text-blue-600 mr-3 mt-0.5"></i>
+                                    <div>
+                                        <p class="text-sm text-blue-800 font-medium">Kelola Alamat Pengiriman</p>
+                                        <p class="text-sm text-blue-700 mt-1">Untuk menambah atau mengubah alamat pengiriman, silakan ke tab <strong>"Daftar Alamat"</strong></p>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Save Buttons (Hidden by default) -->
@@ -145,78 +181,111 @@
                     </div>
                 </div>
 
-                <!-- Alamat Pengiriman Tab -->
+                <!-- Daftar Alamat Tab -->
                 <div id="content-alamat" class="tab-content" style="display: none;">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                         <div class="flex items-center justify-between mb-6">
-                            <h2 class="text-xl font-bold text-gray-900">Alamat Pengiriman</h2>
-                            <button onclick="openModalAlamat()" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                                <i class="bi bi-plus mr-2"></i>
+                            <div>
+                                <h2 class="text-xl font-bold text-gray-900 mb-1">Daftar Alamat</h2>
+                                <p class="text-sm text-gray-600">Kelola alamat pengiriman Anda</p>
+                            </div>
+                            <button onclick="openModalAlamat()" 
+                                    class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                                <i class="bi bi-plus-circle mr-2"></i>
                                 Tambah Alamat
                             </button>
                         </div>
 
-                        @if($alamatList && $alamatList->count() > 0)
-                            <!-- Daftar Alamat -->
-                            <div class="space-y-4">
-                                @foreach($alamatList as $alamat)
-                                <div class="border-2 {{ $alamat->is_default ? 'border-primary-200 bg-primary-50' : 'border-gray-200' }} rounded-xl p-6">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex-1">
-                                            <div class="flex items-center mb-3">
-                                                <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold mr-3">
-                                                    <i class="bi bi-{{ $alamat->label == 'Rumah' ? 'house-door' : ($alamat->label == 'Kantor' ? 'building' : 'geo-alt') }} mr-1"></i>
-                                                    {{ $alamat->label }}
-                                                </span>
-                                                @if($alamat->is_default)
-                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
-                                                    Default
-                                                </span>
-                                                @endif
-                                            </div>
-                                            <h4 class="font-semibold text-gray-900 mb-2">{{ $alamat->nama_penerima }}</h4>
-                                            <p class="text-gray-700 mb-1">{{ $alamat->telepon }}</p>
-                                            <p class="text-gray-600 text-sm">
-                                                {{ $alamat->alamat_lengkap }}, {{ $alamat->kota }}, {{ $alamat->provinsi }} {{ $alamat->kode_pos }}
-                                            </p>
+                        @php
+                            $alamatList = $pelanggan->getAlamatList();
+                            $defaultIndex = $pelanggan->alamat_default_index ?? 0;
+                        @endphp
+
+                        @if(empty($alamatList))
+                            <!-- Empty State -->
+                            <div class="text-center py-12">
+                                <div class="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                    <i class="bi bi-geo-alt text-4xl text-gray-400"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Alamat</h3>
+                                <p class="text-gray-600 mb-6">Tambahkan alamat pengiriman untuk memudahkan checkout</p>
+                                <button onclick="openModalAlamat()" 
+                                        class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                                    <i class="bi bi-plus-circle mr-2"></i>
+                                    Tambah Alamat Pertama
+                                </button>
+                            </div>
+                        @else
+                            <!-- Alamat List -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @foreach($alamatList as $index => $alamat)
+                                <div class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors {{ $index === $defaultIndex ? 'ring-2 ring-primary-500 border-primary-500' : '' }}">
+                                    <!-- Label & Default Badge -->
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="px-3 py-1 text-xs font-semibold rounded-full
+                                                {{ $alamat['label'] === 'rumah' ? 'bg-blue-100 text-blue-700' : '' }}
+                                                {{ $alamat['label'] === 'kantor' ? 'bg-purple-100 text-purple-700' : '' }}
+                                                {{ $alamat['label'] === 'lainnya' ? 'bg-gray-100 text-gray-700' : '' }}">
+                                                <i class="bi bi-{{ $alamat['label'] === 'rumah' ? 'house' : ($alamat['label'] === 'kantor' ? 'building' : 'geo-alt') }} mr-1"></i>
+                                                {{ ucfirst($alamat['label']) }}
+                                            </span>
+                                            @if($index === $defaultIndex)
+                                            <span class="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
+                                                <i class="bi bi-check-circle mr-1"></i>
+                                                Utama
+                                            </span>
+                                            @endif
                                         </div>
-                                        <div class="flex space-x-2">
-                                            @if(!$alamat->is_default)
-                                            <form action="{{ route('alamat.setDefault', $alamat->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Set sebagai default">
-                                                    <i class="bi bi-check-circle"></i>
-                                                </button>
-                                            </form>
-                                            @endif
-                                            <button onclick="editAlamat({{ $alamat->id }}, '{{ $alamat->label }}', '{{ $alamat->nama_penerima }}', '{{ $alamat->telepon }}', '{{ $alamat->alamat_lengkap }}', '{{ $alamat->kota }}', '{{ $alamat->provinsi }}', '{{ $alamat->kode_pos }}')" 
-                                                    class="p-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors">
-                                                <i class="bi bi-pencil"></i>
+                                        
+                                        <!-- Actions Dropdown -->
+                                        <div class="relative">
+                                            <button onclick="toggleDropdown({{ $index }})" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                                <i class="bi bi-three-dots-vertical text-gray-600"></i>
                                             </button>
-                                            @if(!$alamat->is_default)
-                                            <form action="{{ route('alamat.destroy', $alamat->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus alamat ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
-                                                    <i class="bi bi-trash"></i>
+                                            <div id="dropdown-{{ $index }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                                                @if($index !== $defaultIndex)
+                                                <form action="{{ route('alamat.set-default', $index) }}" method="POST" class="block">
+                                                    @csrf
+                                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                                        <i class="bi bi-check-circle mr-2 text-green-600"></i>
+                                                        Jadikan Utama
+                                                    </button>
+                                                </form>
+                                                @endif
+                                                <button onclick="editAlamat({{ $index }}, '{{ $alamat['label'] }}', '{{ $alamat['nama_penerima'] }}', '{{ $alamat['telepon'] }}', '{{ $alamat['alamat_lengkap'] }}', '{{ $alamat['kota'] }}', '{{ $alamat['provinsi'] }}', '{{ $alamat['kode_pos'] }}')" 
+                                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                                    <i class="bi bi-pencil mr-2 text-blue-600"></i>
+                                                    Edit
                                                 </button>
-                                            </form>
-                                            @endif
+                                                <button onclick="confirmDeleteAlamat({{ $index }})" 
+                                                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                                                    <i class="bi bi-trash mr-2"></i>
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Alamat Details -->
+                                    <div class="space-y-2">
+                                        <div class="flex items-start">
+                                            <i class="bi bi-person text-gray-400 mr-2 mt-1"></i>
+                                            <div>
+                                                <p class="font-semibold text-gray-900">{{ $alamat['nama_penerima'] }}</p>
+                                                <p class="text-sm text-gray-600">{{ $alamat['telepon'] }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <i class="bi bi-geo-alt text-gray-400 mr-2 mt-1"></i>
+                                            <p class="text-sm text-gray-700">
+                                                {{ $alamat['alamat_lengkap'] }}<br>
+                                                {{ $alamat['kota'] }}, {{ $alamat['provinsi'] }} {{ $alamat['kode_pos'] }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                                 @endforeach
-                            </div>
-                        @else
-                            <!-- Empty State -->
-                            <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
-                                <i class="bi bi-geo-alt text-5xl text-gray-400 mb-4"></i>
-                                <h4 class="font-semibold text-gray-900 mb-2">Belum Ada Alamat</h4>
-                                <p class="text-gray-600 text-sm mb-4">Tambahkan alamat pengiriman untuk kemudahan berbelanja</p>
-                                <button onclick="openModalAlamat()" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                                    <i class="bi bi-plus mr-2"></i>
-                                    Tambah Alamat
-                                </button>
                             </div>
                         @endif
                     </div>
@@ -329,19 +398,23 @@
 </div>
 
 <!-- Modal Tambah/Edit Alamat -->
-<div id="modalAlamat" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-6 border-b border-gray-200">
+<div id="modalAlamat" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.4);">
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden transform transition-all animate-modal-slide-up">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-200 bg-gradient-to-r from-primary-50 to-white">
             <div class="flex items-center justify-between">
-                <h3 id="modalTitle" class="text-xl font-bold text-gray-900">Tambah Alamat Baru</h3>
-                <button onclick="closeModalAlamat()" class="text-gray-400 hover:text-gray-600">
-                    <i class="bi bi-x-lg text-2xl"></i>
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-900">Tambah Alamat Baru</h3>
+                <button onclick="closeModalAlamat()" class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-2 transition-all">
+                    <i class="bi bi-x-lg text-xl"></i>
                 </button>
             </div>
         </div>
         
-        <form id="formAlamat" method="POST" class="p-6">
-            @csrf
+        <!-- Form Content -->
+        <div class="overflow-y-auto max-h-[calc(90vh-140px)]">
+            <form id="formAlamat" method="POST" class="p-6">
+                    @csrf
             <input type="hidden" id="methodField" name="_method" value="POST">
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -432,18 +505,63 @@
                 </div>
             </div>
 
-            <div class="mt-6 flex justify-end space-x-3">
+            <!-- Footer dengan tombol -->
+            <div class="mt-6 flex gap-3 pt-4 border-t border-gray-200">
                 <button type="button" onclick="closeModalAlamat()" 
-                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm">
                     Batal
                 </button>
                 <button type="submit" 
-                        class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                        class="flex-1 px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
                     <i class="bi bi-check-circle mr-2"></i>
                     Simpan Alamat
                 </button>
             </div>
         </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus Alamat -->
+<div id="modalDeleteAlamat" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.4);">
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all animate-modal-slide-up">
+        <div class="p-6">
+            <!-- Icon -->
+            <div class="flex items-center justify-center w-20 h-20 mx-auto bg-gradient-to-br from-red-100 to-red-50 rounded-full mb-4 shadow-lg">
+                <div class="relative">
+                    <i class="bi bi-exclamation-triangle text-4xl text-red-600"></i>
+                    <div class="absolute inset-0 bg-red-600 opacity-20 blur-xl rounded-full"></div>
+                </div>
+            </div>
+            
+            <!-- Title & Description -->
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Hapus Alamat?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Apakah Anda yakin ingin menghapus alamat ini? <br>
+                    <span class="text-sm text-gray-500">Tindakan ini tidak dapat dibatalkan.</span>
+                </p>
+            </div>
+
+            <!-- Form -->
+            <form id="formDeleteAlamat" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeModalDeleteAlamat()" 
+                            class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <i class="bi bi-trash mr-2"></i>
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -475,6 +593,29 @@ function showTab(tabName) {
     activeIcon.classList.remove('text-gray-400');
     activeIcon.classList.add('text-primary-600');
 }
+
+// Dropdown Management for Alamat
+function toggleDropdown(index) {
+    const dropdown = document.getElementById('dropdown-' + index);
+    const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+    
+    // Close all other dropdowns
+    allDropdowns.forEach(d => {
+        if (d.id !== 'dropdown-' + index) {
+            d.classList.add('hidden');
+        }
+    });
+    
+    // Toggle current dropdown
+    dropdown.classList.toggle('hidden');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('[onclick^="toggleDropdown"]') && !e.target.closest('[id^="dropdown-"]')) {
+        document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.classList.add('hidden'));
+    }
+});
 
 // Edit Mode Management
 function toggleEdit(section) {
@@ -572,6 +713,33 @@ function closeModalAlamat() {
     document.getElementById('modalAlamat').classList.add('hidden');
     document.getElementById('formAlamat').reset();
 }
+
+// Modal Delete Alamat Management
+function confirmDeleteAlamat(index) {
+    const modal = document.getElementById('modalDeleteAlamat');
+    const form = document.getElementById('formDeleteAlamat');
+    
+    // Set form action dengan index alamat
+    form.action = '/alamat/' + index;
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    
+    // Close dropdown
+    document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.classList.add('hidden'));
+}
+
+function closeModalDeleteAlamat() {
+    document.getElementById('modalDeleteAlamat').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('modalDeleteAlamat')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModalDeleteAlamat();
+    }
+});
+
 
 function editAlamat(id, label, nama, telepon, alamat, kota, provinsi, kodePos) {
     document.getElementById('modalAlamat').classList.remove('hidden');

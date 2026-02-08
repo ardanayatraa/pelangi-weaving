@@ -121,36 +121,72 @@ Route::post('/midtrans/notification', function (Request $request) {
             'fraud_status' => $fraudStatus,
         ]);
 
-        $order = Pesanan::where('nomor_invoice', $orderId)->first();
-        if (!$order) {
-            \Log::error('Order not found: ' . $orderId);
-            return response()->json(['message' => 'Order not found'], 404);
-        }
+        // Check if it's a custom order (starts with CO-)
+        if (str_starts_with($orderId, 'CO-')) {
+            $customOrder = \App\Models\CustomOrder::where('nomor_custom_order', $orderId)->first();
+            if (!$customOrder) {
+                \Log::error('Custom Order not found: ' . $orderId);
+                return response()->json(['message' => 'Custom Order not found'], 404);
+            }
 
-        $payment = $order->payment;
-        if (!$payment) {
-            \Log::error('Payment not found for order: ' . $orderId);
-            return response()->json(['message' => 'Payment not found'], 404);
-        }
+            $payment = $customOrder->payment;
+            if (!$payment) {
+                \Log::error('Payment not found for custom order: ' . $orderId);
+                return response()->json(['message' => 'Payment not found'], 404);
+            }
 
-        if ($transactionStatus == 'capture' && $fraudStatus == 'accept') {
-            $payment->update(['status_bayar' => 'paid', 'tanggal_bayar' => now()]);
-            $order->update(['status_pesanan' => 'diproses']);
-        } elseif ($transactionStatus == 'settlement') {
-            $payment->update(['status_bayar' => 'paid', 'tanggal_bayar' => now()]);
-            $order->update(['status_pesanan' => 'diproses']);
-        } elseif ($transactionStatus == 'pending') {
-            $payment->update(['status_bayar' => 'pending']);
-        } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
-            $payment->update(['status_bayar' => 'failed']);
-            $order->update(['status_pesanan' => 'batal']);
-        }
+            // Update payment and custom order status
+            if ($transactionStatus == 'capture' && $fraudStatus == 'accept') {
+                $payment->update(['status_pembayaran' => 'paid', 'status_bayar' => 'paid', 'waktu_settlement' => now()]);
+                $customOrder->update(['status' => 'in_production', 'dp_paid_at' => now()]);
+            } elseif ($transactionStatus == 'settlement') {
+                $payment->update(['status_pembayaran' => 'paid', 'status_bayar' => 'paid', 'waktu_settlement' => now()]);
+                $customOrder->update(['status' => 'in_production', 'dp_paid_at' => now()]);
+            } elseif ($transactionStatus == 'pending') {
+                $payment->update(['status_pembayaran' => 'pending', 'status_bayar' => 'pending']);
+            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                $payment->update(['status_pembayaran' => 'cancel', 'status_bayar' => 'failed']);
+                $customOrder->update(['status' => 'cancelled']);
+            }
 
-        \Log::info('Order & Payment updated (API)', [
-            'order_id' => $orderId,
-            'status_pesanan' => $order->status_pesanan,
-            'status_bayar' => $payment->status_bayar,
-        ]);
+            \Log::info('Custom Order & Payment updated (API)', [
+                'order_id' => $orderId,
+                'status' => $customOrder->status,
+                'status_pembayaran' => $payment->status_pembayaran,
+            ]);
+        } else {
+            // Regular order (INV-)
+            $order = Pesanan::where('nomor_invoice', $orderId)->first();
+            if (!$order) {
+                \Log::error('Order not found: ' . $orderId);
+                return response()->json(['message' => 'Order not found'], 404);
+            }
+
+            $payment = $order->payment;
+            if (!$payment) {
+                \Log::error('Payment not found for order: ' . $orderId);
+                return response()->json(['message' => 'Payment not found'], 404);
+            }
+
+            if ($transactionStatus == 'capture' && $fraudStatus == 'accept') {
+                $payment->update(['status_pembayaran' => 'paid', 'status_bayar' => 'paid', 'waktu_settlement' => now()]);
+                $order->update(['status_pesanan' => 'diproses']);
+            } elseif ($transactionStatus == 'settlement') {
+                $payment->update(['status_pembayaran' => 'paid', 'status_bayar' => 'paid', 'waktu_settlement' => now()]);
+                $order->update(['status_pesanan' => 'diproses']);
+            } elseif ($transactionStatus == 'pending') {
+                $payment->update(['status_pembayaran' => 'pending', 'status_bayar' => 'pending']);
+            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                $payment->update(['status_pembayaran' => 'cancel', 'status_bayar' => 'failed']);
+                $order->update(['status_pesanan' => 'batal']);
+            }
+
+            \Log::info('Order & Payment updated (API)', [
+                'order_id' => $orderId,
+                'status_pesanan' => $order->status_pesanan,
+                'status_pembayaran' => $payment->status_pembayaran,
+            ]);
+        }
 
         return response()->json(['message' => 'Notification processed']);
     } catch (\Exception $e) {

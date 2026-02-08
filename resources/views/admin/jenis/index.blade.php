@@ -3,6 +3,29 @@
 @section('title', 'Jenis')
 @section('page-title', 'Manajemen Jenis')
 
+@push('styles')
+<style>
+    @keyframes modalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .animate-modal-slide-up {
+        animation: modalSlideUp 0.3s ease-out;
+    }
+    
+    #modalDelete:not(.hidden) {
+        display: flex;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="mb-6 flex items-center justify-between">
     <div class="flex items-center gap-4">
@@ -100,18 +123,12 @@
                         </a>
                         
                         @if($item->customOrders->count() == 0 && $item->products->count() == 0)
-                            <form action="{{ route('admin.jenis.destroy', $item->id_jenis) }}" 
-                                  method="POST" 
-                                  class="inline-block ml-2"
-                                  onsubmit="return confirm('Yakin ingin menghapus jenis ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="inline-flex items-center px-3 py-1 border border-red-600 text-red-600 hover:bg-red-50 rounded text-sm font-medium transition"
-                                        title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                            <button type="button"
+                                    onclick="confirmDelete('{{ route('admin.jenis.destroy', $item->id_jenis) }}', '{{ $item->nama_jenis }}')"
+                                    class="inline-flex items-center px-3 py-1 border border-red-600 text-red-600 hover:bg-red-50 rounded text-sm font-medium transition ml-2"
+                                    title="Hapus">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         @else
                             <span class="inline-flex items-center px-3 py-1 border border-gray-300 text-gray-400 rounded text-sm font-medium ml-2" 
                                   title="Tidak dapat dihapus karena memiliki data terkait">
@@ -135,4 +152,68 @@
     </div>
     @endif
 </div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="modalDelete" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background-color: rgba(0, 0, 0, 0.4);">
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all animate-modal-slide-up">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-20 h-20 mx-auto bg-gradient-to-br from-red-100 to-red-50 rounded-full mb-4 shadow-lg">
+                <div class="relative">
+                    <i class="bi bi-exclamation-triangle text-4xl text-red-600"></i>
+                    <div class="absolute inset-0 bg-red-600 opacity-20 blur-xl rounded-full"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Hapus Jenis?</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Apakah Anda yakin ingin menghapus jenis <br>
+                    <strong id="jenisName" class="text-gray-900"></strong>?
+                    <br>
+                    <span class="text-sm text-gray-500">Tindakan ini tidak dapat dibatalkan.</span>
+                </p>
+            </div>
+
+            <form id="formDelete" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeModal()" 
+                            class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <i class="bi bi-trash mr-2"></i>
+                        Ya, Hapus
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(url, name) {
+    const modal = document.getElementById('modalDelete');
+    const form = document.getElementById('formDelete');
+    const nameElement = document.getElementById('jenisName');
+    
+    form.action = url;
+    nameElement.textContent = name;
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('modalDelete').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('modalDelete')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
 @endsection

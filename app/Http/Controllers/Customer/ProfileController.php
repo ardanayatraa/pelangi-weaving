@@ -13,13 +13,7 @@ class ProfileController extends Controller
     public function index()
     {
         $pelanggan = Auth::user();
-        
-        // Load alamat dengan eager loading
-        $alamatList = \App\Models\Alamat::where('id_pelanggan', $pelanggan->id_pelanggan)
-            ->orderBy('is_default', 'desc')
-            ->get();
-            
-        return view('customer.profile.index', compact('pelanggan', 'alamatList'));
+        return view('customer.profile.index', compact('pelanggan'));
     }
 
     public function update(Request $request)
@@ -29,8 +23,8 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:100',
             'email' => 'required|email|unique:pelanggan,email,' . $pelanggan->id_pelanggan . ',id_pelanggan',
-            'telepon' => 'required|string|max:15',
-            'alamat' => 'required|string',
+            'telepon' => 'required|string|max:20',
+            'whatsapp' => 'nullable|string|max:20',
             'kode_pos' => 'nullable|string|max:10',
         ]);
 
@@ -57,5 +51,60 @@ class ProfileController extends Controller
         ]);
 
         return back()->with('success', 'Password berhasil diubah!');
+    }
+
+    // Alamat Management (JSON)
+    public function storeAlamat(Request $request)
+    {
+        $pelanggan = Auth::user();
+
+        $validated = $request->validate([
+            'label' => 'required|in:rumah,kantor,lainnya',
+            'nama_penerima' => 'required|string|max:100',
+            'telepon' => 'required|string|max:20',
+            'alamat_lengkap' => 'required|string',
+            'kota' => 'required|string|max:100',
+            'provinsi' => 'required|string|max:100',
+            'kode_pos' => 'required|string|max:10',
+        ]);
+
+        $pelanggan->addAlamat($validated);
+
+        return back()->with('success', 'Alamat berhasil ditambahkan!');
+    }
+
+    public function updateAlamat(Request $request, $index)
+    {
+        $pelanggan = Auth::user();
+
+        $validated = $request->validate([
+            'label' => 'required|in:rumah,kantor,lainnya',
+            'nama_penerima' => 'required|string|max:100',
+            'telepon' => 'required|string|max:20',
+            'alamat_lengkap' => 'required|string',
+            'kota' => 'required|string|max:100',
+            'provinsi' => 'required|string|max:100',
+            'kode_pos' => 'required|string|max:10',
+        ]);
+
+        $pelanggan->updateAlamat($index, $validated);
+
+        return back()->with('success', 'Alamat berhasil diperbarui!');
+    }
+
+    public function deleteAlamat($index)
+    {
+        $pelanggan = Auth::user();
+        $pelanggan->deleteAlamat($index);
+
+        return back()->with('success', 'Alamat berhasil dihapus!');
+    }
+
+    public function setDefaultAlamat($index)
+    {
+        $pelanggan = Auth::user();
+        $pelanggan->setDefaultAlamat($index);
+
+        return back()->with('success', 'Alamat default berhasil diubah!');
     }
 }

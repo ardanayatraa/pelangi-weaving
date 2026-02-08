@@ -20,22 +20,6 @@
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Produk Kami</h1>
                 <p class="text-gray-600">Menampilkan {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} dari {{ $products->total() }} produk</p>
             </div>
-            
-            <!-- View Toggle -->
-            <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                <div class="flex bg-gray-100 rounded-lg p-1" x-data="{ view: 'grid' }">
-                    <button @click="view = 'grid'" 
-                            :class="view === 'grid' ? 'bg-white shadow-sm' : ''"
-                            class="px-3 py-2 rounded-md text-sm font-medium transition">
-                        Grid View
-                    </button>
-                    <button @click="view = 'list'" 
-                            :class="view === 'list' ? 'bg-white shadow-sm' : ''"
-                            class="px-3 py-2 rounded-md text-sm font-medium transition">
-                        List View
-                    </button>
-                </div>
-            </div>
         </div>
 
         <!-- Filters & Search -->
@@ -92,13 +76,83 @@
                 </div>
 
                 <!-- Filter Button -->
-                <div class="md:col-span-5 flex justify-end">
+                <div class="md:col-span-5 flex justify-end gap-3">
+                    @if(request('search') || request('category') || request('price_range') || request('sort'))
+                    <a href="{{ route('products.index') }}" 
+                       class="border border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-50 transition font-medium">
+                        <i class="bi bi-x-circle mr-1"></i>
+                        Reset Filter
+                    </a>
+                    @endif
                     <button type="submit" class="bg-primary-600 text-white px-8 py-3 rounded-xl hover:bg-primary-700 transition font-medium">
+                        <i class="bi bi-funnel mr-1"></i>
                         Filter
                     </button>
                 </div>
             </form>
         </div>
+
+        <!-- Active Filters Indicator -->
+        @if(request('search') || request('category') || request('price_range') || request('sort'))
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+            <div class="flex items-center justify-between flex-wrap gap-3">
+                <div class="flex items-center flex-wrap gap-2 text-sm">
+                    <i class="bi bi-funnel-fill text-blue-600"></i>
+                    <span class="text-blue-900 font-medium">Filter Aktif:</span>
+                    @if(request('search'))
+                    <span class="px-3 py-1 bg-white rounded-lg text-blue-900 border border-blue-200">
+                        <i class="bi bi-search mr-1"></i>
+                        "{{ request('search') }}"
+                    </span>
+                    @endif
+                    @if(request('category'))
+                    @php
+                        $selectedCat = \App\Models\Kategori::find(request('category'));
+                    @endphp
+                    @if($selectedCat)
+                    <span class="px-3 py-1 bg-white rounded-lg text-blue-900 border border-blue-200">
+                        <i class="bi bi-tag mr-1"></i>
+                        {{ $selectedCat->nama_kategori }}
+                    </span>
+                    @endif
+                    @endif
+                    @if(request('price_range'))
+                    <span class="px-3 py-1 bg-white rounded-lg text-blue-900 border border-blue-200">
+                        <i class="bi bi-cash mr-1"></i>
+                        @php
+                            $priceLabels = [
+                                '0-500000' => '< Rp 500rb',
+                                '500000-1000000' => 'Rp 500rb - 1jt',
+                                '1000000-2000000' => 'Rp 1jt - 2jt',
+                                '2000000-999999999' => '> Rp 2jt'
+                            ];
+                        @endphp
+                        {{ $priceLabels[request('price_range')] ?? request('price_range') }}
+                    </span>
+                    @endif
+                    @if(request('sort'))
+                    <span class="px-3 py-1 bg-white rounded-lg text-blue-900 border border-blue-200">
+                        <i class="bi bi-sort-down mr-1"></i>
+                        @php
+                            $sortLabels = [
+                                'price_low' => 'Harga Terendah',
+                                'price_high' => 'Harga Tertinggi',
+                                'name' => 'Nama A-Z',
+                                'popular' => 'Terpopuler'
+                            ];
+                        @endphp
+                        {{ $sortLabels[request('sort')] ?? 'Terbaru' }}
+                    </span>
+                    @endif
+                </div>
+                <a href="{{ route('products.index') }}" 
+                   class="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap">
+                    <i class="bi bi-x-circle mr-1"></i>
+                    Hapus Semua Filter
+                </a>
+            </div>
+        </div>
+        @endif
 
         <!-- Category Tabs -->
         <div class="flex flex-wrap gap-2 mb-8">
@@ -137,11 +191,14 @@
                     
                     <!-- Badges -->
                     <div class="absolute top-3 left-3">
-                        @if($product->stok < 10 && $product->stok > 0)
+                        @php
+                            $totalStok = $product->activeVariants->sum('stok');
+                        @endphp
+                        @if($totalStok < 10 && $totalStok > 0)
                         <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
                             Terbatas
                         </span>
-                        @elseif($product->stok == 0)
+                        @elseif($totalStok == 0)
                         <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
                             Habis
                         </span>
@@ -189,7 +246,15 @@
                     
                     <!-- Stock Info -->
                     <div class="text-sm text-gray-600 mb-4">
-                        Stok: <span class="font-medium">{{ $product->stok }}</span>
+                        @php
+                            $totalStok = $product->activeVariants->sum('stok');
+                            $varianCount = $product->activeVariants->count();
+                        @endphp
+                        @if($varianCount > 1)
+                        Stok: <span class="font-medium">{{ $totalStok }}</span> ({{ $varianCount }} varian)
+                        @else
+                        Stok: <span class="font-medium">{{ $totalStok }}</span>
+                        @endif
                     </div>
                     
                     <!-- Action Button -->

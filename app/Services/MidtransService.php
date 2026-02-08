@@ -27,11 +27,6 @@ class MidtransService
                 'first_name' => $order->pelanggan->nama,
                 'email' => $order->pelanggan->email,
                 'phone' => $order->pelanggan->telepon,
-                'shipping_address' => [
-                    'address' => $order->alamat_pengiriman ?? $order->pelanggan->alamat,
-                    'city' => $order->pelanggan->id_kota ?? '',
-                    'postal_code' => $order->pelanggan->kode_pos ?? '',
-                ],
             ],
             'item_details' => $this->getItemDetails($order),
             'callbacks' => [
@@ -75,22 +70,6 @@ class MidtransService
             ];
         }
 
-        // Add discount (negative price)
-        $items[] = [
-            'id' => 'DISCOUNT',
-            'price' => -50000,
-            'quantity' => 1,
-            'name' => 'Diskon Promo',
-        ];
-
-        // Add admin fee
-        $items[] = [
-            'id' => 'ADMIN_FEE',
-            'price' => 2500,
-            'quantity' => 1,
-            'name' => 'Biaya Admin',
-        ];
-
         return $items;
     }
 
@@ -105,11 +84,6 @@ class MidtransService
                 'first_name' => $customOrder->pelanggan->nama,
                 'email' => $customOrder->pelanggan->email,
                 'phone' => $customOrder->pelanggan->telepon,
-                'shipping_address' => [
-                    'address' => $customOrder->pelanggan->alamat,
-                    'city' => $customOrder->pelanggan->id_kota ?? '',
-                    'postal_code' => $customOrder->pelanggan->kode_pos ?? '',
-                ],
             ],
             'item_details' => [
                 [

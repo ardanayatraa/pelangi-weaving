@@ -15,7 +15,7 @@ class DashboardController extends Controller
     {
         // Total statistik
         $totalOrders = Pesanan::count();
-        $totalProducts = Produk::count();
+        $totalProducts = DB::table('varian_produk')->count(); // Hitung total varian, bukan produk
         $totalCustomers = Pelanggan::count();
         $totalRevenue = Pesanan::where('status_pesanan', 'selesai')->sum('total_bayar');
         

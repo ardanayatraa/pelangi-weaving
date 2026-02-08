@@ -13,11 +13,14 @@ return new class extends Migration
             $table->string('nama', 100);
             $table->string('email', 100)->unique();
             $table->string('password', 255);
-            $table->text('alamat')->nullable();
+            $table->json('alamat')->nullable(); // JSON untuk multiple alamat
+            $table->integer('alamat_default_index')->default(0); // Index alamat default
             $table->string('telepon', 20)->nullable();
+            $table->string('whatsapp', 20)->nullable();
             $table->integer('id_kota')->nullable();
             $table->integer('id_provinsi')->nullable();
             $table->string('kode_pos', 10)->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

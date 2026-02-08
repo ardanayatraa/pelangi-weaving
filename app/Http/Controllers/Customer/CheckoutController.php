@@ -59,7 +59,12 @@ class CheckoutController extends Controller
         
         $pelanggan = Auth::guard('pelanggan')->user();
         
-        return view('customer.checkout.index', compact('cartItems', 'subtotal', 'pelanggan'));
+        // Get default address
+        $alamatList = $pelanggan->getAlamatList();
+        $defaultIndex = $pelanggan->alamat_default_index ?? 0;
+        $defaultAlamat = $alamatList[$defaultIndex] ?? null;
+        
+        return view('customer.checkout.index', compact('cartItems', 'subtotal', 'pelanggan', 'defaultAlamat'));
     }
 
     public function process(Request $request)
@@ -101,11 +106,7 @@ class CheckoutController extends Controller
             
             $ongkir = $validated['shipping_cost'];
             
-            // Add discount and admin fee (same as frontend calculation)
-            $discount = 50000; // Diskon tetap
-            $adminFee = 2500;  // Biaya admin
-            
-            $totalBayar = $subtotal + $ongkir - $discount + $adminFee;
+            $totalBayar = $subtotal + $ongkir;
             
             $nomorInvoice = 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
             
@@ -166,8 +167,8 @@ class CheckoutController extends Controller
             // Create payment record with snap token
             Pembayaran::create([
                 'id_pesanan' => $order->id_pesanan,
-                'jumlah_bayar' => $totalBayar,
-                'status_bayar' => 'pending',
+                'status_pembayaran' => 'unpaid',
+                'status_bayar' => 'unpaid',
                 'snap_token' => $snapToken,
             ]);
             
