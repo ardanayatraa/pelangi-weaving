@@ -98,10 +98,6 @@
                                 <div class="w-8 h-8 bg-primary-500 rounded-full border-2 border-white"></div>
                                 <div class="w-8 h-8 bg-primary-400 rounded-full border-2 border-white"></div>
                             </div>
-                            <div class="text-sm">
-                                <div class="font-semibold text-gray-900">4.9/5</div>
-                                <div class="text-gray-600">Rating</div>
-                            </div>
                         </div>
                     </div>
                 </div>

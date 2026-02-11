@@ -58,7 +58,6 @@ class ProductController extends Controller
             'berat' => 'required|numeric|min:0',
             'status' => 'nullable|in:aktif,nonaktif',
             'is_made_to_order' => 'nullable|boolean',
-            'lead_time_days' => 'nullable|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
 
@@ -191,7 +190,6 @@ class ProductController extends Controller
             'berat' => 'required|numeric|min:0',
             'status' => 'nullable|in:aktif,nonaktif',
             'is_made_to_order' => 'nullable|boolean',
-            'lead_time_days' => 'nullable|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
         

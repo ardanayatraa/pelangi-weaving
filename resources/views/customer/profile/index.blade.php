@@ -423,21 +423,21 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Label Alamat</label>
                     <div class="flex space-x-3">
                         <label class="flex-1 group cursor-pointer">
-                            <input type="radio" name="label" value="Rumah" class="sr-only" checked>
+                            <input type="radio" name="label" value="rumah" class="sr-only" checked>
                             <div class="label-alamat-option border-2 border-gray-300 rounded-lg p-3 text-center transition-colors hover:border-primary-400 group-has-[:checked]:border-primary-600 group-has-[:checked]:bg-primary-50">
                                 <i class="bi bi-house-door text-xl"></i>
                                 <p class="text-sm font-medium mt-1">Rumah</p>
                             </div>
                         </label>
                         <label class="flex-1 group cursor-pointer">
-                            <input type="radio" name="label" value="Kantor" class="sr-only">
+                            <input type="radio" name="label" value="kantor" class="sr-only">
                             <div class="label-alamat-option border-2 border-gray-300 rounded-lg p-3 text-center transition-colors hover:border-primary-400 group-has-[:checked]:border-primary-600 group-has-[:checked]:bg-primary-50">
                                 <i class="bi bi-building text-xl"></i>
                                 <p class="text-sm font-medium mt-1">Kantor</p>
                             </div>
                         </label>
                         <label class="flex-1 group cursor-pointer">
-                            <input type="radio" name="label" value="Lainnya" class="sr-only">
+                            <input type="radio" name="label" value="lainnya" class="sr-only">
                             <div class="label-alamat-option border-2 border-gray-300 rounded-lg p-3 text-center transition-colors hover:border-primary-400 group-has-[:checked]:border-primary-600 group-has-[:checked]:bg-primary-50">
                                 <i class="bi bi-geo-alt text-xl"></i>
                                 <p class="text-sm font-medium mt-1">Lainnya</p>

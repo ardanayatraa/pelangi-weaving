@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama', 100);
             $table->string('email', 100)->unique();
             $table->string('password', 255);
-            $table->string('role', 20)->default('admin'); // admin role only
+            $table->string('role', 20)->default('admin');
             $table->dateTime('last_login')->nullable();
             $table->timestamps();
         });

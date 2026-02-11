@@ -1,0 +1,553 @@
+<mxfile host="app.diagrams.net" modified="2026-02-11T00:00:00.000Z" agent="Kiro" version="24.0.0">
+  <diagram name="Pelangi Weaving ERD" id="erd-diagram">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3000" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- JENIS TABLE -->
+        <mxCell id="jenis" value="&lt;b&gt;jenis&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="200" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-1" value="PK id_jenis" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="jenis">
+          <mxGeometry y="30" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-2" value="nama_jenis" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jenis">
+          <mxGeometry y="55" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-3" value="slug (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jenis">
+          <mxGeometry y="80" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-4" value="deskripsi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jenis">
+          <mxGeometry y="105" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-5" value="icon" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jenis">
+          <mxGeometry y="130" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-6" value="status" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jenis">
+          <mxGeometry y="155" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="jenis-7" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="jenis">
+          <mxGeometry y="180" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- KATEGORI TABLE -->
+        <mxCell id="kategori" value="&lt;b&gt;kategori&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="400" width="200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="kategori-1" value="PK id_kategori" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="kategori">
+          <mxGeometry y="30" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="kategori-2" value="nama_kategori" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="kategori">
+          <mxGeometry y="55" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="kategori-3" value="slug (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="kategori">
+          <mxGeometry y="80" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="kategori-4" value="deskripsi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="kategori">
+          <mxGeometry y="105" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="kategori-5" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="kategori">
+          <mxGeometry y="130" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- PRODUK TABLE -->
+        <mxCell id="produk" value="&lt;b&gt;produk&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="450" y="100" width="220" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-1" value="PK id_produk" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="produk">
+          <mxGeometry y="30" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-2" value="FK id_kategori" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="produk">
+          <mxGeometry y="55" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-3" value="FK id_jenis (nullable)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="produk">
+          <mxGeometry y="80" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-4" value="nama_produk" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="105" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-5" value="slug (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="130" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-6" value="deskripsi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="155" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-7" value="berat (gram)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="180" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-8" value="status" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="205" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-9" value="is_made_to_order" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="230" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-10" value="views" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="produk">
+          <mxGeometry y="255" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="produk-11" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="produk">
+          <mxGeometry y="280" width="220" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- VARIAN_PRODUK TABLE -->
+        <mxCell id="varian" value="&lt;b&gt;varian_produk&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="220" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-1" value="PK id_varian" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="varian">
+          <mxGeometry y="30" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-2" value="FK id_produk" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="varian">
+          <mxGeometry y="55" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-3" value="nama_varian" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="80" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-4" value="kode_varian (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="105" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-5" value="gambar_varian" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="130" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-6" value="harga" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="varian">
+          <mxGeometry y="155" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-7" value="stok" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="varian">
+          <mxGeometry y="180" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-8" value="berat (gram)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="205" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-9" value="warna" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="230" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-10" value="ukuran" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="255" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-11" value="jenis_benang" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="280" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-12" value="status" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="varian">
+          <mxGeometry y="305" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="varian-13" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="varian">
+          <mxGeometry y="330" width="220" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ADMIN TABLE -->
+        <mxCell id="admin" value="&lt;b&gt;admin&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="100" y="700" width="200" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-1" value="PK id_admin" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="admin">
+          <mxGeometry y="30" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-2" value="nama" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="admin">
+          <mxGeometry y="55" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-3" value="email (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="admin">
+          <mxGeometry y="80" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-4" value="password" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="admin">
+          <mxGeometry y="105" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-5" value="role" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="admin">
+          <mxGeometry y="130" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-6" value="last_login" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="admin">
+          <mxGeometry y="155" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-7" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="admin">
+          <mxGeometry y="160" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- PELANGGAN TABLE -->
+        <mxCell id="pelanggan" value="&lt;b&gt;pelanggan&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="700" width="220" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-1" value="PK id_pelanggan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pelanggan">
+          <mxGeometry y="30" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-2" value="nama" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="55" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-3" value="email (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="80" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-4" value="password" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="105" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-5" value="alamat (JSON)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pelanggan">
+          <mxGeometry y="130" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-6" value="alamat_default_index" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="155" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-7" value="telepon" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="180" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-8" value="whatsapp" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="205" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-9" value="id_kota (RajaOngkir)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="230" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-10" value="id_provinsi (RajaOngkir)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="255" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-11" value="kode_pos" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pelanggan">
+          <mxGeometry y="280" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-12" value="remember_token" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pelanggan">
+          <mxGeometry y="305" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pelanggan-13" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pelanggan">
+          <mxGeometry y="310" width="220" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- KERANJANG TABLE -->
+        <mxCell id="keranjang" value="&lt;b&gt;keranjang&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="800" y="700" width="220" height="185" as="geometry" />
+        </mxCell>
+        <mxCell id="keranjang-1" value="PK id_keranjang" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="keranjang">
+          <mxGeometry y="30" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="keranjang-2" value="FK id_pelanggan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#5a6c7d;" vertex="1" parent="keranjang">
+          <mxGeometry y="55" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="keranjang-3" value="FK id_produk" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="keranjang">
+          <mxGeometry y="80" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="keranjang-4" value="FK id_varian (nullable)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="keranjang">
+          <mxGeometry y="105" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="keranjang-5" value="jumlah" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="keranjang">
+          <mxGeometry y="130" width="220" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="keranjang-6" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="keranjang">
+          <mxGeometry y="155" width="220" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- CUSTOM_ORDERS TABLE -->
+        <mxCell id="custom_orders" value="&lt;b&gt;custom_orders&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="100" width="250" height="510" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-1" value="PK id_custom_order" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="custom_orders">
+          <mxGeometry y="30" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-2" value="FK id_pelanggan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#5a6c7d;" vertex="1" parent="custom_orders">
+          <mxGeometry y="55" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-3" value="FK id_jenis" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#6c8ebf;" vertex="1" parent="custom_orders">
+          <mxGeometry y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-4" value="nomor_custom_order (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="105" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-5" value="nama_custom" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="130" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-6" value="deskripsi_custom" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="155" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-7" value="jumlah" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="180" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-8" value="harga_final" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="custom_orders">
+          <mxGeometry y="205" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-9" value="dp_amount (50%)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="custom_orders">
+          <mxGeometry y="230" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-10" value="status" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="255" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-11" value="catatan_pelanggan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="280" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-12" value="gambar_referensi (JSON)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="custom_orders">
+          <mxGeometry y="305" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-13" value="midtrans_order_id" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="330" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-14" value="dp_paid_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="custom_orders">
+          <mxGeometry y="355" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-15" value="fully_paid_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="custom_orders">
+          <mxGeometry y="380" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-16" value="payment_response" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="custom_orders">
+          <mxGeometry y="405" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-17" value="FK updated_by (Admin)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#b85450;" vertex="1" parent="custom_orders">
+          <mxGeometry y="430" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-18" value="progress_history (JSON)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="custom_orders">
+          <mxGeometry y="455" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="custom_orders-19" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="custom_orders">
+          <mxGeometry y="480" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- PESANAN TABLE -->
+        <mxCell id="pesanan" value="&lt;b&gt;pesanan&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="100" width="250" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-1" value="PK id_pesanan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pesanan">
+          <mxGeometry y="30" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-2" value="FK id_pelanggan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#5a6c7d;" vertex="1" parent="pesanan">
+          <mxGeometry y="55" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-3" value="FK id_custom_order (nullable)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="pesanan">
+          <mxGeometry y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-4" value="nomor_invoice (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pesanan">
+          <mxGeometry y="105" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-5" value="tanggal_pesanan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pesanan">
+          <mxGeometry y="130" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-6" value="subtotal" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pesanan">
+          <mxGeometry y="155" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-7" value="ongkir" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pesanan">
+          <mxGeometry y="180" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-8" value="total_bayar" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pesanan">
+          <mxGeometry y="205" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-9" value="status_pesanan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pesanan">
+          <mxGeometry y="230" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-10" value="catatan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pesanan">
+          <mxGeometry y="255" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pesanan-11" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pesanan">
+          <mxGeometry y="280" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- DETAIL_PESANAN TABLE -->
+        <mxCell id="detail_pesanan" value="&lt;b&gt;detail_pesanan&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1850" y="100" width="250" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-1" value="PK id_detail" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="30" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-2" value="FK id_pesanan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#5a6c7d;" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="55" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-3" value="FK id_produk" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-4" value="FK id_varian (nullable)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="105" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-5" value="jumlah" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="130" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-6" value="harga_satuan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="155" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="detail_pesanan-7" value="subtotal" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="detail_pesanan">
+          <mxGeometry y="180" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- PEMBAYARAN TABLE -->
+        <mxCell id="pembayaran" value="&lt;b&gt;pembayaran&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="500" width="250" height="335" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-1" value="PK id_pembayaran" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pembayaran">
+          <mxGeometry y="30" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-2" value="FK id_pesanan (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#5a6c7d;" vertex="1" parent="pembayaran">
+          <mxGeometry y="55" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-3" value="FK id_custom_order (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#d79b00;" vertex="1" parent="pembayaran">
+          <mxGeometry y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-4" value="midtrans_order_id" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pembayaran">
+          <mxGeometry y="105" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-5" value="snap_token" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pembayaran">
+          <mxGeometry y="130" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-6" value="tipe_pembayaran" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pembayaran">
+          <mxGeometry y="155" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-7" value="status_pembayaran" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pembayaran">
+          <mxGeometry y="180" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-8" value="status_bayar" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pembayaran">
+          <mxGeometry y="205" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-9" value="waktu_transaksi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pembayaran">
+          <mxGeometry y="230" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-10" value="waktu_settlement" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pembayaran">
+          <mxGeometry y="255" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-11" value="fraud_status" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pembayaran">
+          <mxGeometry y="280" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pembayaran-12" value="timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pembayaran">
+          <mxGeometry y="305" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- PENGIRIMAN TABLE -->
+        <mxCell id="pengiriman" value="&lt;b&gt;pengiriman&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1850" y="500" width="250" height="335" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-1" value="PK id_pengiriman" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pengiriman">
+          <mxGeometry y="30" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-2" value="FK id_pesanan (UNIQUE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontColor=#5a6c7d;" vertex="1" parent="pengiriman">
+          <mxGeometry y="55" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-3" value="id_kota_asal (RajaOngkir)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pengiriman">
+          <mxGeometry y="80" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-4" value="id_kota_tujuan (RajaOngkir)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pengiriman">
+          <mxGeometry y="105" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-5" value="kurir (JNE/TIKI/POS)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pengiriman">
+          <mxGeometry y="130" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-6" value="layanan (REG/YES/OKE)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pengiriman">
+          <mxGeometry y="155" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-7" value="ongkir" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pengiriman">
+          <mxGeometry y="180" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-8" value="estimasi_pengiriman" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pengiriman">
+          <mxGeometry y="205" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-9" value="alamat_pengiriman" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pengiriman">
+          <mxGeometry y="230" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-10" value="no_resi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="pengiriman">
+          <mxGeometry y="255" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-11" value="status_pengiriman" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="pengiriman">
+          <mxGeometry y="280" width="250" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="pengiriman-12" value="tanggal_kirim / tanggal_terima" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="pengiriman">
+          <mxGeometry y="305" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS / CONNECTORS -->
+        
+        <!-- Jenis to Produk (1:N) -->
+        <mxCell id="rel-jenis-produk" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#6c8ebf;" edge="1" parent="1" source="jenis-1" target="produk-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Kategori to Produk (1:N) -->
+        <mxCell id="rel-kategori-produk" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d6b656;" edge="1" parent="1" source="kategori-1" target="produk-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Produk to VarianProduk (1:N) -->
+        <mxCell id="rel-produk-varian" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1" source="produk-1" target="varian-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Pelanggan to Keranjang (1:N) -->
+        <mxCell id="rel-pelanggan-keranjang" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="pelanggan-1" target="keranjang-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Produk to Keranjang (1:N) -->
+        <mxCell id="rel-produk-keranjang" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1" source="produk-1" target="keranjang-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- VarianProduk to Keranjang (1:N) -->
+        <mxCell id="rel-varian-keranjang" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d79b00;dashed=1;" edge="1" parent="1" source="varian-1" target="keranjang-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Jenis to CustomOrders (1:N) -->
+        <mxCell id="rel-jenis-custom" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#6c8ebf;" edge="1" parent="1" source="jenis-1" target="custom_orders-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Pelanggan to CustomOrders (1:N) -->
+        <mxCell id="rel-pelanggan-custom" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="pelanggan-1" target="custom_orders-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Admin to CustomOrders (1:N) -->
+        <mxCell id="rel-admin-custom" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#b85450;dashed=1;" edge="1" parent="1" source="admin-1" target="custom_orders-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Pelanggan to Pesanan (1:N) -->
+        <mxCell id="rel-pelanggan-pesanan" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="pelanggan-1" target="pesanan-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- CustomOrders to Pesanan (1:N) -->
+        <mxCell id="rel-custom-pesanan" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d79b00;dashed=1;" edge="1" parent="1" source="custom_orders-1" target="pesanan-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Pesanan to DetailPesanan (1:N) -->
+        <mxCell id="rel-pesanan-detail" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#82b366;" edge="1" parent="1" source="pesanan-1" target="detail_pesanan-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Produk to DetailPesanan (1:N) -->
+        <mxCell id="rel-produk-detail" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d79b00;" edge="1" parent="1" source="produk-1" target="detail_pesanan-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- VarianProduk to DetailPesanan (1:N) -->
+        <mxCell id="rel-varian-detail" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#d79b00;dashed=1;" edge="1" parent="1" source="varian-1" target="detail_pesanan-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Pesanan to Pembayaran (1:1) -->
+        <mxCell id="rel-pesanan-pembayaran" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#666666;" edge="1" parent="1" source="pesanan-1" target="pembayaran-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- CustomOrders to Pembayaran (1:1) -->
+        <mxCell id="rel-custom-pembayaran" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#666666;dashed=1;" edge="1" parent="1" source="custom_orders-1" target="pembayaran-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Pesanan to Pengiriman (1:1) -->
+        <mxCell id="rel-pesanan-pengiriman" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;startFill=0;endFill=0;strokeWidth=2;strokeColor=#666666;" edge="1" parent="1" source="pesanan-1" target="pengiriman-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- LEGEND -->
+        <mxCell id="legend" value="&lt;b&gt;LEGEND&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1150" width="300" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-1" value="PK = Primary Key" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="legend">
+          <mxGeometry y="30" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-2" value="FK = Foreign Key" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="legend">
+          <mxGeometry y="55" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-3" value="Bold = Important field (harga, stok)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="legend">
+          <mxGeometry y="80" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-4" value="Italic = Timestamp field" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="legend">
+          <mxGeometry y="105" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-5" value="Solid Line = Required FK" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="legend">
+          <mxGeometry y="130" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-6" value="Dashed Line = Nullable FK" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="legend">
+          <mxGeometry y="155" width="300" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-7" value="JSON = JSON data type" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="legend">
+          <mxGeometry y="180" width="300" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

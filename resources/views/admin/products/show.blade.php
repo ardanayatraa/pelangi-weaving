@@ -93,9 +93,6 @@
                                 </span>
                             @endif
                         </div>
-                        @if($product->is_made_to_order && $product->lead_time_days)
-                            <p class="text-xs text-gray-600 mt-1">Waktu pengerjaan: {{ $product->lead_time_days }} hari</p>
-                        @endif
                     </div>
                 </div>
             </div>

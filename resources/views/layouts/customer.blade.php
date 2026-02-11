@@ -262,7 +262,6 @@
                     </p>
                     <div class="flex items-center gap-4 text-sm text-gray-400 mb-6">
                         <div><i class="bi bi-clock-fill text-primary-600 mr-1"></i> Sejak 1979</div>
-                        <div><i class="bi bi-star-fill text-yellow-500 mr-1"></i> Rating 4.8</div>
                         <div><i class="bi bi-award-fill text-primary-600 mr-1"></i> 40+ ATBM</div>
                     </div>
                     

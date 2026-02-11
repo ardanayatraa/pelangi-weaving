@@ -21,17 +21,13 @@ class Produk extends Model
         'berat',
         'status',
         'is_made_to_order',
-        'lead_time_days',
         'views',
-        'rating',
     ];
 
     protected $casts = [
         'berat' => 'decimal:2',
-        'rating' => 'decimal:2',
         'views' => 'integer',
         'is_made_to_order' => 'boolean',
-        'lead_time_days' => 'integer',
     ];
 
     public function category(): BelongsTo

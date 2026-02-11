@@ -35,7 +35,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(50, 200),
-                'rating' => 4.8,
             ],
 
             // KATEGORI 2: Kain Songket & Bawahan - 1 produk dengan 4 varian
@@ -49,7 +48,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(100, 300),
-                'rating' => 4.8,
             ],
 
             // KATEGORI 3: Kain Endek Katun - 4 produk dengan varian
@@ -63,7 +61,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(80, 250),
-                'rating' => 4.5,
             ],
             [
                 'id_kategori' => $endekKatun->id_kategori,
@@ -75,7 +72,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(80, 250),
-                'rating' => 4.7,
             ],
             [
                 'id_kategori' => $endekKatun->id_kategori,
@@ -87,7 +83,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(80, 250),
-                'rating' => 4.4,
             ],
             [
                 'id_kategori' => $endekKatun->id_kategori,
@@ -99,7 +94,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(80, 250),
-                'rating' => 4.3,
             ],
 
             // KATEGORI 4: Kain Endek Sutra (Premium) - 2 produk dengan varian
@@ -113,7 +107,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(120, 350),
-                'rating' => 4.8,
             ],
             [
                 'id_kategori' => $endekSutra->id_kategori,
@@ -125,7 +118,6 @@ class ProductSeeder extends Seeder
                 'status' => 'aktif',
                 'is_made_to_order' => false,
                 'views' => rand(120, 350),
-                'rating' => 4.9,
             ],
         ];
 

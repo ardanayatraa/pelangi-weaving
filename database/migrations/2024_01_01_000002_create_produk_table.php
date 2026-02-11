@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('status', 20)->default('aktif'); // aktif / nonaktif
             $table->boolean('is_made_to_order')->default(false);
             $table->integer('views')->default(0);
-            $table->decimal('rating', 3, 2)->default(0);
             $table->timestamps();
 
             $table->foreign('id_kategori')->references('id_kategori')->on('kategori')->onDelete('restrict');

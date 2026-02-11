@@ -202,17 +202,6 @@
                             <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                         </label>
                     </div>
-
-                    <div x-show="madeToOrder" x-cloak x-transition>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Waktu Pengerjaan (Hari)</label>
-                        <input type="number" 
-                               name="lead_time_days" 
-                               value="{{ old('lead_time_days', 7) }}"
-                               class="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-gray-400"
-                               min="1"
-                               placeholder="7">
-                        <p class="mt-1 text-xs text-gray-500">Estimasi waktu pengerjaan pesanan</p>
-                    </div>
                 </div>
             </div>
 
